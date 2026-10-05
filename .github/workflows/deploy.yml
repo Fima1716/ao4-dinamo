@@ -1,0 +1,82 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Выложить на сервер
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Подготовить SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          cat > ~/.ssh/config <<EOF
+          Host deploy
+            HostName ${{ secrets.DEPLOY_HOST }}
+            User ${{ secrets.DEPLOY_USER }}
+            IdentityFile ~/.ssh/id_ed25519
+            StrictHostKeyChecking accept-new
+          EOF
+
+      - name: Проверить вёрстку на битые ссылки
+        run: |
+          bad=0
+          for page in index.html variant1/index.html variant2/index.html variant2-full/index.html final/index.html; do
+            dir=$(dirname "$page")
+            refs=$(grep -oE '(src|href)="[^"#?:]+\.(png|jpg|jpeg|svg|webp|css|js)"' "$page" | sed -E 's/.*="([^"]+)"/\1/' | sort -u)
+            for ref in $refs; do
+              if [ ! -f "$dir/$ref" ]; then
+                echo "::error file=$page::нет файла $ref"
+                bad=1
+              fi
+            done
+          done
+          [ "$bad" = 0 ] || exit 1
+          echo "Все ссылки на файлы на месте"
+
+      - name: Выложить сайт
+        run: |
+          rsync -az --delete --no-perms --no-owner --no-group \
+            --exclude '.git' --exclude '.github' --exclude '.gitignore' \
+            --exclude 'pravki' --exclude 'api' \
+            --exclude 'README.md' --exclude 'AGENTS.md' \
+            --exclude 'All-Smiles-*' --exclude 'assets/brand/guidebook.pdf' \
+            --exclude '_t.html' --exclude '_d.html' --exclude '_m.html' \
+            ./ deploy:/var/www/ao4-dinamo/
+
+      - name: Обновить API редактора, если он менялся
+        run: |
+          changed=$(rsync -az --itemize-changes api/server.js deploy:/var/www/ao4-api/server.js)
+          if [ -n "$changed" ]; then
+            echo "server.js обновлён, перезапускаю"
+            ssh deploy 'pm2 reload ao4-api --update-env'
+          else
+            echo "server.js без изменений, перезапуск не нужен"
+          fi
+
+      - name: Проверить, что сайт отвечает
+        run: |
+          base="https://allsmiles.217-18-60-60.sslip.io"
+          ok=1
+          for p in "" variant1/ variant2/ variant2-full/ final/ api/content?page=/final/; do
+            for try in 1 2 3; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$base/$p" || true)
+              [ "$code" = "200" ] && break
+              sleep 3
+            done
+            echo "$p -> $code"
+            [ "$code" = "200" ] || ok=0
+          done
+          [ "$ok" = 1 ] || { echo "::error::какая-то страница не отдаёт 200"; exit 1; }

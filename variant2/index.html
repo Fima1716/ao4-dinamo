@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ru" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Вариант 2 · All Smiles Динамо</title>
+<meta name="description" content="Имплантация All-on-4 у метро Динамо: установка имплантов все-на-4 за один день, от 119 000 ₽. План и стоимость фиксируем в договоре.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Фирменная графика гайдбука: знак-улыбка и кольцо из восьми улыбок (логознак) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="smile" viewBox="0 0 200 118">
+    <g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round">
+      <path d="M26 30a74 74 0 0 0 148 0" fill="none"/>
+      <circle cx="40" cy="12" r="9" stroke="none"/>
+      <circle cx="160" cy="12" r="9" stroke="none"/>
+    </g>
+  </symbol>
+  <symbol id="ring" viewBox="0 0 200 200">
+    <g fill="currentColor" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+      <g transform="rotate(0 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(45 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(90 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(135 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(180 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(225 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(270 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+      <g transform="rotate(315 100 100)"><path d="M84 42a16 16 0 0 0 32 0" fill="none"/><circle cx="86" cy="30" r="3.6" stroke="none"/><circle cx="114" cy="30" r="3.6" stroke="none"/></g>
+    </g>
+  </symbol>
+</svg>
+
+<!-- Шапка (по прототипу: лого · рейтинг · метро · телефон · кнопка) -->
+<header class="header">
+  <div class="container header-inner">
+    <a class="brand" href="#"><img src="../assets/brand/logo.svg" alt="All Smiles" width="145" height="53"></a>
+    <div class="header-rating">
+      <b>5,0</b>
+      <span class="stars" style="--f:100%" aria-label="5 из 5">★★★★★</span>
+      <small>Яндекс Карты · 2ГИС</small>
+    </div>
+    <div class="header-meta">клиника рядом с метро<br><strong>Динамо</strong></div>
+    <div class="header-contact">
+      <a href="tel:+74950650077">+7 (495) 065-00-77</a>
+      <span>Работаем ежедневно с 9:00 до 21:00</span>
+    </div>
+    <button type="button" class="btn" data-modal>Рассчитать стоимость</button>
+  </div>
+</header>
+
+<main>
+
+<!-- Первый экран -->
+<section class="section hero" id="hero">
+  <div class="pattern" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1 class="reveal">Установка имплантов все‑на‑4 за один день<br><em>От 119 000 рублей</em></h1>
+        <p class="lead reveal">Получите полный план работ и финальную стоимость, зафиксированную в договоре</p>
+        <p class="ct-gift reveal">3D КТ с ИИ‑анализом — 0 ₽ вместо 7 000 ₽</p>
+        <div class="actions reveal">
+          <button type="button" class="btn btn--lg" data-modal>Рассчитать стоимость</button>
+          <a href="tel:+74950650077" class="text-link">+7 (495) 065-00-77</a>
+        </div>
+        <div class="hero-finance reveal">
+          <strong>Беспроцентная рассрочка до 36 месяцев</strong>
+          <p>От клиники или банка‑партнёра — без переплат</p>
+        </div>
+        <div class="trust-line hero-awards reveal">
+          <span class="award"><i class="award-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h2.5a2.5 2.5 0 0 1-2.5 4M7 5H4.5A2.5 2.5 0 0 0 7 9"/><path d="M12 14v3M9 20h6l-.6-2.2a1 1 0 0 0-1-.8h-2.8a1 1 0 0 0-1 .8z"/></svg></i><span><b>Трижды</b> получали награду Яндекса «Хорошее место»</span></span>
+          <span class="award"><i class="award-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14.5" r="5.5"/><path d="M12 12.4l.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z" fill="currentColor" stroke="none"/><path d="M8.5 8.6L6.5 3h4l1.5 3.4M15.5 8.6L17.5 3h-4"/></svg></i><span><b>Лучшая</b> стоматология Москвы по рейтингу 2ГИС</span></span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="photo">
+          <img src="../assets/doctors/berlov.jpg" alt="Берлов Антон Владимирович — главный врач" width="900" height="900">
+          
+        </div>
+        <div class="doctor-caption">
+          <h3>Берлов Антон Владимирович</h3>
+          <p>Главный врач · д. м. н., профессор · стаж более 30 лет</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Баннер акции (отдельно от кнопок) -->
+<section class="promo" aria-label="Акция">
+  <div class="promo-deco" aria-hidden="true">
+    <svg class="sm sm--1"><use href="#smile"/></svg>
+    <svg class="sm sm--2"><use href="#smile"/></svg>
+    <svg class="sm sm--3"><use href="#smile"/></svg>
+    <svg class="sm sm--4"><use href="#smile"/></svg>
+    <svg class="sm sm--5"><use href="#smile"/></svg>
+  </div>
+  <div class="container promo-inner">
+    <span class="promo-price">99 ₽</span>
+    <div class="promo-text">
+      <strong>Удаление зубов за 99 ₽</strong>
+      <span>вместо 10 000 ₽ · при тотальной имплантации</span>
+    </div>
+    <button type="button" class="promo-link" data-modal>Узнать условия →</button>
+  </div>
+</section>
+
+<!-- Второй экран: отзывы и история пациента -->
+<section class="section tinted" id="cases">
+  <div class="container">
+    <div class="ratings-in-stories">
+      <div class="grid three">
+        <article class="rating">
+          <svg class="rating-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
+          <h3>Яндекс Карты</h3>
+          <div class="rating-score"><b>5,0</b><span class="stars" style="--f:100%">★★★★★</span></div>
+          <span class="rating-badge">«Хорошее место»</span>
+          <p class="rating-sub">Три года подряд</p>
+          <a class="rating-link" href="https://yandex.ru/maps/org/all_smiles/35087973041/" target="_blank" rel="noopener"><span>Посмотреть отзывы</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="rating">
+          <svg class="rating-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
+          <h3>2ГИС</h3>
+          <div class="rating-score"><b>5,0</b><span class="stars" style="--f:100%">★★★★★</span></div>
+          <span class="rating-badge">«Лучшая стоматология»</span>
+          <p class="rating-sub">590 оценок</p>
+          <a class="rating-link" href="https://2gis.ru/moscow/firm/70000001055164514" target="_blank" rel="noopener"><span>Посмотреть отзывы</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a>
+        </article>
+        <article class="rating">
+          <svg class="rating-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
+          <h3>ПроДокторов</h3>
+          <div class="rating-score"><b>4,5</b><span class="stars" style="--f:90%">★★★★★</span></div>
+          <span class="rating-badge">Рейтинг врачей 5,0</span>
+          <p class="rating-sub">134 отзыва</p>
+          <a class="rating-link" href="https://prodoctorov.ru/moskva/lpu/85292-all-smiles/" target="_blank" rel="noopener"><span>Посмотреть отзывы</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a>
+        </article>
+      </div>
+      <p class="small ratings-note">Рейтинги сети All Smiles на 02.10.2026.</p>
+    </div>
+
+    <h2>Отзывы и результаты лечения</h2>
+
+    <div class="featured-patient">
+      <article class="story">
+        <div class="story-pics">
+          <figure><img src="../assets/cases/shklyaeva-face-before.jpg" alt="Пациентка до лечения" loading="lazy"><span class="state">до</span></figure>
+          <figure><img src="../assets/cases/shklyaeva-face-after.jpg" alt="Пациентка после лечения" loading="lazy"><span class="state state--after">после</span></figure>
+        </div>
+        <div class="story-card">
+          <a class="story-video" href="#" aria-label="Смотреть историю пациентки">
+            <img src="../assets/cases/shklyaeva-face-after.jpg" alt="" loading="lazy">
+            <span class="play-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5l9 5.5-9 5.5z" fill="currentColor"/></svg></span>
+            <span class="cap">История пациентки</span>
+          </a>
+          <h3>Восстановили обе челюсти</h3>
+          <p class="story-price">от 5 250 ₽ в месяц</p>
+          <p class="story-lead">Импланты и несъёмный протез — в день операции</p>
+          <p class="story-text">Полное отсутствие зубов на обеих челюстях. Поставили All‑on‑4 на верхнюю и нижнюю, адаптационный протез зафиксировали сразу, постоянный — через неделю.</p>
+          <p class="small">Пациентка Е. Ш., 14 → 21 сентября 2026. Расчёт платежа: пакет 189 000 ₽ в рассрочку от клиники на 36 месяцев без переплат.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="stories-link">
+      <a href="#our-work" class="btn outline">Показать ещё истории пациентов</a>
+    </div>
+  </div>
+</section>
+
+<!-- Форма (цель кнопки «Рассчитать стоимость») -->
+<section class="section consult" id="consultation">
+  <div class="container">
+    <form class="consult-card" data-lead="v2">
+      <svg class="mark mark--form" aria-hidden="true"><use href="#ring"/></svg>
+      <svg class="sm sm--form" aria-hidden="true"><use href="#smile"/></svg>
+      <div>
+        <h2>Получите план лечения и расчёт стоимости</h2>
+        <p class="lead">Администратор свяжется с вами и подберёт время. КТ и консультация имплантолога — бесплатно, удаление зубов при имплантации — 99 ₽.</p>
+      </div>
+      <div class="consult-fields">
+        <input name="phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
+        <button class="btn btn--lg" type="submit">Рассчитать стоимость</button>
+        <label class="consent"><input type="checkbox" required checked> Согласен на обработку персональных данных</label>
+        <p class="form-message" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <svg class="foot-mark" aria-hidden="true"><use href="#ring"/></svg>
+    <p>All Smiles · Москва, Ленинградский проспект, д. 36, стр. 40 (2 минуты от м. Динамо)</p>
+    <p>ООО «А‑Клиник» · ОГРН 1247700478662 · ИНН 9709113057 · КПП 771445001<br>Медицинская лицензия Л041-01137-77/01412746 от 02.10.2024</p>
+    <p> <a href="../">полная версия сайта</a> · <a href="../variant1/">вариант 1</a></p>
+    <p class="small">Имеются противопоказания. Необходима консультация специалиста.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  // появление
+  $$('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('is-in'), 120 + i * 90));
+  // маска телефона
+  const mask = v => { let d = v.replace(/\D/g, ''); if (d.startsWith('8')) d = '7' + d.slice(1); if (!d.startsWith('7')) d = '7' + d; d = d.slice(0, 11);
+    let o = '+7'; if (d.length > 1) o += ' (' + d.slice(1, 4); if (d.length >= 4) o += ') ' + d.slice(4, 7); if (d.length >= 7) o += '-' + d.slice(7, 9); if (d.length >= 9) o += '-' + d.slice(9, 11); return o; };
+  $$('input[type=tel]').forEach(i => { i.addEventListener('input', () => { i.value = i.value.replace(/\D/g, '') ? mask(i.value) : ''; }); i.addEventListener('focus', () => { if (!i.value) i.value = '+7 '; }); });
+  // модальное окно
+  const dlg = $('#lead');
+  $$('[data-modal]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); dlg.showModal(); setTimeout(() => $('input[type=tel]', dlg).focus(), 60); }));
+  $('.modal-close', dlg).addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); });
+  $$('form[data-lead]').forEach(f => f.addEventListener('submit', e => { e.preventDefault(); const t = $('input[type=tel]', f); if (t.value.replace(/\D/g, '').length !== 11) { t.focus(); $('.form-message', f).textContent = 'Проверьте номер телефона'; return; } f.classList.add('is-sent'); $('.form-message', f).textContent = 'Спасибо! Администратор свяжется с вами в ближайшее время.'; }));
+})();
+</script>
+<dialog id="lead" class="modal">
+  <button type="button" class="modal-close" aria-label="Закрыть">×</button>
+  <div class="modal-body">
+    <svg class="mark mark--modal" aria-hidden="true"><use href="#ring"/></svg>
+    <svg class="sm sm--modal" aria-hidden="true"><use href="#smile"/></svg>
+    <img class="modal-logo" src="../assets/brand/logo.svg" alt="All Smiles" width="124" height="45">
+    <h3>Рассчитаем стоимость лечения</h3>
+    <p>Оставьте телефон — администратор перезвонит, уточнит ситуацию и подберёт время. Консультация имплантолога — 0 ₽ вместо 2 000 ₽.</p>
+    <ul class="modal-list">
+      <li>Три плана лечения от трёх специалистов</li>
+      <li>3D КТ с ИИ‑анализом Diagnocat — 0 ₽</li>
+      <li>Рассрочка без переплат до 36 месяцев</li>
+    </ul>
+    <form class="modal-form" data-lead="modal">
+      <input name="phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
+      <button class="btn btn--lg" type="submit">Отправить заявку</button>
+      <label class="consent consent--dark"><input type="checkbox" required checked> Согласен на обработку персональных данных</label>
+      <p class="form-message" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</dialog>
+
+<script src="../js/editor.js" defer></script>
+</body>
+</html>
