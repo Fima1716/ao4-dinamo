@@ -36,6 +36,20 @@ main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .section.tinted{background:var(--lav)}
 .section.tinted{background-image:none}
 
+/* Шапка */
+.header{box-shadow:0 1px 0 var(--line)}
+.header-inner{gap:clamp(14px,1.7vw,30px);padding-top:18px;padding-bottom:18px}
+.brand{width:128px}
+.header-rating{align-items:baseline;gap:0 8px;padding:8px 14px;border-radius:14px;background:var(--lav-soft)}
+.header-rating b{font-size:20px;color:var(--violet)}
+.header-rating small{font-size:11.5px;color:var(--muted);margin-top:2px}
+.header-nav{gap:clamp(12px,1.5vw,26px);font-size:15px;font-weight:400}
+.header-nav a{opacity:1;color:var(--muted)}
+.header-nav a:hover{color:var(--accent)}
+.header-contact a{font-size:18px;font-weight:600;color:var(--text)}
+.header-contact span{font-size:12px;color:var(--muted)}
+.header .btn{min-height:46px;padding:12px 22px;font-size:15px}
+
 /* Кнопки */
 .btn,.promo-link,.tabs button{font-family:var(--ui)}
 .btn{min-height:52px;padding:14px 28px;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;font-size:16px;box-shadow:none;gap:10px}
