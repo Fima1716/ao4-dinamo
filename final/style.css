@@ -166,3 +166,13 @@
 .v1 .ticker{padding-bottom:10px}
 .header{border-bottom:0}
 .promo{margin-top:-6px}
+
+/* цифры первого экрана: число не переносится, «000 ₽» читается, третья цифра — только на широких экранах */
+.v1 .stat{flex:none}
+.v1 .stat b{white-space:nowrap;font-weight:400}
+.v1 .stat b span{font-size:.62em;color:var(--ink);letter-spacing:-.02em}
+.v1 .stat small{max-width:190px;margin-left:auto;font-size:13px;color:var(--ink-60)}
+@media (max-width:1900px){.v1 .stat:nth-child(4){display:none}}
+@media (max-width:860px){.v1 .stat small{margin-left:0;max-width:none}.v1 .stat:nth-child(4){display:block}}
+@media (min-width:861px){.v1 .hero__stats{flex-wrap:nowrap;gap:clamp(16px,2vw,40px)}}
+@media (min-width:861px) and (max-width:1366px){.v1 .stat b{font-size:clamp(28px,2.6vw,36px)}.v1 .stat small{font-size:12px;max-width:150px}}
