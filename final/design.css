@@ -1,0 +1,314 @@
+/* Дизайн-слой по макетам Ильи. Первый экран (.v1) не трогаем. */
+
+:root{
+  --page:#ffffff;
+  --lav:#f5f1fc;
+  --lav-soft:#efeafb;
+  --card:#ffffff;
+  --accent:#ef3693;
+  --accent-dark:#d9257e;
+  --violet:#6f52c4;
+  --text:#171525;
+  --muted:#69647b;
+  --line:#e8e1f3;
+  --r-card:20px;
+  --r-panel:28px;
+  --wrap:1280px;
+  --gap:clamp(56px,7vw,104px);
+  --ui:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+
+/* Типографика: один шрифт со страницей первого экрана, лёгкие заголовки */
+body{background:var(--page);color:var(--text);font:400 16px/1.55 var(--ui)}
+main h2,main h3,main h4,
+.footer p,.header,.modal{font-family:var(--ui)}
+main h2{font-weight:300;font-size:clamp(30px,3.5vw,52px);line-height:1.1;letter-spacing:-.02em;color:var(--text);max-width:22ch}
+main h2 em{font-style:normal;color:var(--accent)}
+main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
+.lead,main p{color:var(--muted)}
+.lead{font-size:clamp(16px,1.3vw,19px);line-height:1.55;max-width:62ch}
+.small,.fine{font-size:14px;color:var(--muted)}
+.eyebrow{font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violet)}
+
+/* Секции и контейнер */
+.container{max-width:var(--wrap);padding:0 clamp(16px,4vw,64px)}
+.section{padding:var(--gap) 0}
+.section.tinted{background:var(--lav)}
+.section.tinted{background-image:none}
+
+/* Кнопки */
+.btn,.promo-link,.tabs button{font-family:var(--ui)}
+.btn{min-height:52px;padding:14px 28px;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;font-size:16px;box-shadow:none;gap:10px}
+.btn:hover{background:var(--accent-dark)}
+.btn--lg{min-height:56px;padding:16px 32px;font-size:17px}
+.btn::after{content:"→";font-size:17px;line-height:1}
+.btn.outline{background:transparent;border:1.5px solid var(--line);color:var(--text)}
+.btn.outline:hover{background:var(--lav-soft);border-color:var(--violet);color:var(--violet)}
+.btn--ghost{background:none;color:var(--muted);min-height:auto;padding:12px 18px}
+.btn--ghost::after{content:none}
+.btn--ghost::before{content:"←";margin-right:2px}
+.modal-close::after,.promo-price::after{content:none}
+
+/* Карточки */
+.card,.brand-card,.choice,.rating,.doc,.work,.route-steps li,.calc,.contract,.story,.lab-photos figure,.step-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);box-shadow:none}
+.card{padding:26px}
+.card h3{font-size:19px;margin-bottom:10px}
+.card p{font-size:15px}
+
+/* Иконка-линия в фирменном розовом */
+.ico{display:block;width:30px;height:30px;color:var(--accent);margin-bottom:16px}
+.ico svg{width:100%;height:100%}
+
+/* Рассрочка и калькулятор */
+#finance .container{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px 48px;align-items:start}
+#finance h2{grid-column:1}
+#finance>.container>.lead{grid-column:1;margin:0}
+#finance .grid.three{grid-column:1;grid-template-columns:1fr;gap:12px;margin:8px 0 0}
+#finance .card--plain{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:18px 20px}
+#finance .card--plain .ico{grid-row:1/3;margin:0;width:26px;height:26px}
+#finance .card--plain h3{margin:0;font-size:17px}
+#finance .calc-wrap{grid-column:2;grid-row:1/5;max-width:none;margin:0}
+#finance .grid.three{gap:16px;margin-top:36px}
+.calc{padding:28px;box-shadow:0 18px 50px rgba(94,83,145,.08)}
+.calc-head{border-bottom:0;padding-bottom:4px;margin-bottom:18px;display:block}
+.calc-head span{display:block;font-size:20px;font-weight:500}
+.calc-head small{color:var(--muted)}
+.calc-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-row{display:block;padding:0;border:1px solid var(--line);border-radius:14px;padding:10px 16px}
+.calc-row span{display:block;font-size:13px;color:var(--muted);margin-bottom:2px}
+.calc-row output{display:block;text-align:left;font-size:19px;font-weight:600}
+.calc-row input{margin-top:8px}
+.calc-res{margin-top:16px;padding:18px 22px;border:0;border-radius:14px;background:var(--lav-soft);align-items:center}
+.calc-res small{font-size:16px;color:var(--text)}
+.calc-res b{font-size:clamp(26px,2.4vw,32px);font-weight:700;color:var(--accent)}
+.calc .btn{width:100%;margin-top:16px}
+.calc-wrap .small{margin-top:14px}
+
+/* Варианты лечения */
+.choice{padding:26px;position:relative}
+.choice .n{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--lav-soft);color:var(--violet);font-size:14px;font-weight:600;letter-spacing:0;margin-bottom:16px}
+.choice h3{font-size:19px;margin:0 0 10px}
+.choice p{font-size:15px}
+.alt-note{background:var(--lav);border-radius:var(--r-panel);padding:32px;display:grid;grid-template-columns:1fr auto;gap:20px 32px;align-items:center}
+.alt-note h3{grid-column:1;font-size:21px}
+.alt-note p{grid-column:1;margin:0}
+.alt-note .btn{grid-column:2;grid-row:1/4;align-self:center}
+
+/* Квиз */
+.quiz-card{background:transparent;box-shadow:none;border-radius:var(--r-panel);overflow:visible;gap:20px;grid-template-columns:.9fr 1.1fr}
+.quiz-side{background:var(--lav);color:var(--text);border-radius:var(--r-panel);padding:36px}
+.quiz-side h2{color:var(--text)}
+.quiz-side .eyebrow{color:var(--violet)}
+.mark--quiz{display:none}
+.quiz-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;height:6px;background:none;margin:0 0 22px}
+.quiz-progress i{width:100%;background:var(--lav-soft);border-radius:3px;transition:background .3s}
+.quiz-bonus{grid-template-columns:1fr 1fr;display:grid;gap:12px;padding-top:28px}
+.quiz-bonus li{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;color:var(--muted);font-size:13px}
+.quiz-bonus b{display:block;min-width:0;font-size:22px;font-weight:700;color:var(--accent);margin-bottom:2px;-webkit-text-fill-color:currentColor}
+.quiz-body{background:var(--card);border:1px solid var(--line);border-radius:var(--r-panel);padding:36px}
+.quiz-step{order:-1;font-size:14px;color:var(--muted);margin:0 0 10px}
+.qstep legend{font-weight:500;font-size:clamp(20px,2vw,26px);margin-bottom:22px}
+.opt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;min-height:56px}
+.opt:hover{background:var(--lav);border-color:var(--violet)}
+.opt input{border-color:#cfc7e4}
+.opt input:checked{background:var(--accent);border-color:var(--accent)}
+.opt:has(input:checked){border-color:var(--accent);background:#fff}
+.quiz-nav .btn{min-width:200px}
+.quiz-gift{background:var(--lav);border-radius:16px}
+.quiz-gift b{color:var(--accent)}
+
+/* Бренды имплантов */
+.brand-card{padding:28px;gap:14px}
+.brand-card header{gap:10px;font-size:14px;color:var(--muted)}
+.flag{width:28px;height:28px;background:none;font-size:20px}
+.brand-card h3{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.brand-card ul{gap:12px;font-size:15px;color:var(--muted)}
+.brand-card li{padding-left:28px}
+.brand-card li::before{content:"";position:absolute;left:0;top:3px;width:18px;height:18px;border-radius:0;background:none;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12.5l5.5 5.5L20 6'/></svg>") center/contain no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12.5l5.5 5.5L20 6'/></svg>") center/contain no-repeat}
+.brand-card footer{display:block;border-top:1px solid var(--line);padding-top:18px;white-space:normal}
+.brand-card footer span{display:block;font-size:14px;color:var(--muted);margin-bottom:4px}
+.brand-card footer b{font-size:22px;font-weight:600;color:var(--text)}
+.brand-card--dark{position:relative;background:linear-gradient(180deg,#faf6ff,#f6f0fd);color:var(--text);border-color:#e3d6f6}
+.brand-card--dark header,.brand-card--dark ul,.brand-card--dark footer{color:var(--muted)}
+.brand-card--dark footer b{color:var(--text)}
+.brand-card--dark .flag{background:none}
+.brand-card--dark::after{content:"Премиум";position:absolute;right:20px;top:20px;padding:6px 14px;border-radius:999px;background:var(--violet);color:#fff;font-size:12px;font-weight:600}
+
+/* Рейтинги */
+.rating{padding:24px 26px 0}
+.rating-smile{display:none}
+.rating h3{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;margin-bottom:14px}
+.rating h3::before{content:"";width:28px;height:28px;border-radius:8px;background:var(--mark,var(--lav-soft)) center/60% no-repeat;flex:none}
+.rating-score b{font-size:40px;font-weight:700;color:var(--text)}
+.rating-badge{background:var(--lav-soft);color:var(--violet);font-weight:500;font-size:14px}
+.rating-sub{font-size:14px}
+.rating-link{color:var(--violet);font-weight:500;font-size:15px;border-top:1px solid var(--line)}
+
+/* Баннер акции */
+.promo{background:var(--lav);color:var(--text);margin:0 auto;max-width:calc(var(--wrap) - 2*clamp(16px,4vw,64px));border-radius:var(--r-panel)}
+.promo-deco{display:none}
+.promo-inner{padding:28px 32px;gap:24px}
+.promo-price{min-width:86px;height:86px;border-radius:50%;background:var(--accent);color:#fff;font-size:26px;font-weight:700;box-shadow:none}
+.promo-text strong{font-size:clamp(22px,2.4vw,30px);font-weight:500;color:var(--text)}
+.promo-text span{color:var(--muted)}
+.promo-link{background:var(--accent);border:0;color:#fff;min-height:52px;padding:14px 26px;font-weight:600}
+.promo-link:hover{background:var(--accent-dark);color:#fff}
+
+/* Истории пациентов */
+.story{padding:20px}
+.story-card h3{font-weight:500}
+.story-price{background:none;color:var(--accent);padding:0;font-size:19px;font-weight:700}
+.story-lead{background:var(--lav-soft);color:var(--violet);border-radius:999px;padding:7px 16px;align-self:flex-start;font-size:14px}
+.work{padding:16px}
+.work h4{font-weight:600}
+
+/* Комфорт и СтАР */
+.sleep{background:var(--lav);border-radius:var(--r-panel)}
+.assoc{background:var(--lav);border-radius:var(--r-panel);padding:28px 32px;gap:28px}
+.assoc-mark{width:76px;height:76px;background:var(--card);border:1px solid var(--line);color:var(--violet);box-shadow:none}
+.assoc-mark b{font-size:17px;color:var(--violet)}
+.assoc>div{border-left:1px solid var(--line);padding-left:28px}
+.assoc h3{font-size:19px}
+
+/* Эстетика и шкала оттенков */
+.shade{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:20px;margin-top:28px}
+.shade-photo{border-radius:16px;overflow:hidden;aspect-ratio:4/3}
+.shade-label{display:none}
+.lab-photos figcaption{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text)}
+.lab-photos figcaption::before{counter-increment:lab;content:counter(lab);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px;font-weight:600;flex:none}
+.lab-photos{counter-reset:lab}
+
+/* Выноска с описанием оттенка */
+.shade-tip{position:relative;height:84px;margin-bottom:10px;pointer-events:none}
+.shade-tip>b,.shade-tip>span{position:absolute;left:var(--x,50%);transform:translateX(-50%);
+  width:max-content;max-width:210px;text-align:center;opacity:0;transition:opacity .2s,left .25s cubic-bezier(.2,.7,.2,1)}
+.shade-tip.is-on>b,.shade-tip.is-on>span{opacity:1}
+.shade-tip>b{top:8px;padding:10px 18px 30px;border-radius:14px;background:var(--lav-soft);
+  color:var(--text);font-size:19px;font-weight:600;line-height:1.1;min-width:150px}
+.shade-tip>span{top:36px;z-index:1;font-size:13px;color:var(--muted);line-height:1.3;padding:0 18px;max-width:190px}
+.shade-tip::after{content:"";position:absolute;left:var(--x,50%);bottom:-7px;transform:translateX(-50%);
+  border:8px solid transparent;border-top-color:var(--lav-soft);opacity:0;transition:opacity .2s,left .25s cubic-bezier(.2,.7,.2,1)}
+.shade-tip.is-on::after{opacity:1}
+.shade-row button{transition:border-color .2s,box-shadow .2s,transform .2s}
+.shade-row button:hover{transform:translateY(-3px)}
+.shade-row button[aria-checked="true"]{border-color:var(--accent);box-shadow:0 0 0 3px rgba(239,54,147,.12)}
+
+/* Второе мнение */
+.plan-card{background:var(--lav);color:var(--text);box-shadow:none;border-radius:var(--r-panel)}
+.plan-card h2{color:var(--text)}
+.plan-card h2 em{color:var(--accent)}
+.plan-card p{color:var(--muted)}
+.plan-card .eyebrow--light{display:inline-block;padding:6px 14px;border-radius:999px;background:var(--accent);color:#fff;letter-spacing:.1em}
+.mark--plan{display:none}
+.plan-form{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:24px}
+.plan-form input[type=tel]{border:1px solid var(--line)}
+.plan-form .btn{background:var(--accent);color:#fff}
+.plan-form .btn:hover{background:var(--accent-dark)}
+.plan-form .consent{color:var(--muted)}
+.drop{border:1.5px dashed #cfc3ea;background:var(--lav);color:var(--violet)}
+.drop:hover,.drop.is-over{background:var(--lav-soft)}
+.drop span{color:var(--text)}
+.drop small{color:var(--muted)}
+
+/* Гарантии */
+.steps{counter-reset:s;grid-template-columns:repeat(3,1fr);gap:16px}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:22px;border-bottom:1px solid var(--line)}
+.steps li::before{position:static;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-size:14px;font-weight:600;margin-bottom:14px}
+.steps b{font-weight:500;font-size:17px}
+.contract{padding:26px}
+.contract-doc{background:var(--lav-soft)}
+
+/* Врачи */
+.chief{background:var(--card);border:1px solid var(--line);border-radius:var(--r-panel);padding:28px}
+.chief .photo{border-radius:16px}
+.chief h3{font-weight:500}
+.chief-std{font-weight:500;color:var(--text)}
+.more summary{display:inline-flex;gap:10px;align-items:center;padding:14px 20px;border-radius:999px;background:var(--lav);color:var(--violet);font-weight:500}
+.more summary::after{margin-left:6px}
+.doc{padding:16px}
+.doc h3{font-size:17px;font-weight:600}
+.doc small{color:var(--muted);display:block;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:12px}
+
+/* FAQ */
+.faq{border-top:1px solid var(--line)}
+.faq summary{padding:20px 50px 20px 0;font-weight:400;font-size:clamp(16px,1.5vw,19px);color:var(--text)}
+.faq summary::after{width:18px;height:18px;top:50%;margin-top:-9px;border:0;transform:none;right:4px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef3693' stroke-width='2.4' stroke-linecap='round'><path d='M12 5v14M5 12h14'/></svg>") center/contain no-repeat}
+.faq details[open] summary::after{transform:rotate(45deg)}
+
+/* Маршрут */
+.tabs{background:none;border:0;padding:0;gap:10px}
+.tabs button{background:var(--card);border:1px solid var(--line);color:var(--muted);min-height:48px;font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.route-steps{gap:16px}
+.route-steps li{padding:16px;position:relative}
+.route-steps li+li::before{content:"";position:absolute;left:-26px;top:92px;width:20px;height:20px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef3693' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12h15M13 6l6 6-6 6'/></svg>") center/contain no-repeat}
+.route-steps b{display:flex;align-items:center;gap:10px;font-weight:500}
+.route-steps b::before{content:"";display:none}
+.route-addr{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;margin-top:24px;padding:18px 24px;background:var(--card);border:1px solid var(--line);border-radius:999px}
+.route-addr b{font-weight:500}
+
+/* Финальная форма */
+.consult-card{background:var(--lav);color:var(--text);box-shadow:none;border-radius:var(--r-panel);padding:40px;grid-template-columns:1fr 1fr;gap:40px}
+.consult-card h2,.consult-card .lead{color:var(--text)}
+.consult-card .lead{color:var(--muted)}
+.mark--form,.sm--form{display:none}
+.final-list{gap:12px;margin-top:26px}
+.final-list li{display:flex;align-items:center;gap:14px;padding:0 0 0 0;color:var(--text);font-size:15px}
+.final-list li::before{content:"";position:static;width:38px;height:38px;border:0;transform:none;border-radius:12px;background:var(--card) center/18px no-repeat;flex:none;border:1px solid var(--line)}
+.final-list li:nth-child(1)::before{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef3693' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M6 3h9l5 5v13H6z'/><path d='M15 3v5h5M9 12h7M9 16h5'/></svg>")}
+.final-list li:nth-child(2)::before{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef3693' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><path d='M12 7v5l3 2'/></svg>")}
+.final-list li:nth-child(3)::before{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef3693' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h16v12H4z'/><path d='M4 11h16M8 15h4'/></svg>")}
+.final-list li:nth-child(4)::before{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef3693' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M7 4c-2.5 0-4 2-4 4.5 0 3.5 2 6 2.5 9.5.3 2 2.2 2.6 3 .8L10 14h4l1.5 4.8c.8 1.8 2.7 1.2 3-.8.5-3.5 2.5-6 2.5-9.5C21 6 19.5 4 17 4c-2 0-3 1-5 1s-3-1-5-1z'/></svg>")}
+.consult-fields{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:26px;align-content:start}
+.consult-fields input[type=tel],.consult-fields input[type=text]{height:52px;border:1px solid var(--line);border-radius:14px;padding:0 18px}
+.consult-fields .btn{width:100%}
+.consult-card .consent{color:var(--muted)}
+
+/* Подвал */
+.footer{background:var(--page);padding:48px 0 0;color:var(--muted)}
+.foot-mark{display:none}
+.footer .container{display:grid;grid-template-columns:auto 1fr;gap:12px 40px;align-items:start}
+.footer p{margin:0;font-size:14px;line-height:1.5}
+.footer .warn{grid-column:1/-1;margin-top:36px;padding:18px;background:var(--lav);border-radius:14px;text-align:center;
+  letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)}
+
+/* Модалка */
+.modal-body{border-radius:var(--r-panel)}
+.modal-body h3{font-weight:500}
+.modal-list li::before{background-color:var(--lav-soft)}
+.modal-form input[type=tel]{border-radius:14px;height:52px}
+
+/* Мягкое появление блоков */
+@media (prefers-reduced-motion:no-preference){
+  .section>.container>*{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .section.is-seen>.container>*{opacity:1;transform:none}
+  .section.is-seen>.container>*:nth-child(2){transition-delay:.07s}
+  .section.is-seen>.container>*:nth-child(3){transition-delay:.14s}
+  .section.is-seen>.container>*:nth-child(4){transition-delay:.21s}
+  .promo{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+  .promo.is-seen{opacity:1;transform:none}
+}
+
+/* Адаптив */
+@media (max-width:1000px){
+  #finance .container{grid-template-columns:1fr}
+  #finance .calc-wrap{grid-column:1;grid-row:auto}
+  .quiz-card,.consult-card,.plan-card,.alt-note{grid-template-columns:1fr}
+  .alt-note .btn{grid-column:1;grid-row:auto;justify-self:start}
+  .steps{grid-template-columns:1fr 1fr}
+  .route-steps li+li::before{display:none}
+}
+@media (max-width:760px){
+  .steps,.calc-fields,.quiz-bonus{grid-template-columns:1fr}
+  .promo-inner{padding:22px}
+  .promo-price{min-width:68px;height:68px;font-size:22px}
+  .assoc>div{border-left:0;padding-left:0}
+  .route-addr{border-radius:20px}
+  .quiz-side,.quiz-body,.consult-card,.plan-card{padding:24px}
+  .footer .container{grid-template-columns:1fr}
+}

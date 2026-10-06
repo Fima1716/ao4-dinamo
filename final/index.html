@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Nunito+Sans:wght@400;600&family=Onest:wght@300;400;500;600&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -170,7 +171,7 @@
       <div class="grid three">
         <article class="rating">
           <svg class="rating-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
-          <h3>Яндекс Карты</h3>
+          <h3 style="--mark:#fff url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fc3f1d' d='M12 2c3.9 0 7 3.1 7 7 0 5.2-7 13-7 13S5 14.2 5 9c0-3.9 3.1-7 7-7z'/><circle cx='12' cy='9' r='2.6' fill='white'/></svg>&quot;)">Яндекс Карты</h3>
           <div class="rating-score"><b>5,0</b><span class="stars" style="--f:100%">★★★★★</span></div>
           <span class="rating-badge">«Хорошее место»</span>
           <p class="rating-sub">Три года подряд</p>
@@ -178,7 +179,7 @@
         </article>
         <article class="rating">
           <svg class="rating-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
-          <h3>2ГИС</h3>
+          <h3 style="--mark:#fff url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' fill='%2300a046'/><path d='M9 9.5a3 3 0 1 1 5 2.2L9.5 16H15' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>&quot;)">2ГИС</h3>
           <div class="rating-score"><b>5,0</b><span class="stars" style="--f:100%">★★★★★</span></div>
           <span class="rating-badge">«Лучшая стоматология»</span>
           <p class="rating-sub">590 оценок</p>
@@ -186,7 +187,7 @@
         </article>
         <article class="rating">
           <svg class="rating-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="currentColor" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
-          <h3>ПроДокторов</h3>
+          <h3 style="--mark:#fff url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='3' y='3' width='18' height='18' rx='5' fill='%230a7cff'/><path d='M8 12h8M12 8v8' stroke='white' stroke-width='2.2' stroke-linecap='round'/></svg>&quot;)">ПроДокторов</h3>
           <div class="rating-score"><b>4,5</b><span class="stars" style="--f:90%">★★★★★</span></div>
           <span class="rating-badge">Рейтинг врачей 5,0</span>
           <p class="rating-sub">134 отзыва</p>
@@ -302,15 +303,17 @@
     <h2>Беспроцентная рассрочка или кредит на выгодных условиях</h2>
     <p class="lead">Обсудите график оплаты после того, как понятны план и общая стоимость.</p>
     <div class="grid three">
-      <article class="card card--plain"><h3>Комфортный график</h3><p>Поможем подобрать график платежей, который будет вам удобен.</p></article>
-      <article class="card card--plain"><h3>Рассрочка 0%</h3><p>Рассрочка от клиники без переплат — до 36 месяцев.</p></article>
-      <article class="card card--plain"><h3>Выгодный кредит</h3><p>Также возможен кредит от банков‑партнёров. Решение принимает банк.</p></article>
+      <article class="card card--plain"><i class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></i><h3>Комфортный график</h3><p>Поможем подобрать график платежей, который будет вам удобен.</p></article>
+      <article class="card card--plain"><i class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5L5 19"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg></i><h3>Рассрочка 0%</h3><p>Рассрочка от клиники без переплат — до 36 месяцев.</p></article>
+      <article class="card card--plain"><i class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg></i><h3>Выгодный кредит</h3><p>Также возможен кредит от банков‑партнёров. Решение принимает банк.</p></article>
     </div>
     <div class="calc-wrap">
       <div class="calc">
         <div class="calc-head"><span>Калькулятор платежа</span><small>ориентировочно</small></div>
-        <label class="calc-row"><span>Стоимость лечения</span><output id="calcSumOut">189 000 ₽</output><input id="calcSum" type="range" min="189000" max="760000" step="1000" value="189000"></label>
-        <label class="calc-row"><span>Срок</span><output id="calcMonOut">36 мес.</output><input id="calcMon" type="range" min="3" max="36" step="1" value="36"></label>
+        <div class="calc-fields">
+          <label class="calc-row"><span>Стоимость лечения</span><output id="calcSumOut">189 000 ₽</output><input id="calcSum" type="range" min="189000" max="760000" step="1000" value="189000"></label>
+          <label class="calc-row"><span>Срок</span><output id="calcMonOut">36 мес.</output><input id="calcMon" type="range" min="3" max="36" step="1" value="36"></label>
+        </div>
         <div class="calc-res"><small>в месяц</small><b id="calcRes">5 250 ₽</b></div>
         <button type="button" class="btn btn--lg" data-modal>Получить точный расчёт</button>
       </div>
@@ -347,7 +350,7 @@
         <svg class="mark mark--quiz" aria-hidden="true"><use href="#ring"/></svg>
         <span class="eyebrow">Подбор за минуту</span>
         <h2>Ответьте на 4 вопроса — получите варианты и бонусы</h2>
-        <div class="quiz-progress"><i style="--p:0"></i></div>
+        <div class="quiz-progress"><i></i><i></i><i></i><i></i></div>
         <p class="quiz-step"><span id="quizStepNum">1</span> / 4</p>
         <ul class="quiz-bonus">
           <li><b>−15%</b> на любой план лечения</li>
@@ -389,8 +392,8 @@
           <p class="form-message" role="status" aria-live="polite"></p>
         </fieldset>
         <div class="quiz-nav">
-          <button type="button" class="btn btn--ghost" id="quizPrev" hidden>← Назад</button>
-          <button type="button" class="btn" id="quizNext" disabled>Дальше →</button>
+          <button type="button" class="btn btn--ghost" id="quizPrev" hidden>Назад</button>
+          <button type="button" class="btn" id="quizNext" disabled>Дальше</button>
           <button type="submit" class="btn" id="quizSubmit" hidden>Получить варианты и бонусы</button>
         </div>
       </form>
@@ -622,6 +625,7 @@
         </ul>
       </div>
       <div class="consult-fields">
+        <input name="name" type="text" placeholder="Как вас зовут?" autocomplete="name">
         <input name="phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
         <button class="btn btn--lg" type="submit">Записаться за планом лечения</button>
         <label class="consent"><input type="checkbox" required checked> Согласен на обработку персональных данных</label>
@@ -638,7 +642,7 @@
     <svg class="foot-mark" aria-hidden="true"><use href="#ring"/></svg>
     <p>All Smiles · центр имплантации у метро «Динамо» · Москва, Ленинградский проспект, д. 36, стр. 40</p>
     <p>ООО «А‑Клиник» · ОГРН 1247700478662 · ИНН 9709113057 · КПП 771445001<br>Медицинская лицензия Л041-01137-77/01412746 от 02.10.2024</p>
-    <p class="small">Имеются противопоказания. Необходима консультация специалиста.</p>
+    <p class="warn">Имеются противопоказания. Необходима консультация специалиста.</p>
     <p class="small"><a href="../">вариант 1</a> · <a href="../variant2/">вариант 2</a> · <a href="../variant2-full/">вариант 2, полная</a></p>
   </div>
 </footer>
