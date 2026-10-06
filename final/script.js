@@ -83,7 +83,7 @@
     dlgList.hidden = !!title;
     $('.form-message', dlg).textContent = '';
     dlg.showModal();
-    setTimeout(() => $('input[type=tel]', dlg).focus(), 60);
+    if (!matchMedia('(pointer:coarse)').matches) setTimeout(() => $('input[type=tel]', dlg).focus(), 60);
   };
   $$('[data-modal]').forEach(b => b.addEventListener('click', e => {
     e.preventDefault();
