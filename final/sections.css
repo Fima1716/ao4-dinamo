@@ -469,6 +469,18 @@ main #care-title{margin-bottom:18px}
 @media(max-width:1000px){.closing-chief .closing-photo,.closing-doc .closing-photo{height:auto}}
 @media(max-width:650px){.closing-chief .closing-photo,.closing-doc .closing-photo{height:auto}}
 
+/* карточки брендов: одинаковая раскладка у всех трёх */
+.implant-brand-card{padding:26px 24px 20px}
+.implant-country,.nobel .implant-country{margin:0 0 18px;min-height:26px;padding-right:96px}
+.implant-brand-logo,.nobel .implant-brand-logo,.riellens .implant-brand-logo{width:calc(100% - 110px);height:64px;margin:0 0 24px;padding:0;background:none;border-radius:0;display:flex;align-items:center}
+.implant-brand-logo img,.riellens .implant-brand-logo img{max-height:56px;max-width:100%;width:auto;object-fit:contain;object-position:left center}
+.riellens .implant-brand-logo img{background:#182b5b;border-radius:10px;padding:10px 16px;box-sizing:content-box;max-height:34px}
+.implant-product,.nobel .implant-product{top:58px;right:18px;width:86px;height:190px}
+.implant-brand-card li:first-child{padding-right:96px;min-height:0}
+.implant-brand-card ul{margin-bottom:22px}
+.implant-premium{top:0;right:24px}
+@media(max-width:1100px){.implant-product,.nobel .implant-product{width:70px;height:160px;right:10px}.implant-country,.nobel .implant-country{padding-right:80px}.implant-brand-logo,.nobel .implant-brand-logo,.riellens .implant-brand-logo{width:calc(100% - 86px)}.implant-brand-card li:first-child{padding-right:76px}}
+
 /* ====================================================================
    Анимации: появление при прокрутке, подъём карточек, живые детали
    ==================================================================== */
@@ -509,3 +521,22 @@ main #care-title{margin-bottom:18px}
 @media(max-width:1150px) and (min-width:701px){.extraction-panel{grid-template-columns:180px minmax(200px,1fr) auto}.extraction-action{margin-right:0}}
 @media(max-width:700px){.extraction-art{display:block;right:-90px;top:-70px;transform:none;width:230px;height:230px}.extraction-action{grid-column:1/-1;grid-row:2;margin-right:0}}
 @media(prefers-reduced-motion:reduce){.extraction-ring{animation:none}}
+
+/* шкала оттенков: наша улыбка, зубы перекрашиваются по маске */
+.smile-shade-photo{position:relative;overflow:hidden;border-radius:14px;background:#000;--c:#eadbb9;--bl:0;min-height:280px;max-height:none;height:100%;object-fit:initial}
+.smile-shade-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.smile-shade-photo .shade-tint,.smile-shade-photo .shade-bleach{position:absolute;inset:0;pointer-events:none;-webkit-mask:url(../assets/shade/mask.png) center/cover no-repeat;mask:url(../assets/shade/mask.png) center/cover no-repeat;mask-mode:alpha;transition:background-color .4s var(--ease),opacity .4s}
+.smile-shade-photo .shade-tint{background:var(--c);mix-blend-mode:multiply}
+.smile-shade-photo .shade-bleach{background:#fff;mix-blend-mode:soft-light;opacity:var(--bl)}
+.smile-shade-label{position:absolute;left:12px;bottom:12px;display:flex;align-items:baseline;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.82);backdrop-filter:blur(10px)}
+.smile-shade-label b{font-size:22px;font-weight:600;line-height:1;color:var(--ink)}
+.smile-shade-label small{font-size:12.5px;color:var(--ink-2)}
+@media(max-width:760px){.smile-shade-photo{height:230px;min-height:0}}
+
+/* квиз: шаги в одной «сцене» постоянной высоты, кнопки внизу не прыгают */
+.match-quiz-stage{position:relative}
+.match-quiz-step legend small{font-size:.5em;letter-spacing:0;color:var(--muted);margin-left:8px;white-space:nowrap}
+.match-quiz-option input[type=checkbox]{border-radius:6px}
+.match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in .35s var(--ease)}
+@keyframes quiz-in{from{opacity:0;transform:translateX(12px)}}
+@media(prefers-reduced-motion:reduce){.match-quiz-step,.match-quiz-contact{animation:none!important}}
