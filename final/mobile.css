@@ -1,0 +1,149 @@
+/* final · мобильная версия в концепте приложения.
+   Всё внутри @media (max-width:760px): на компьютере этот файл ничего не меняет.
+   Таб-бар, сторис, ленты со свайпом, форма-шторка снизу, шторка «до/после». */
+
+.m-tabbar,.m-stories,.m-story,.m-compare,.m-compare-line,.m-dots{display:none}
+
+@media (max-width:760px){
+
+/* ---------- основа ---------- */
+:root{--gut:16px;--tab-h:64px}
+html{scroll-padding-top:70px}
+body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 8px);-webkit-tap-highlight-color:transparent}
+input,select,textarea{font-size:16px!important}
+button,a,.match-quiz-option,summary{touch-action:manipulation}
+
+/* шапка: тонкая, логотип и телефон */
+.header-inner{padding-top:10px;padding-bottom:10px}
+.header .brand{width:104px}
+.header-contact a{font-size:15px}
+
+/* единые поля и заголовки спокойных секций */
+.network-ratings,.treatment-results,.care-benefits,.payment-section,.solution-section,.implant-brands,
+.smile-aesthetic,.opinion-section,.care-support,.closing-section:not(.closing-consult){padding-left:var(--gut);padding-right:var(--gut)}
+main #results-title,main #care-title,main #payment-title,main #solution-title,main #implant-brands-title,
+main #smile-aesthetic-title,main #care-support-title,.closing-section:not(.closing-consult) h2{font-size:26px;line-height:1.15;margin-left:0;margin-right:0}
+main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .payment-intro,.closing-section .closing-lead{font-size:15px;margin-left:0;margin-right:0}
+
+/* ---------- первый экран: коротко и по делу ---------- */
+.v1 .hero__form{display:none}
+.v1 .hero__wm{display:none}
+.v1 .hero__h{font-size:clamp(46px,13vw,58px)}
+.v1 .hero__obj{max-width:340px;margin:-2vw auto -4vw}
+.v1 .hero__stats{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px}
+.v1 .stat,.v1 .stat:nth-child(3),.v1 .stat:nth-child(4){display:block;padding:12px 10px;border-radius:16px;background:rgba(255,255,255,.7);text-align:left}
+.v1 .stat b{font-size:22px!important}
+.v1 .stat b span{font-size:.6em}
+.v1 .stat small{font-size:11px;line-height:1.3;margin-top:4px}
+
+/* ---------- сторис ---------- */
+.m-stories{display:flex;gap:14px;overflow-x:auto;padding:16px var(--gut) 8px;scrollbar-width:none;scroll-snap-type:x proximity}
+.m-stories::-webkit-scrollbar{display:none}
+.m-stories button{flex:none;width:72px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;font:600 11.5px/1.2 var(--ui);color:var(--ink);scroll-snap-align:start;cursor:pointer}
+.m-stories .ring{width:68px;height:68px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#e93d8d,#b9a7ea,#e93d8d)}
+.m-stories .ring>*{display:block;width:100%;height:100%;border-radius:50%;border:2.5px solid #fff;object-fit:cover;background:#fff}
+.m-stories .is-seen .ring{background:#d8d7de}
+.m-stories .ring b{display:grid;place-items:center;background:#e93d8d;color:#fff;font-size:17px;font-weight:700}
+
+.m-story{position:fixed;inset:0;z-index:300;background:#111;color:#fff;flex-direction:column;touch-action:none}
+.m-story.is-open{display:flex;animation:story-in .25s ease}
+@keyframes story-in{from{opacity:0;transform:scale(.96)}}
+.m-story__bars{position:absolute;left:10px;right:10px;top:calc(10px + env(safe-area-inset-top));display:flex;gap:4px;z-index:3}
+.m-story__bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
+.m-story__bars i::after{content:"";display:block;height:100%;width:var(--p,0%);background:#fff}
+.m-story__head{position:absolute;left:14px;right:14px;top:calc(22px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;z-index:3;font:700 14px var(--ui)}
+.m-story__head img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid #fff}
+.m-story__close{margin-left:auto;width:40px;height:40px;border:0;border-radius:50%;background:rgba(0,0,0,.3);color:#fff;font-size:26px;line-height:1}
+.m-story__media{position:absolute;inset:0}
+.m-story__media img{width:100%;height:100%;object-fit:cover}
+.m-story--fit .m-story__media img{object-fit:contain}
+.m-story--doctors .m-story__media{background:#e93d8d}
+.m-story__media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 22%,transparent 55%,rgba(0,0,0,.75))}
+.m-story__promo{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:32px;background:#e93d8d var(--smiles) right -80px top -60px/420px no-repeat}
+.m-story__promo b{font-size:84px;line-height:1;font-weight:700;letter-spacing:-.04em}
+.m-story__promo s{font-size:22px;opacity:.8}
+.m-story__promo p{margin:14px 0 0;font-size:24px;line-height:1.2;font-weight:700;color:#fff}
+.m-story__cap{position:absolute;left:18px;right:18px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:3;font:700 22px/1.2 var(--ui)}
+.m-story__cap small{display:block;margin-top:6px;font-size:15px;font-weight:400;opacity:.9}
+.m-story__tag{display:inline-block;margin-bottom:8px;padding:4px 10px;border-radius:999px;background:#e93d8d;font-size:12px;font-weight:700}
+.m-story__cta{position:absolute;left:18px;right:18px;bottom:calc(24px + env(safe-area-inset-bottom));z-index:3;min-height:54px;border:0;border-radius:999px;background:#fff;color:#e93d8d;font:700 16px var(--ui)}
+.m-story__tap{position:absolute;top:80px;bottom:90px;width:40%;z-index:2}
+.m-story__tap--prev{left:0}.m-story__tap--next{right:0;width:60%}
+
+/* ---------- ленты со свайпом вместо столбиков ---------- */
+.network-ratings-grid,.results-works,.care-pair,.payment-benefits,.solution-cards,.implant-brands-grid,
+.opinion-stages,.care-support-steps,.closing-docs,.closing-route-steps{
+  display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:82%;gap:12px!important;
+  overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
+  margin-left:calc(var(--gut) * -1)!important;margin-right:calc(var(--gut) * -1)!important;padding:4px var(--gut) 14px!important;scrollbar-width:none}
+.network-ratings-grid::-webkit-scrollbar,.results-works::-webkit-scrollbar,.care-pair::-webkit-scrollbar,.payment-benefits::-webkit-scrollbar,
+.solution-cards::-webkit-scrollbar,.implant-brands-grid::-webkit-scrollbar,.opinion-stages::-webkit-scrollbar,.care-support-steps::-webkit-scrollbar,
+.closing-docs::-webkit-scrollbar,.closing-route-steps::-webkit-scrollbar{display:none}
+.network-ratings-grid>*,.results-works>*,.care-pair>*,.payment-benefits>*,.solution-cards>*,.implant-brands-grid>*,
+.opinion-stages>*,.care-support-steps>*,.closing-docs>*,.closing-route-steps>*{scroll-snap-align:start;min-width:0}
+.network-ratings-grid,.payment-benefits,.care-support-steps,.closing-docs{grid-auto-columns:66%}
+.closing-route-steps[hidden]{display:none!important}
+.opinion-stages>li:not(:last-child)::after,.closing-route-steps li::after{display:none!important}
+/* подсказка «листай» — точки под лентой */
+.m-dots{display:flex;justify-content:center;gap:6px;margin:-4px 0 10px}
+.m-dots i{width:6px;height:6px;border-radius:3px;background:#d8d7de;transition:width .25s,background .25s}
+.m-dots i.on{width:18px;background:#e93d8d}
+
+/* карточки в лентах — ровные */
+.network-rating{padding:18px}
+.network-rating-score>span{font-size:34px}
+.care-card{grid-template-columns:1fr;height:100%}
+.care-card>img{height:170px;min-height:0;max-height:none}
+.payment-benefit{display:block;height:100%}
+.payment-benefit svg{margin-bottom:12px}
+.solution-card{height:100%}
+.implant-brand-card{height:100%}
+.care-support-step{height:100%}
+.closing-doc{height:100%}
+.closing-doc .closing-photo{height:auto;aspect-ratio:1}
+
+/* ---------- шторка «до/после» в истории пациентки ---------- */
+.results-story-pics{position:relative;display:block!important;border-radius:16px;overflow:hidden;--pos:50%}
+.results-story-pics figure{margin:0;border-radius:0}
+.results-story-pics figure+figure{position:absolute;inset:0;clip-path:inset(0 0 0 var(--pos))}
+.results-story-pics img{width:100%;height:auto!important;max-height:none!important;aspect-ratio:3/4!important;object-fit:cover}
+.results-story-pics figure+figure .results-state{left:auto;right:10px}
+.m-compare{display:block;position:absolute;inset:0;z-index:3;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
+.m-compare-line{display:block;position:absolute;top:0;bottom:0;left:var(--pos);z-index:2;width:2px;margin-left:-1px;background:#fff;pointer-events:none}
+.m-compare-line::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#e93d8d;font:700 16px var(--ui);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+
+/* ---------- эстетика, FAQ, врачи, маршрут ---------- */
+.smile-shade-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:84px 8px;padding-top:84px}
+.smile-shade-button img{height:84px}
+.closing-faq summary{min-height:52px}
+.closing-chief{padding:14px}
+.closing-chief .closing-photo{max-width:none}
+.closing-route-head{display:block}
+.closing-tabs{margin:12px 0 14px}
+.closing-tabs button{min-height:40px}
+.closing-route-addr{justify-content:flex-start;text-align:left;font-size:13px}
+.smile-shade-hint{display:none}
+
+/* ---------- форма-шторка снизу вместо окна по центру ---------- */
+.modal{margin:auto 0 0!important;width:100%!important;max-width:none!important;max-height:92vh;border-radius:26px 26px 0 0!important}
+.modal[open]{animation:sheet-up .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheet-up{from{transform:translateY(100%)}}
+.modal-body{border-radius:26px 26px 0 0!important;padding:30px 20px calc(22px + env(safe-area-inset-bottom))!important}
+.modal-body::before{left:50%!important;right:auto!important;top:10px!important;width:44px!important;height:5px!important;border-radius:3px;transform:translateX(-50%);background:#d8d7de!important}
+.modal-close{right:12px!important;top:12px!important;width:36px!important;height:36px!important;background:#eeeaf9!important;color:#2e2e35!important;box-shadow:none!important;font-size:20px!important}
+.modal-logo{display:none}
+.modal-body h3{font-size:22px;padding-right:40px}
+
+/* ---------- таб-бар ---------- */
+.m-tabbar{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:120;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;height:var(--tab-h);padding:0 4px;border-radius:22px;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(46,46,53,.16),0 0 0 1px rgba(226,220,244,.9);transition:transform .3s ease}
+.m-tabbar a,.m-tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;padding:0;border:0;background:none;color:#8d8c96;font:600 10.5px/1 var(--ui);text-decoration:none}
+.m-tabbar svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.m-tabbar .on{color:#e93d8d}
+.m-tabbar .m-tab-cta{position:relative;color:#2e2e35}
+.m-tabbar .m-tab-cta span{display:grid;place-items:center;width:52px;height:52px;margin-top:-22px;border-radius:18px;background:#e93d8d;color:#fff;box-shadow:0 8px 20px rgba(233,61,141,.4)}
+.m-tabbar .m-tab-cta svg{stroke-width:2.2}
+.kb-open .m-tabbar,.sheet-open .m-tabbar{transform:translateY(140%)}
+
+/* появление: на телефоне без задержек */
+.anim-on .rv{transition-delay:0s!important}
+}
