@@ -1,18 +1,8 @@
-/* variant2-full · интерактив */
+/* final · интерактив страницы: формы, модалка, калькулятор, квиз, оттенки, маршрут */
 (() => {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  /* появление секций при прокрутке */
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
-    document.documentElement.classList.add('reveal-on');
-    const seen = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('is-seen'); seen.unobserve(e.target); }
-    }), { rootMargin: '0px 0px -12% 0px' });
-    $$('.section, .promo').forEach(el => seen.observe(el));
-    setTimeout(() => $$('.section, .promo').forEach(el => el.classList.add('is-seen')), 2500);
-  }
-
-  /* появление блоков */
+  /* появление блоков первого экрана */
   const reveal = $$('.reveal');
   const check = () => reveal.forEach(el => { if (el.getBoundingClientRect().top < innerHeight * .95) el.classList.add('is-in'); });
   addEventListener('scroll', check, { passive: true }); addEventListener('load', check); check();
@@ -40,17 +30,46 @@
   $$('form[data-lead]').forEach(f => f.addEventListener('submit', e => {
     e.preventDefault();
     const t = $('input[type=tel]', f);
-    const msg = $('.form-message', f);
+    const msg = $('.lead__msg,.form-message', f);
     if (t.value.replace(/\D/g, '').length !== 11) { t.focus(); msg.textContent = 'Проверьте номер телефона'; return; }
     console.log('lead', f.dataset.lead, Object.fromEntries(new FormData(f).entries())); // TODO: отправка в CRM
     f.classList.add('is-sent');
     msg.textContent = 'Спасибо! Администратор свяжется с вами в ближайшее время.';
   }));
 
-  /* модальное окно */
+  /* калькулятор платежа */
+  const payAmount = $('#payment-amount'), payMonths = $('#payment-months'), payResult = $('#payment-result');
+  if (payAmount) {
+    const update = () => { payResult.textContent = Math.ceil(payAmount.value / payMonths.value).toLocaleString('ru-RU') + ' ₽'; };
+    payAmount.addEventListener('change', update); payMonths.addEventListener('change', update); update();
+  }
+
+  /* модальное окно: заголовок и текст зависят от кнопки, которая его открыла */
   const dlg = $('#lead');
+  const dlgTitle = $('h3', dlg), dlgText = $('.modal-body>p', dlg), dlgList = $('.modal-list', dlg);
+  const dlgDefault = { title: dlgTitle.textContent, text: dlgText.textContent };
+  const variants = {
+    extraction: ['Удаление зубов за 99 ₽', 'Вместо 10 000 ₽ — при тотальной имплантации. Оставьте телефон, чтобы уточнить условия акции в клинике.'],
+    sleep: ['Обсудить лечение во сне', 'Оставьте телефон — администратор поможет записаться на консультацию, чтобы обсудить лечение во сне и подходящий вариант обезболивания.'],
+    choice: ['Разобрать мой случай', 'Оставьте телефон — администратор поможет записаться на консультацию. Врач оценит, какие зубы можно сохранить, и объяснит доступные варианты восстановления.'],
+    contract: ['Запросить образец договора', 'Оставьте телефон — администратор свяжется с вами, уточнит, куда прислать образец договора, или предложит ознакомиться с ним на консультации.'],
+  };
+  const openModal = (title, text) => {
+    dlgTitle.textContent = title || dlgDefault.title;
+    dlgText.textContent = text || dlgDefault.text;
+    dlgList.hidden = !!title;
+    $('.form-message', dlg).textContent = '';
+    dlg.showModal();
+    setTimeout(() => $('input[type=tel]', dlg).focus(), 60);
+  };
   $$('[data-modal]').forEach(b => b.addEventListener('click', e => {
-    e.preventDefault(); dlg.showModal(); setTimeout(() => $('input[type=tel]', dlg).focus(), 60);
+    e.preventDefault();
+    if (b.hasAttribute('data-finance') && payAmount) {
+      openModal('Получить точный расчёт', 'Предварительный расчёт: ' + payAmount.selectedOptions[0].textContent + ' на ' + payMonths.value + ' мес. — ' + payResult.textContent + ' в месяц без учёта процентов. Оставьте телефон, чтобы уточнить доступную программу и условия оплаты.');
+      return;
+    }
+    const key = Object.keys(variants).find(k => b.hasAttribute('data-' + k));
+    openModal(...(key ? variants[key] : []));
   }));
   $('.modal-close', dlg).addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', e => {
@@ -58,84 +77,102 @@
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
   });
 
-  /* калькулятор рассрочки */
-  const sum = $('#calcSum'), mon = $('#calcMon');
-  if (sum) {
-    const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
-    const paint = i => i.style.setProperty('--v', ((i.value - i.min) / (i.max - i.min) * 100) + '%');
-    const calc = () => {
-      $('#calcSumOut').value = fmt(+sum.value);
-      $('#calcMonOut').value = mon.value + ' мес.';
-      $('#calcRes').textContent = fmt(Math.round(sum.value / mon.value / 10) * 10);
-      paint(sum); paint(mon);
+  /* квиз: четыре вопроса и форма контакта */
+  const quiz = $('#match-quiz');
+  if (quiz) {
+    const steps = $$('.match-quiz-step', quiz), next = $('#match-quiz-next'), back = $('.match-quiz-back', quiz);
+    const contact = $('.match-quiz-contact', quiz), count = $('#match-quiz-count'), bars = $$('.match-quiz-bars i', quiz);
+    let s = 0;
+    const render = focus => {
+      steps.forEach((st, i) => { st.hidden = i !== s; st.disabled = i !== s; });
+      contact.hidden = s !== 4;
+      $$('input', contact).forEach(i => i.disabled = s !== 4);
+      next.hidden = s === 4; back.hidden = s === 0;
+      next.disabled = s < 4 && !$('input:checked', steps[s]);
+      count.textContent = (s === 4 ? 4 : s + 1) + ' / 4';
+      bars.forEach((b, i) => b.classList.toggle('is-active', i <= s));
+      if (focus) (s === 4 ? $('h3', contact) : $('legend', steps[s])).focus({ preventScroll: true });
     };
-    [sum, mon].forEach(i => i.addEventListener('input', calc)); calc();
+    quiz.addEventListener('change', () => render());
+    next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) { s++; render(true); } });
+    back.addEventListener('click', () => { if (s > 0) { s--; render(true); } });
+    render();
   }
 
-  /* квиз */
-  const qf = $('#quizForm');
-  if (qf) {
-    const steps = $$('.qstep', qf), prev = $('#quizPrev'), next = $('#quizNext'), submit = $('#quizSubmit');
-    const segs = $$('.quiz-progress i'), num = $('#quizStepNum');
-    let s = 1;
-    const show = () => {
-      steps.forEach(st => st.classList.toggle('is-on', +st.dataset.step === s));
-      prev.hidden = s === 1; next.hidden = s === 5; submit.hidden = s !== 5;
-      segs.forEach((seg, i) => seg.style.background = i < Math.min(s, 4) ? 'var(--accent)' : '');
-      num.textContent = Math.min(s, 4);
-      next.disabled = !$(`.qstep[data-step="${s}"] input:checked`);
-    };
-    qf.addEventListener('change', () => { next.disabled = !$(`.qstep[data-step="${s}"] input:checked`); });
-    next.addEventListener('click', () => { s++; show(); });
-    prev.addEventListener('click', () => { s--; show(); });
-    show();
-  }
-
-  /* шкала оттенков: выноска с описанием при наведении и выборе */
-  const shade = $('#shade');
+  /* шкала оттенков: выноска при наведении, выбор по клику и стрелками */
+  const shade = $('.smile-shade-selector');
   if (shade) {
-    const photo = $('#shadePhoto'), row = $('.shade-row', shade);
-    const tip = document.createElement('div');
-    tip.className = 'shade-tip';
-    tip.innerHTML = '<b></b><span></span>';
-    row.parentNode.insertBefore(tip, row);
-    const tipName = $('b', tip), tipText = $('span', tip);
-
-    const paint = b => {
-      photo.style.setProperty('--c', b.dataset.t);
-      photo.style.setProperty('--bl', b.dataset.bl ? '.55' : '0');
-    };
-    const point = b => {
-      tipName.textContent = b.dataset.n;
-      tipText.textContent = b.dataset.d;
-      const r = b.getBoundingClientRect(), rr = tip.getBoundingClientRect();
-      tip.style.setProperty('--x', (r.left - rr.left + r.width / 2) + 'px');
-      tip.classList.add('is-on');
-    };
-    const chosen = () => $('.shade-row button[aria-checked="true"]', shade);
-
-    $$('.shade-row button', shade).forEach(b => {
-      b.addEventListener('pointerenter', () => { paint(b); point(b); });
-      b.addEventListener('focus', () => { paint(b); point(b); });
+    const items = $$('.smile-shade-item', shade), status = $('.smile-shade-status', shade);
+    const mouse = matchMedia('(hover:hover) and (pointer:fine)');
+    let selected = items.find(i => i.dataset.shade === 'A2') || items[0];
+    const preview = item => items.forEach(i => i.classList.toggle('is-preview', i === item));
+    items.forEach((item, index) => {
+      const b = $('button', item);
+      b.addEventListener('pointerenter', () => { if (mouse.matches) preview(item); });
+      b.addEventListener('pointerleave', () => { if (mouse.matches) preview(selected); });
+      b.addEventListener('focus', () => preview(item));
+      b.addEventListener('blur', () => preview(selected));
       b.addEventListener('click', () => {
-        $$('.shade-row button', shade).forEach(x => x.setAttribute('aria-checked', x === b));
-        paint(b); point(b);
+        selected = item;
+        items.forEach(i => $('button', i).setAttribute('aria-pressed', String(i === selected)));
+        preview(item);
+        status.textContent = item.dataset.shade + ' — ' + $('.smile-shade-tip span', item).textContent;
+      });
+      b.addEventListener('keydown', e => {
+        let n;
+        if (e.key === 'ArrowRight') n = (index + 1) % items.length;
+        if (e.key === 'ArrowLeft') n = (index + items.length - 1) % items.length;
+        if (e.key === 'Home') n = 0;
+        if (e.key === 'End') n = items.length - 1;
+        if (n !== undefined) { e.preventDefault(); $('button', items[n]).focus(); }
+        if (e.key === 'Escape') items.forEach(i => i.classList.remove('is-preview'));
       });
     });
-    row.addEventListener('pointerleave', () => { const c = chosen(); if (c) { paint(c); point(c); } });
-    const start = chosen(); if (start) { paint(start); requestAnimationFrame(() => point(start)); }
-    addEventListener('resize', () => { const c = chosen(); if (c) point(c); });
   }
 
-  /* загрузка плана лечения */
-  const drop = $('#drop');
-  if (drop) {
-    const inp = $('input', drop), label = $('span', drop);
-    const set = fl => { if (fl.length) { drop.classList.add('has-file'); label.textContent = fl.length === 1 ? fl[0].name : `Файлов: ${fl.length}`; } };
-    inp.addEventListener('change', () => set(inp.files));
-    ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
-    ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
-    drop.addEventListener('drop', e => { inp.files = e.dataTransfer.files; set(inp.files); });
+  /* второе мнение: выбор файлов плана, затем телефон в модалке */
+  const opinion = $('#opinion-form');
+  if (opinion) {
+    const input = $('#opinion-files'), drop = $('#opinion-drop'), list = $('.opinion-file-list', opinion);
+    const status = $('.opinion-upload-status', opinion), msg = $('.form-message', opinion);
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+    let files = [];
+    const size = f => f.size < 100 * 1024 ? Math.max(1, Math.round(f.size / 1024)) + ' КБ' : (f.size / 1024 / 1024).toFixed(1) + ' МБ';
+    const render = () => {
+      list.replaceChildren();
+      files.forEach((file, i) => {
+        const li = document.createElement('li'), name = document.createElement('span'), rm = document.createElement('button');
+        name.textContent = file.name + ' · ' + size(file);
+        rm.type = 'button'; rm.textContent = '×'; rm.setAttribute('aria-label', 'Убрать файл ' + file.name);
+        rm.addEventListener('click', () => { files.splice(i, 1); render(); status.textContent = files.length ? 'Выбрано файлов: ' + files.length : 'Файлы удалены. Можно выбрать другие.'; });
+        li.append(name, rm); list.append(li);
+      });
+    };
+    const add = incoming => {
+      const errors = [];
+      for (const file of incoming) {
+        if (!allowed.includes(file.type)) { errors.push('Формат файла «' + file.name + '» не поддерживается.'); continue; }
+        if (file.size > 10 * 1024 * 1024) { errors.push('Файл «' + file.name + '» больше 10 МБ.'); continue; }
+        if (files.some(f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)) continue;
+        if (files.length >= 5) { errors.push('Можно выбрать не более 5 файлов.'); break; }
+        files.push(file);
+      }
+      render();
+      status.textContent = errors.length ? errors.join(' ') : 'Выбрано файлов: ' + files.length;
+      msg.textContent = ''; input.value = '';
+    };
+    input.addEventListener('change', () => add([...input.files]));
+    let depth = 0;
+    drop.addEventListener('dragenter', e => { e.preventDefault(); depth++; drop.classList.add('is-dragging'); });
+    drop.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+    drop.addEventListener('dragleave', e => { e.preventDefault(); if (--depth <= 0) { depth = 0; drop.classList.remove('is-dragging'); } });
+    drop.addEventListener('drop', e => { e.preventDefault(); depth = 0; drop.classList.remove('is-dragging'); add([...e.dataTransfer.files]); });
+    opinion.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!files.length) { msg.textContent = 'Добавьте фото или PDF плана лечения.'; input.focus(); return; }
+      console.log('lead', 'opinion', files.map(f => f.name)); // TODO: загрузка файлов и отправка в CRM
+      openModal('Получить расчёт со скидкой 15%', 'Файлов выбрано: ' + files.length + '. Оставьте телефон — администратор свяжется с вами и пришлёт расчёт со скидкой.');
+    });
   }
 
   /* параллакс объекта на первом экране */
@@ -161,8 +198,20 @@
   }
 
   /* табы маршрута */
-  $$('.tabs [data-route]').forEach(b => b.addEventListener('click', () => {
-    $$('.tabs [data-route]').forEach(x => x.setAttribute('aria-selected', x === b));
-    $$('.route-steps').forEach(p => p.classList.toggle('is-on', p.dataset.route === b.dataset.route));
-  }));
+  const tabs = $$('.closing-tabs [role=tab]');
+  const activate = tab => tabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+  });
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => activate(tab));
+    tab.addEventListener('keydown', e => {
+      let n;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') n = 1 - i;
+      if (e.key === 'Home') n = 0;
+      if (e.key === 'End') n = tabs.length - 1;
+      if (n !== undefined) { e.preventDefault(); activate(tabs[n]); tabs[n].focus(); }
+    });
+  });
 })();
