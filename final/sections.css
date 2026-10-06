@@ -621,3 +621,11 @@ main .smile-aesthetic-lead{grid-column:2;margin:0 0 10px;max-width:none;font-siz
 .header .btn:hover,.btn:hover{transform:none;box-shadow:none}
 .opinion-stages,.closing-footer-grid,.closing-warning{max-width:1240px;margin-inline:auto}
 @media(min-width:1600px){.opinion-stages,.closing-footer-grid,.closing-warning{max-width:1320px}}
+
+/* награды главврача — сразу видны, сеткой 2×2 */
+.closing-awards{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.closing-awards li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--lav-10)}
+.closing-awards svg{flex:none;width:34px;height:34px;padding:7px;border-radius:10px;background:#fff;fill:none;stroke:var(--pink);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.closing-awards span{font-size:13.5px;line-height:1.35;color:var(--ink-2)}
+.closing-awards b{display:block;font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+@media(max-width:700px){.closing-awards{grid-template-columns:1fr}}
