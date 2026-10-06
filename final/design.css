@@ -2,27 +2,27 @@
 
 :root{
   --page:#ffffff;
-  --lav:#f5f1fc;
-  --lav-soft:#efeafb;
+  --lav:#f4f3f7;
+  --lav-soft:#eeeaf9;
   --card:#ffffff;
-  --accent:#ef3693;
-  --accent-dark:#d9257e;
-  --violet:#6f52c4;
-  --text:#171525;
-  --muted:#69647b;
-  --line:#e8e1f3;
+  --accent:#e93d8d;
+  --accent-dark:#c9247a;
+  --violet:#5e5391;
+  --text:#2e2e35;
+  --muted:#5f5d68;
+  --line:#e2dcf4;
   --r-card:20px;
   --r-panel:28px;
   --wrap:1280px;
   --gap:clamp(56px,7vw,104px);
-  --ui:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ui:'Nunito','Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
 
 /* Типографика: один шрифт со страницей первого экрана, лёгкие заголовки */
 body{background:var(--page);color:var(--text);font:400 16px/1.55 var(--ui)}
 main h2,main h3,main h4,
 .footer p,.header,.modal{font-family:var(--ui)}
-main h2{font-weight:300;font-size:clamp(30px,3.5vw,52px);line-height:1.1;letter-spacing:-.02em;color:var(--text);max-width:22ch}
+main h2{font-weight:600;font-size:clamp(30px,3.5vw,52px);line-height:1.1;letter-spacing:-.02em;color:var(--text);max-width:22ch}
 main h2 em{font-style:normal;color:var(--accent)}
 main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .lead,main p{color:var(--muted)}
