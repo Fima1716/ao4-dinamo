@@ -462,6 +462,13 @@ main #care-title{margin-bottom:18px}
   .closing-route-steps figure,.closing-metro-ph{height:180px}
 }
 
+
+/* портреты врачей квадратные 1:1 — фото с фотозоны показываем целиком, без обрезки по шею */
+.closing-chief .closing-photo,.closing-doc .closing-photo{height:auto;aspect-ratio:1}
+.closing-photo img{object-position:center}
+@media(max-width:1000px){.closing-chief .closing-photo,.closing-doc .closing-photo{height:auto}}
+@media(max-width:650px){.closing-chief .closing-photo,.closing-doc .closing-photo{height:auto}}
+
 /* ====================================================================
    Анимации: появление при прокрутке, подъём карточек, живые детали
    ==================================================================== */
