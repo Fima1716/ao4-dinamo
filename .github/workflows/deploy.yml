@@ -48,7 +48,7 @@ jobs:
 
       - name: Выложить сайт
         run: |
-          rsync -az --delete --no-perms --no-owner --no-group \
+          rsync -rlDz --checksum --delete --no-perms --no-owner --no-group \
             --exclude '.git' --exclude '.github' --exclude '.gitignore' \
             --exclude 'pravki' --exclude 'api' \
             --exclude 'README.md' --exclude 'AGENTS.md' \
