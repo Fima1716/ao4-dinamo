@@ -201,3 +201,12 @@
 .v1 .hero__orbit .orbit-2{transform-box:fill-box;transform-origin:center;transform:rotate(16deg) scale(.86,1.08);stroke:rgba(94,83,145,.45);animation-delay:.9s}
 /* без подпрыгиваний и теней при наведении */
 .v1 .btn:hover,.v1 .tag:hover{transform:none;box-shadow:none}
+
+/* бегущая строка: крупный текст, разделители — улыбки из логотипа, тонкие линии сверху и снизу */
+.ticker{padding:18px 0;margin:6px 16px 0;border-top:1px solid #e2dcf4;border-bottom:1px solid #e2dcf4;mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.v1 .ticker__track{gap:36px;font-family:'Nunito','Onest',sans-serif;font-size:clamp(15px,1.25vw,19px);font-weight:600;letter-spacing:-.01em;color:var(--ink);animation-duration:55s}
+.v1 .ticker__track i{width:28px;height:17px;border-radius:0;background:var(--pink);box-shadow:none;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 118'><g fill='black' stroke='black' stroke-width='16' stroke-linecap='round'><path d='M26 30a74 74 0 0 0 148 0' fill='none'/><circle cx='40' cy='12' r='11' stroke='none'/><circle cx='160' cy='12' r='11' stroke='none'/></g></svg>") center/contain no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 118'><g fill='black' stroke='black' stroke-width='16' stroke-linecap='round'><path d='M26 30a74 74 0 0 0 148 0' fill='none'/><circle cx='40' cy='12' r='11' stroke='none'/><circle cx='160' cy='12' r='11' stroke='none'/></g></svg>") center/contain no-repeat}
+.v1 .ticker:hover .ticker__track{animation-play-state:paused}
+@media (max-width:860px){.ticker{margin:4px 10px 0;padding:14px 0}.v1 .ticker__track{gap:24px}.v1 .ticker__track i{width:22px;height:13px}}
