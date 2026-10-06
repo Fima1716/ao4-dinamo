@@ -197,3 +197,7 @@
 .v1 .offer-chip{right:clamp(24px,4vw,72px)}
 @media (max-width:860px){.v1 .offer-chip{right:auto}}
 @media (max-width:860px){.v1 .offer-chip{display:none}}
+/* вторая орбита, пересекается с первой */
+.v1 .hero__orbit .orbit-2{transform-box:fill-box;transform-origin:center;transform:rotate(16deg) scale(.86,1.08);stroke:rgba(94,83,145,.45);animation-delay:.9s}
+/* без подпрыгиваний и теней при наведении */
+.v1 .btn:hover,.v1 .tag:hover{transform:none;box-shadow:none}
