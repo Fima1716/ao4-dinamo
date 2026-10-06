@@ -540,3 +540,84 @@ main #care-title{margin-bottom:18px}
 .match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in .35s var(--ease)}
 @keyframes quiz-in{from{opacity:0;transform:translateX(12px)}}
 @media(prefers-reduced-motion:reduce){.match-quiz-step,.match-quiz-contact{animation:none!important}}
+
+/* ====================================================================
+   Аккуратная сетка спокойных секций (розовые блоки и формы не трогаем)
+   ==================================================================== */
+.network-ratings-grid,main .network-ratings-date,.results-wrap,.care-wrap,.payment-wrap,.solution-wrap,
+.implant-brands-wrap,.smile-aesthetic-wrap,.care-support-wrap,.closing-section:not(.closing-consult) .closing-container{max-width:1240px}
+@media(min-width:1600px){.network-ratings-grid,main .network-ratings-date,.results-wrap,.care-wrap,.payment-wrap,.solution-wrap,
+.implant-brands-wrap,.smile-aesthetic-wrap,.care-support-wrap,.closing-section:not(.closing-consult) .closing-container{max-width:1320px}}
+main #care-title,main #solution-title,main .solution-intro,main #implant-brands-title,main .implant-brands-intro,main #care-support-title,main .care-support-intro{margin-inline:0}
+.care-contract{margin-inline:0}
+
+/* история пациентки: фото не выше карточки текста */
+.results-story{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+.results-story-pics{padding-top:0;align-self:stretch}
+.results-story-pics figure{height:100%}
+.results-story-pics img{width:100%;height:100%;max-height:440px;aspect-ratio:4/5;object-fit:cover;object-position:center 35%}
+.results-story-card{padding:24px 26px}
+main .results-story-text{margin-bottom:18px}
+
+/* лечение во сне и СтАР — ниже */
+.care-sleep{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:center}
+.care-sleep>img{max-height:230px;min-height:0;aspect-ratio:16/10}
+.care-association{padding:16px 24px}
+.care-association-heading img{width:84px;height:86px}
+
+/* эстетика: заголовок и текст в две колонки, без пустого поля справа */
+.smile-aesthetic-hero{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px 48px;align-items:end;background:none;border-radius:0;padding:8px 0 24px}
+.smile-aesthetic-copy{display:contents}
+main #smile-aesthetic-title{margin:0;grid-column:1}
+main .smile-aesthetic-lead{grid-column:2;margin:0 0 10px;max-width:none;font-size:19px}
+.smile-aesthetic-copy>p:last-child{grid-column:2;max-width:none}
+.smile-shade-panel{margin-top:0}
+.smile-shade-row{padding-top:88px}
+
+/* три этапа второго мнения и договор — ниже */
+.opinion-stages>li>img{aspect-ratio:2.4}
+.care-contract{padding:14px 22px 14px 14px;grid-template-columns:.7fr 1.3fr}
+.care-contract-art{height:170px}
+.care-support-visual{height:112px}
+
+/* врачи: главврач компактнее */
+.closing-chief{grid-template-columns:260px minmax(0,1fr)}
+
+/* FAQ в две колонки */
+.closing-faq{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;align-items:start}
+.closing-faq details:last-child{border-bottom:1px solid #e2dcf4}
+.closing-faq summary{font-size:17px;padding:15px 2px}
+.closing-faq details p{padding:0 10px 16px 2px;font-size:15px}
+
+/* маршрут */
+.closing-route-steps figure,.closing-metro-ph{height:160px}
+
+@media(max-width:900px){
+  .smile-aesthetic-hero{grid-template-columns:1fr}
+  main .smile-aesthetic-lead,.smile-aesthetic-copy>p:last-child{grid-column:1}
+  .closing-faq{grid-template-columns:1fr}
+  .care-sleep{grid-template-columns:1fr}
+  .care-contract{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .results-story{grid-template-columns:1fr}
+  .results-story-pics img{max-height:none;aspect-ratio:3/4}
+  .closing-chief{grid-template-columns:1fr}
+  .smile-shade-row{padding-top:100px}
+}
+
+/* ====================================================================
+   Без «прыгающих» ховеров: никаких подъёмов, теней и зума при наведении.
+   Кнопки только меняют цвет, ссылки — цвет.
+   ==================================================================== */
+.extraction-button,.care-sleep-button,.payment-button,.solution-button,.match-quiz-next,.opinion-submit,
+.care-contract-button,.closing-consult-fields .closing-btn{box-shadow:none}
+.extraction-button:hover,.care-sleep-button:hover,.payment-button:hover,.solution-button:hover,.match-quiz-next:hover:enabled,
+.opinion-submit:hover,.care-contract-button:hover,.closing-consult-fields .closing-btn:hover{transform:none;box-shadow:none}
+.anim-on .rv.is-in:is(.network-rating,.results-work,.care-card,.payment-benefit,.solution-card,.implant-brand-card,.care-support-step,.closing-doc,.closing-route-steps li):hover,
+.network-rating:hover,.implant-brand-card:hover,.match-quiz-option:hover{transform:none;box-shadow:none}
+.closing-route-steps li:hover figure img,.closing-doc:hover .closing-photo img,.care-card:hover>img,.care-sleep:hover>img{transform:none}
+.network-rating>a:hover span{transform:none}
+.header .btn:hover,.btn:hover{transform:none;box-shadow:none}
+.opinion-stages,.closing-footer-grid,.closing-warning{max-width:1240px;margin-inline:auto}
+@media(min-width:1600px){.opinion-stages,.closing-footer-grid,.closing-warning{max-width:1320px}}
