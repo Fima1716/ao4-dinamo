@@ -8,6 +8,29 @@
   addEventListener('scroll', check, { passive: true }); addEventListener('load', check); check();
   setTimeout(check, 400);
 
+  /* появление секций при прокрутке: карточки выезжают по очереди */
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const targets = $$([
+      'main section h2', '.network-ratings-date', '.results-sub-h', '.payment-intro', '.solution-intro', '.implant-brands-intro',
+      '.care-support-intro', '.closing-lead', '.extraction-panel', '.network-rating', '.results-story', '.results-work', '.care-card',
+      '.care-sleep', '.care-association', '.payment-benefit', '.payment-calculator', '.solution-card', '.solution-alternatives',
+      '.match-quiz-wrap', '.implant-brand-card', '.smile-aesthetic-hero', '.smile-shade-panel', '.opinion-stages>li', '.opinion-card',
+      '.care-support-step', '.care-contract', '.closing-chief', '.closing-doc', '.closing-faq details', '.closing-route-steps li',
+      '.closing-route-addr', '.closing-consult-card'
+    ].join(','));
+    const groups = new Map();
+    targets.forEach(el => {
+      const n = (groups.get(el.parentElement) || 0); groups.set(el.parentElement, n + 1);
+      el.classList.add('rv'); el.style.setProperty('--d', Math.min(n, 7) * 80 + 'ms');
+    });
+    document.documentElement.classList.add('anim-on');
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    targets.forEach(el => io.observe(el));
+    setTimeout(() => targets.forEach(el => el.classList.add('is-in')), 4000); // страховка: показать всё, если наблюдатель не сработал
+  }
+
   /* маска телефона */
   const mask = v => {
     let d = v.replace(/\D/g, '');
