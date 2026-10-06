@@ -31,10 +31,24 @@ main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .eyebrow{font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violet)}
 
 /* Секции и контейнер */
-.container{max-width:var(--wrap);padding:0 clamp(16px,4vw,64px)}
+.container{max-width:var(--wrap);padding-inline:clamp(16px,4vw,64px)}
 .section{padding:var(--gap) 0}
 .section.tinted{background:var(--lav)}
 .section.tinted{background-image:none}
+
+/* Шапка */
+.header{box-shadow:0 1px 0 var(--line)}
+.header-inner{gap:clamp(14px,1.7vw,30px);padding-top:18px;padding-bottom:18px}
+.brand{width:128px}
+.header-rating{align-items:baseline;gap:0 8px;padding:8px 14px;border-radius:14px;background:var(--lav-soft)}
+.header-rating b{font-size:20px;color:var(--violet)}
+.header-rating small{font-size:11.5px;color:var(--muted);margin-top:2px}
+.header-nav{gap:clamp(12px,1.5vw,26px);font-size:15px;font-weight:400}
+.header-nav a{opacity:1;color:var(--muted)}
+.header-nav a:hover{color:var(--accent)}
+.header-contact a{font-size:18px;font-weight:600;color:var(--text)}
+.header-contact span{font-size:12px;color:var(--muted)}
+.header .btn{min-height:46px;padding:12px 22px;font-size:15px}
 
 /* Кнопки */
 .btn,.promo-link,.tabs button{font-family:var(--ui)}
@@ -302,7 +316,7 @@ main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .promo-inner{position:relative;z-index:1;padding-right:300px}
 
 .choice{position:relative;overflow:hidden;padding-top:26px}
-.choice-art{position:absolute;right:-6px;top:14px;width:104px;height:auto;opacity:.9;pointer-events:none}
+.choice-art{position:absolute;right:14px;top:16px;width:96px;height:auto;opacity:1;pointer-events:none}
 .choice h3{max-width:78%}
 
 .alt-note{position:relative;overflow:hidden;padding-right:210px}
@@ -336,6 +350,24 @@ main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .shade-row button::after{content:attr(data-n);display:block;padding:3px 10px;border-radius:8px;background:var(--lav-soft);font-size:12px}
 .shade-row button[aria-checked="true"]{border-color:var(--accent)}
 .shade-row button[aria-checked="true"]::after{background:var(--accent);color:#fff}
+
+/* Графика из макета: звёзды, флаги, знаки, нумерация этапов */
+.stars-img{display:block;width:88px;height:auto}
+.rating-score{display:flex;align-items:center;gap:10px}
+.rating-score .stars-img{width:104px}
+.flag{overflow:hidden}
+.flag img{display:block;width:22px;height:auto;border-radius:3px}
+.assoc-mark{display:grid;place-items:center;overflow:hidden}
+.assoc-mark img{width:54px;height:auto}
+.steps li::before{content:"";background:url(../assets/kit/stage_badge_1.png) center/contain no-repeat;width:32px;height:33px}
+.steps li:nth-child(2)::before{background-image:url(../assets/kit/stage_badge_2.png)}
+.steps li:nth-child(3)::before{background-image:url(../assets/kit/stage_badge_3.png)}
+.steps li:nth-child(4)::before{background-image:url(../assets/kit/stage_badge_4.png)}
+.steps li:nth-child(5)::before{background-image:url(../assets/kit/stage_badge_5.png)}
+.steps li:nth-child(6)::before{background-image:url(../assets/kit/stage_badge_6.png)}
+.tabs .m{width:21px;height:21px;border-radius:6px;background:#fff url(../assets/kit/metro_icon.png) center/15px no-repeat}
+.tabs .m::before{content:none}
+.tabs button[data-route="petrovsky"] .m{background-image:url(../assets/kit/petrovsky_park_icon.png)}
 
 /* Адаптив */
 @media (max-width:1000px){
