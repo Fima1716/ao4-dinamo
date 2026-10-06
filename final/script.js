@@ -56,8 +56,8 @@
     const msg = $('.lead__msg,.form-message', f);
     if (t.value.replace(/\D/g, '').length !== 11) { t.focus(); msg.textContent = 'Проверьте номер телефона'; return; }
     console.log('lead', f.dataset.lead, Object.fromEntries(new FormData(f).entries())); // TODO: отправка в CRM
-    f.classList.add('is-sent');
-    msg.textContent = 'Спасибо! Администратор свяжется с вами в ближайшее время.';
+    try { sessionStorage.setItem('as_lead', JSON.stringify({ form: f.dataset.lead, at: Date.now() })); } catch {}
+    location.href = 'thanks/?form=' + encodeURIComponent(f.dataset.lead);
   }));
 
   /* калькулятор платежа */
@@ -116,7 +116,24 @@
       bars.forEach((b, i) => b.classList.toggle('is-active', i <= s));
       if (focus) (s === 4 ? $('h3', contact) : $('legend', steps[s])).focus({ preventScroll: true });
     };
-    quiz.addEventListener('change', () => render());
+    /* одинаковая высота всех шагов: замеряем самый высокий и держим её, чтобы страница не прыгала */
+    const stage = $('.match-quiz-stage', quiz);
+    const fit = () => {
+      stage.style.minHeight = '';
+      let h = 0;
+      [...steps, contact].forEach(el => {
+        const was = el.hidden; el.hidden = false; el.style.position = 'absolute'; el.style.visibility = 'hidden'; el.style.width = stage.clientWidth + 'px';
+        h = Math.max(h, el.offsetHeight);
+        el.hidden = was; el.style.position = el.style.visibility = el.style.width = '';
+      });
+      stage.style.minHeight = h + 'px';
+    };
+    fit(); addEventListener('resize', fit); addEventListener('load', fit);
+    const answers = $('input[name=answers]', contact);
+    quiz.addEventListener('change', () => {
+      render();
+      answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '—').join(' | ');
+    });
     next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) { s++; render(true); } });
     back.addEventListener('click', () => { if (s > 0) { s--; render(true); } });
     render();
@@ -128,7 +145,15 @@
     const items = $$('.smile-shade-item', shade), status = $('.smile-shade-status', shade);
     const mouse = matchMedia('(hover:hover) and (pointer:fine)');
     let selected = items.find(i => i.dataset.shade === 'A2') || items[0];
-    const preview = item => items.forEach(i => i.classList.toggle('is-preview', i === item));
+    const photo = $('#shadePhoto'), label = photo && $('.smile-shade-label', photo);
+    const preview = item => {
+      items.forEach(i => i.classList.toggle('is-preview', i === item));
+      if (!photo) return;
+      photo.style.setProperty('--c', item.dataset.t);
+      photo.style.setProperty('--bl', item.dataset.bl ? '.55' : '0');
+      $('b', label).textContent = item.dataset.shade;
+      $('small', label).textContent = $('.smile-shade-tip span', item).textContent;
+    };
     items.forEach((item, index) => {
       const b = $('button', item);
       b.addEventListener('pointerenter', () => { if (mouse.matches) preview(item); });
@@ -151,6 +176,7 @@
         if (e.key === 'Escape') items.forEach(i => i.classList.remove('is-preview'));
       });
     });
+    preview(selected);
   }
 
   /* второе мнение: выбор файлов плана, затем телефон в модалке */
