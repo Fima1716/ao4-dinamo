@@ -198,27 +198,6 @@
     });
   }
 
-  /* параллакс объекта на первом экране */
-  const obj = $('#heroObj');
-  if (obj && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let tx = 0, ty = 0, cx = 0, cy = 0;
-    const host = $('.v1 .hero');
-    if (host) {
-      host.addEventListener('mousemove', e => {
-        const r = host.getBoundingClientRect();
-        tx = ((e.clientX - r.left) / r.width - .5) * 2;
-        ty = ((e.clientY - r.top) / r.height - .5) * 2;
-      });
-      (function tick() {
-        if (innerWidth > 860) {
-          cx += (tx - cx) * .06; cy += (ty - cy) * .06;
-          obj.style.perspective = '900px';
-          obj.style.transform = `translate(-50%,-52%) rotateY(${cx * 7}deg) rotateX(${-cy * 5}deg) translate(${cx * 10}px,${cy * 8}px)`;
-        }
-        requestAnimationFrame(tick);
-      })();
-    }
-  }
 
   /* табы маршрута */
   const tabs = $$('.closing-tabs [role=tab]');
