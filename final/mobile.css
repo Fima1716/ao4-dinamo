@@ -1,49 +1,79 @@
 /* final · мобильная версия в концепте приложения.
    Всё внутри @media (max-width:760px): на компьютере этот файл ничего не меняет.
-   Таб-бар, сторис, ленты со свайпом, форма-шторка снизу, шторка «до/после». */
+   Шапка с меню, компактный первый экран, сторис, ленты со свайпом, таб-бар,
+   экраны-шторки (результаты, врачи, маршрут, меню), форма снизу с учётом клавиатуры. */
 
-.m-tabbar,.m-stories,.m-story,.m-compare,.m-compare-line,.m-dots{display:none}
+.m-tabbar,.m-stories,.m-story,.m-sheet,.m-dots,.m-hero-cta,.m-menu,.m-compare,.m-compare-line{display:none}
 
 @media (max-width:760px){
 
 /* ---------- основа ---------- */
-:root{--gut:16px;--tab-h:64px}
-html{scroll-padding-top:70px}
-body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 8px);-webkit-tap-highlight-color:transparent}
+:root{--gut:16px;--tab-h:66px;--vv-h:100dvh;--vv-top:0px}
+html{scroll-behavior:auto;scroll-padding-top:70px}
+html.m-lock,html.m-lock body{overflow:hidden;overscroll-behavior:none}
+body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 12px);-webkit-tap-highlight-color:transparent}
 input,select,textarea{font-size:16px!important}
 button,a,.match-quiz-option,summary{touch-action:manipulation}
 
-/* шапка: тонкая, логотип и телефон */
-.header-inner{padding-top:10px;padding-bottom:10px}
-.header .brand{width:104px}
-.header-contact a{font-size:15px}
+/* ---------- шапка: логотип, рейтинг, меню ---------- */
+.header{box-shadow:none;border-bottom:1px solid var(--line)}
+.header-inner{gap:10px;padding-top:9px;padding-bottom:9px}
+.header .brand{width:98px}
+.header-nav,.header-contact,.header .btn{display:none}
+.header-rating{display:flex!important;margin-left:auto;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:var(--lav-soft);line-height:1}
+.header-rating b{font-size:14px}
+.header-rating .stars-img{width:60px;height:auto}
+.header-rating small{display:none}
+.m-menu{display:block;flex:none}
+.m-menu button{display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:13px;background:var(--lav-soft);color:var(--ink)}
+.m-menu svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+
+/* ---------- первый экран ---------- */
+.v1 .hero{padding:0 10px}
+.v1 .hero__sheet{min-height:0;padding:22px 18px 20px;border-radius:26px}
+.v1 .hero__grid{display:grid;grid-template-columns:1fr;gap:0;margin:0;position:relative}
+.v1 .hero__wm{display:none}
+.v1 .hero__glow{width:110vw;height:70vw;top:42%}
+.v1 .hero__left{grid-row:1}
+.v1 .hero__right{grid-row:2;text-align:left;padding-top:0}
+.v1 .hero__h,.v1 .hero__h--r{display:block;font-size:clamp(36px,11vw,44px);line-height:1.04;letter-spacing:-.03em;align-items:flex-start}
+.v1 .hero__h span{display:inline}
+.v1 .hero__l2,.v1 .hero__l4{padding-left:0;margin-left:.22em}
+.v1 .hero__obj{grid-row:3;position:relative;left:auto;top:auto;transform:none!important;width:100%;max-width:330px;margin:0 auto -8px;z-index:1}
+.v1 .hero__orbit{width:118%}
+.v1 .hero__form{display:none}
+.v1 .hero__stats{grid-row:4;display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;text-align:left}
+.v1 .stat,.v1 .stat:nth-child(3),.v1 .stat:nth-child(4){display:block;padding:11px 13px;border-radius:16px;background:rgba(255,255,255,.75)}
+.v1 .stat:first-child{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px}
+.v1 .stat:first-child b{font-size:30px!important}
+.v1 .stat:first-child small{margin:0;max-width:150px;text-align:right}
+.v1 .stat b{font-size:22px!important;line-height:1}
+.v1 .stat small{font-size:11.5px;line-height:1.3;margin-top:4px;max-width:none}
+.m-hero-cta{display:block;grid-row:5;margin-top:12px}
+.m-hero-cta button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;border:0;border-radius:999px;background:var(--pink);color:#fff;font:700 16px var(--ui)}
+.m-hero-cta button span{font-size:20px;line-height:0}
+.m-hero-cta p{margin:9px 4px 0;font-size:11.5px;line-height:1.35;color:var(--ink-40);text-align:center}
+
+/* акция и бегущая строка */
+.extraction-offer{margin:12px 10px 0;border-radius:24px}
+.extraction-panel{border-radius:20px}
+.ticker{margin:4px 10px 0}
 
 /* единые поля и заголовки спокойных секций */
 .network-ratings,.treatment-results,.care-benefits,.payment-section,.solution-section,.implant-brands,
 .smile-aesthetic,.opinion-section,.care-support,.closing-section:not(.closing-consult){padding-left:var(--gut);padding-right:var(--gut)}
 main #results-title,main #care-title,main #payment-title,main #solution-title,main #implant-brands-title,
-main #smile-aesthetic-title,main #care-support-title,.closing-section:not(.closing-consult) h2{font-size:26px;line-height:1.15;margin-left:0;margin-right:0}
+main #smile-aesthetic-title,main #care-support-title,.closing-section:not(.closing-consult) h2{font-size:25px;line-height:1.15;margin-left:0;margin-right:0}
 main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .payment-intro,.closing-section .closing-lead{font-size:15px;margin-left:0;margin-right:0}
 
-/* ---------- первый экран: коротко и по делу ---------- */
-.v1 .hero__form{display:none}
-.v1 .hero__wm{display:none}
-.v1 .hero__h{font-size:clamp(46px,13vw,58px)}
-.v1 .hero__obj{max-width:340px;margin:-2vw auto -4vw}
-.v1 .hero__stats{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px}
-.v1 .stat,.v1 .stat:nth-child(3),.v1 .stat:nth-child(4){display:block;padding:12px 10px;border-radius:16px;background:rgba(255,255,255,.7);text-align:left}
-.v1 .stat b{font-size:22px!important}
-.v1 .stat b span{font-size:.6em}
-.v1 .stat small{font-size:11px;line-height:1.3;margin-top:4px}
-
 /* ---------- сторис ---------- */
-.m-stories{display:flex;gap:14px;overflow-x:auto;padding:16px var(--gut) 8px;scrollbar-width:none;scroll-snap-type:x proximity}
+.m-stories{display:flex;gap:14px;overflow-x:auto;padding:14px var(--gut) 4px;scrollbar-width:none;scroll-snap-type:x proximity}
 .m-stories::-webkit-scrollbar{display:none}
-.m-stories button{flex:none;width:72px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;font:600 11.5px/1.2 var(--ui);color:var(--ink);scroll-snap-align:start;cursor:pointer}
-.m-stories .ring{width:68px;height:68px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#e93d8d,#b9a7ea,#e93d8d)}
+.m-stories button{flex:none;width:70px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;font:600 11.5px/1.2 var(--ui);color:var(--ink);scroll-snap-align:start;cursor:pointer}
+.m-stories .ring{width:66px;height:66px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#e93d8d,#b9a7ea,#e93d8d)}
 .m-stories .ring>*{display:block;width:100%;height:100%;border-radius:50%;border:2.5px solid #fff;object-fit:cover;background:#fff}
 .m-stories .is-seen .ring{background:#d8d7de}
-.m-stories .ring b{display:grid;place-items:center;background:#e93d8d;color:#fff;font-size:17px;font-weight:700}
+.m-stories .ring b{display:grid;place-items:center;background:#e93d8d;color:#fff;font-size:16px;font-weight:700}
 
 .m-story{position:fixed;inset:0;z-index:300;background:#111;color:#fff;flex-direction:column;touch-action:none}
 .m-story.is-open{display:flex;animation:story-in .25s ease}
@@ -52,13 +82,13 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-story__bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
 .m-story__bars i::after{content:"";display:block;height:100%;width:var(--p,0%);background:#fff}
 .m-story__head{position:absolute;left:14px;right:14px;top:calc(22px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;z-index:3;font:700 14px var(--ui)}
-.m-story__head img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid #fff}
+.m-story__head img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid #fff;background:#fff}
 .m-story__close{margin-left:auto;width:40px;height:40px;border:0;border-radius:50%;background:rgba(0,0,0,.3);color:#fff;font-size:26px;line-height:1}
 .m-story__media{position:absolute;inset:0}
 .m-story__media img{width:100%;height:100%;object-fit:cover}
 .m-story--fit .m-story__media img{object-fit:contain}
-.m-story--doctors .m-story__media{background:#e93d8d}
-.m-story__media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 22%,transparent 55%,rgba(0,0,0,.75))}
+.m-story--doctors .m-story__media{background:#e93d8d var(--smiles) center/420px}
+.m-story__media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 22%,transparent 55%,rgba(0,0,0,.72))}
 .m-story__promo{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:32px;background:#e93d8d var(--smiles) right -80px top -60px/420px no-repeat}
 .m-story__promo b{font-size:84px;line-height:1;font-weight:700;letter-spacing:-.04em}
 .m-story__promo s{font-size:22px;opacity:.8}
@@ -73,36 +103,30 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 /* ---------- ленты со свайпом вместо столбиков ---------- */
 .network-ratings-grid,.results-works,.care-pair,.payment-benefits,.solution-cards,.implant-brands-grid,
 .opinion-stages,.care-support-steps,.closing-docs,.closing-route-steps{
-  display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:82%;gap:12px!important;
+  display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:84%;gap:12px!important;
   overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
-  margin-left:calc(var(--gut) * -1)!important;margin-right:calc(var(--gut) * -1)!important;padding:4px var(--gut) 14px!important;scrollbar-width:none}
+  margin-left:calc(var(--gut) * -1)!important;margin-right:calc(var(--gut) * -1)!important;padding:4px var(--gut) 12px!important;scrollbar-width:none}
 .network-ratings-grid::-webkit-scrollbar,.results-works::-webkit-scrollbar,.care-pair::-webkit-scrollbar,.payment-benefits::-webkit-scrollbar,
 .solution-cards::-webkit-scrollbar,.implant-brands-grid::-webkit-scrollbar,.opinion-stages::-webkit-scrollbar,.care-support-steps::-webkit-scrollbar,
 .closing-docs::-webkit-scrollbar,.closing-route-steps::-webkit-scrollbar{display:none}
 .network-ratings-grid>*,.results-works>*,.care-pair>*,.payment-benefits>*,.solution-cards>*,.implant-brands-grid>*,
 .opinion-stages>*,.care-support-steps>*,.closing-docs>*,.closing-route-steps>*{scroll-snap-align:start;min-width:0}
-.network-ratings-grid,.payment-benefits,.care-support-steps,.closing-docs{grid-auto-columns:66%}
+.network-ratings-grid,.payment-benefits,.care-support-steps,.closing-docs{grid-auto-columns:68%}
 .closing-route-steps[hidden]{display:none!important}
 .opinion-stages>li:not(:last-child)::after,.closing-route-steps li::after{display:none!important}
-/* подсказка «листай» — точки под лентой */
-.m-dots{display:flex;justify-content:center;gap:6px;margin:-4px 0 10px}
+.m-dots{display:flex;justify-content:center;gap:6px;margin:-2px 0 10px}
 .m-dots i{width:6px;height:6px;border-radius:3px;background:#d8d7de;transition:width .25s,background .25s}
 .m-dots i.on{width:18px;background:#e93d8d}
-
-/* карточки в лентах — ровные */
 .network-rating{padding:18px}
 .network-rating-score>span{font-size:34px}
 .care-card{grid-template-columns:1fr;height:100%}
 .care-card>img{height:170px;min-height:0;max-height:none}
 .payment-benefit{display:block;height:100%}
 .payment-benefit svg{margin-bottom:12px}
-.solution-card{height:100%}
-.implant-brand-card{height:100%}
-.care-support-step{height:100%}
-.closing-doc{height:100%}
+.solution-card,.implant-brand-card,.care-support-step,.closing-doc{height:100%}
 .closing-doc .closing-photo{height:auto;aspect-ratio:1}
 
-/* ---------- шторка «до/после» в истории пациентки ---------- */
+/* ---------- шторка «до/после» ---------- */
 .results-story-pics{position:relative;display:block!important;border-radius:16px;overflow:hidden;--pos:50%}
 .results-story-pics figure{margin:0;border-radius:0}
 .results-story-pics figure+figure{position:absolute;inset:0;clip-path:inset(0 0 0 var(--pos))}
@@ -112,37 +136,112 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-compare-line{display:block;position:absolute;top:0;bottom:0;left:var(--pos);z-index:2;width:2px;margin-left:-1px;background:#fff;pointer-events:none}
 .m-compare-line::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#e93d8d;font:700 16px var(--ui);box-shadow:0 4px 14px rgba(0,0,0,.25)}
 
-/* ---------- эстетика, FAQ, врачи, маршрут ---------- */
+/* ---------- прочие секции ---------- */
+.smile-shade-hint{display:none}
 .smile-shade-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:84px 8px;padding-top:84px}
 .smile-shade-button img{height:84px}
 .closing-faq summary{min-height:52px}
 .closing-chief{padding:14px}
-.closing-chief .closing-photo{max-width:none}
 .closing-route-head{display:block}
 .closing-tabs{margin:12px 0 14px}
 .closing-tabs button{min-height:40px}
 .closing-route-addr{justify-content:flex-start;text-align:left;font-size:13px}
-.smile-shade-hint{display:none}
 
-/* ---------- форма-шторка снизу вместо окна по центру ---------- */
-.modal{margin:auto 0 0!important;width:100%!important;max-width:none!important;max-height:92vh;border-radius:26px 26px 0 0!important}
+/* ---------- экраны-шторки ---------- */
+.m-sheet{display:block;position:fixed;inset:0;z-index:200;visibility:hidden;pointer-events:none}
+.m-sheet.is-open{visibility:visible;pointer-events:auto}
+.m-sheet__backdrop{position:absolute;inset:0;background:rgba(46,46,53,.5);opacity:0;transition:opacity .25s}
+.m-sheet.is-open .m-sheet__backdrop{opacity:1}
+.m-sheet__panel{position:absolute;left:0;right:0;bottom:0;max-height:calc(var(--vv-h) - 40px);display:flex;flex-direction:column;background:#fff;border-radius:26px 26px 0 0;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.m-sheet.is-open .m-sheet__panel{transform:none}
+.m-sheet__head{position:relative;flex:none;display:flex;align-items:center;gap:12px;padding:22px 16px 10px 20px;touch-action:none}
+.m-sheet__head::before{content:"";position:absolute;left:50%;top:8px;width:40px;height:5px;margin-left:-20px;border-radius:3px;background:#d8d7de}
+.m-sheet__head h2{flex:1;margin:0;font:700 20px/1.2 var(--ui);color:var(--ink)}
+.m-sheet__close{flex:none;width:36px;height:36px;border:0;border-radius:50%;background:var(--lav-soft);color:var(--ink);font-size:22px;line-height:1}
+.m-sheet__body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 16px 20px}
+.m-sheet__foot{flex:none;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#fff}
+.m-sheet__foot button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;border:0;border-radius:999px;background:var(--pink);color:#fff;font:700 16px var(--ui)}
+.m-sheet__foot svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.m-sheet .m-dots{display:none}
+
+/* содержимое шторок: вертикальные списки из клонов секций */
+.m-sheet .closing-docs,.m-sheet .results-works,.m-sheet .closing-route-steps{display:grid!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;grid-template-columns:1fr!important;gap:10px!important;overflow:visible;margin:0!important;padding:0!important}
+.m-sheet .closing-route-steps[hidden]{display:none!important}
+.m-sheet .closing-chief{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:center;padding:12px;background:var(--paper);border-radius:16px}
+.m-sheet .closing-chief .closing-photo{height:auto;aspect-ratio:1;border-radius:12px;overflow:hidden}
+.m-sheet .closing-chief p:not(.closing-chief-std){display:none}
+.m-sheet .closing-chief h3{font-size:17px;margin:4px 0 6px}
+.m-sheet .closing-chief .closing-chief-std{font-size:13px;margin:0}
+.m-sheet .closing-eyebrow{font-size:11px}
+.m-sheet .closing-awards{grid-column:1/-1;grid-template-columns:1fr;gap:8px;margin:2px 0 0}
+.m-sheet .closing-awards li{background:#fff}
+.m-sheet .closing-docs{margin-top:10px!important}
+.m-sheet .closing-doc{display:grid;grid-template-columns:92px 1fr;grid-template-rows:auto auto auto;gap:0 12px;align-items:start;align-content:center;padding:10px;border-radius:16px;background:var(--paper)}
+.m-sheet .closing-doc .closing-photo{grid-column:1;grid-row:1/4;align-self:center}
+.m-sheet .closing-doc h3,.m-sheet .closing-doc small,.m-sheet .closing-doc p{grid-column:2}
+.m-sheet .closing-doc .closing-photo{height:auto;aspect-ratio:1;border-radius:12px;overflow:hidden}
+.m-sheet .closing-doc h3{font-size:15px;margin:0 0 3px}
+.m-sheet .closing-doc small{font-size:12px;margin:0}
+.m-sheet .closing-doc p{border:0;padding:0;margin:5px 0 0;font-size:12.5px}
+.m-sheet .results-story{display:grid;grid-template-columns:1fr;gap:10px}
+.m-sheet .results-story-card{padding:16px;background:var(--paper);border-radius:16px}
+.m-sheet .results-story-card h3{font-size:21px}
+.m-sheet .results-story-card .results-small{margin-top:10px}
+.m-sheet .results-sub-h{font-size:17px;margin:18px 0 10px}
+.m-sheet .results-work{padding:12px;background:var(--paper);border-radius:16px}
+.m-sheet .results-work-pair{gap:6px;margin-bottom:10px}
+.m-sheet .results-work-pair img{aspect-ratio:1;object-fit:cover}
+.m-sheet .closing-tabs{display:flex;gap:8px;margin:0 0 12px}
+.m-sheet .closing-tabs button{flex:1;justify-content:center;min-height:42px}
+.m-sheet .closing-route-steps li{display:grid;grid-template-columns:96px 1fr;grid-template-rows:auto auto;gap:0 12px;align-items:start;align-content:center;padding:10px;border:0;border-radius:16px;background:var(--paper);box-shadow:none}
+.m-sheet .closing-route-steps figure,.m-sheet .closing-metro-ph{grid-column:1;grid-row:1/3;align-self:center}
+.m-sheet .closing-route-steps b,.m-sheet .closing-route-steps li>span{grid-column:2}
+.m-sheet .closing-route-steps figure,.m-sheet .closing-metro-ph{height:auto;aspect-ratio:1;margin:0;border-radius:12px;overflow:hidden}
+.m-sheet .closing-metro-ph span{font-size:44px}
+.m-sheet .closing-route-steps b{font-size:14px;margin:0 0 4px}
+.m-sheet .closing-route-steps li>span{font-size:12.5px;line-height:1.4}
+.m-sheet .closing-route-addr{flex-direction:column;align-items:flex-start;gap:6px;margin:12px 0 0;padding:12px 14px;font-size:13px}
+.m-maps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.m-maps a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:14px;background:var(--lav-10);color:var(--ink);font:600 14px var(--ui);text-decoration:none}
+.m-maps img{width:22px;height:22px;object-fit:contain}
+.m-menu-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.m-menu-list a{display:flex;align-items:center;gap:12px;min-height:50px;padding:0 10px 0 12px;border-radius:14px;color:var(--ink);font:600 15px var(--ui);text-decoration:none}
+.m-menu-list a:active{background:var(--paper)}
+.m-menu-list a::after{content:"›";margin-left:auto;font-size:22px;color:var(--lavender)}
+.m-menu-list svg{width:22px;height:22px;flex:none;fill:none;stroke:var(--pink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.m-menu-contacts{display:grid;gap:8px;margin-top:12px;padding:14px;border-radius:16px;background:var(--paper);font-size:14px;color:var(--ink-2)}
+.m-menu-contacts a{color:var(--ink);font-weight:700;text-decoration:none;font-size:18px}
+.m-menu-contacts b{font-weight:600;color:var(--ink)}
+
+/* ---------- форма: шторка снизу, при клавиатуре — к верху видимой области ---------- */
+.modal{margin:auto 0 0!important;width:100%!important;max-width:none!important;max-height:calc(var(--vv-h) - 24px)!important;border-radius:26px 26px 0 0!important;overflow:hidden!important;transition:transform .2s}
 .modal[open]{animation:sheet-up .32s cubic-bezier(.2,.8,.2,1)}
 @keyframes sheet-up{from{transform:translateY(100%)}}
-.modal-body{border-radius:26px 26px 0 0!important;padding:30px 20px calc(22px + env(safe-area-inset-bottom))!important}
+.modal-body{display:flex;flex-direction:column;max-height:inherit;overflow-y:auto;border-radius:26px 26px 0 0!important;padding:30px 20px calc(18px + env(safe-area-inset-bottom))!important}
 .modal-body::before{left:50%!important;right:auto!important;top:10px!important;width:44px!important;height:5px!important;border-radius:3px;transform:translateX(-50%);background:#d8d7de!important}
 .modal-close{right:12px!important;top:12px!important;width:36px!important;height:36px!important;background:#eeeaf9!important;color:#2e2e35!important;box-shadow:none!important;font-size:20px!important}
 .modal-logo{display:none}
-.modal-body h3{font-size:22px;padding-right:40px}
+.modal-body h3{order:1;font-size:21px;line-height:1.2;margin:0 44px 12px 0}
+.modal-form{order:2;gap:10px}
+.modal-form input[type=tel]{height:54px}
+.modal-form .btn{min-height:54px}
+.modal-body>p{order:3;font-size:13px;line-height:1.45;margin:14px 0 8px;color:var(--muted)}
+.modal-list{order:4;margin:0;gap:6px}
+.modal-list li{font-size:13px}
+html.kb-open .modal{margin:0 0 auto!important;transform:translateY(var(--vv-top));max-height:var(--vv-h)!important;border-radius:0 0 26px 26px!important;animation:none}
+html.kb-open .modal-body{border-radius:0 0 26px 26px!important;padding-top:18px!important}
+html.kb-open .modal-body::before{display:none}
+html.kb-open .modal-body>p,html.kb-open .modal-list{display:none}
 
 /* ---------- таб-бар ---------- */
-.m-tabbar{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:120;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;height:var(--tab-h);padding:0 4px;border-radius:22px;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(46,46,53,.16),0 0 0 1px rgba(226,220,244,.9);transition:transform .3s ease}
+.m-tabbar{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:120;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;height:var(--tab-h);padding:0 4px;border-radius:22px;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(46,46,53,.16),0 0 0 1px rgba(226,220,244,.9);transition:transform .3s ease}
 .m-tabbar a,.m-tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;padding:0;border:0;background:none;color:#8d8c96;font:600 10.5px/1 var(--ui);text-decoration:none}
 .m-tabbar svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .m-tabbar .on{color:#e93d8d}
 .m-tabbar .m-tab-cta{position:relative;color:#2e2e35}
 .m-tabbar .m-tab-cta span{display:grid;place-items:center;width:52px;height:52px;margin-top:-22px;border-radius:18px;background:#e93d8d;color:#fff;box-shadow:0 8px 20px rgba(233,61,141,.4)}
 .m-tabbar .m-tab-cta svg{stroke-width:2.2}
-.kb-open .m-tabbar,.sheet-open .m-tabbar{transform:translateY(140%)}
+html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{transform:translateY(140%)}
 
 /* появление: на телефоне без задержек */
 .anim-on .rv{transition-delay:0s!important}
