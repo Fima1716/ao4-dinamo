@@ -210,3 +210,8 @@
   mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 118'><g fill='black' stroke='black' stroke-width='16' stroke-linecap='round'><path d='M26 30a74 74 0 0 0 148 0' fill='none'/><circle cx='40' cy='12' r='11' stroke='none'/><circle cx='160' cy='12' r='11' stroke='none'/></g></svg>") center/contain no-repeat}
 .v1 .ticker:hover .ticker__track{animation-play-state:paused}
 @media (max-width:860px){.ticker{margin:4px 10px 0;padding:14px 0}.v1 .ticker__track{gap:24px}.v1 .ticker__track i{width:22px;height:13px}}
+/* кнопка первого экрана — как все кнопки сайта: плоская розовая, при наведении темнеет */
+.v1 .btn--grad{background:var(--pink);box-shadow:none;transition:background .25s}
+.v1 .btn--grad:hover{background:#c9247a}
+.v1 .btn--grad::after{display:none}
+.v1 .btn--grad:hover .arr{transform:none}
