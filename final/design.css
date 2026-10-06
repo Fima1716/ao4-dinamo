@@ -155,7 +155,7 @@ main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .rating{padding:24px 26px 0}
 .rating-smile{display:none}
 .rating h3{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;margin-bottom:14px}
-.rating h3::before{content:"";width:28px;height:28px;border-radius:8px;background:var(--mark,var(--lav-soft)) center/100% no-repeat;box-shadow:0 0 0 1px var(--line);flex:none}
+.rating h3::before{content:"";width:28px;height:28px;border-radius:8px;background:var(--mark,var(--lav-soft)) center/60% no-repeat;flex:none}
 .rating-score b{font-size:40px;font-weight:700;color:var(--text)}
 .rating-badge{background:var(--lav-soft);color:var(--violet);font-weight:500;font-size:14px}
 .rating-sub{font-size:14px}
@@ -351,29 +351,23 @@ main h3{font-weight:500;letter-spacing:-.01em;color:var(--text)}
 .shade-row button[aria-checked="true"]{border-color:var(--accent)}
 .shade-row button[aria-checked="true"]::after{background:var(--accent);color:#fff}
 
-/* Векторная графика: звёзды, флаги, нумерация этапов, знак метро */
-.stars-svg{display:block;height:18px;width:auto;color:var(--accent);fill:currentColor}
+/* Графика из макета: звёзды, флаги, знаки, нумерация этапов */
+.stars-img{display:block;width:88px;height:auto}
 .rating-score{display:flex;align-items:center;gap:10px}
-.rating-score .stars-svg{height:22px}
+.rating-score .stars-img{width:104px}
 .flag{overflow:hidden}
-.flag img{display:block;width:24px;height:16px;border-radius:3px}
-.steps li::before{content:counter(s);background:linear-gradient(135deg,#8d6cf0,#ef3693);width:32px;height:32px;font-size:14px;font-weight:600;color:#fff}
-.tabs .m{width:20px;height:20px;border-radius:5px;background:#fff url(../assets/marks/metro.svg) center/13px no-repeat;box-shadow:0 0 0 1px var(--line)}
+.flag img{display:block;width:22px;height:auto;border-radius:3px}
+.assoc-mark{display:grid;place-items:center;overflow:hidden}
+.assoc-mark img{width:54px;height:auto}
+.steps li::before{content:"";background:url(../assets/kit/stage_badge_1.png) center/contain no-repeat;width:32px;height:33px}
+.steps li:nth-child(2)::before{background-image:url(../assets/kit/stage_badge_2.png)}
+.steps li:nth-child(3)::before{background-image:url(../assets/kit/stage_badge_3.png)}
+.steps li:nth-child(4)::before{background-image:url(../assets/kit/stage_badge_4.png)}
+.steps li:nth-child(5)::before{background-image:url(../assets/kit/stage_badge_5.png)}
+.steps li:nth-child(6)::before{background-image:url(../assets/kit/stage_badge_6.png)}
+.tabs .m{width:21px;height:21px;border-radius:6px;background:#fff url(../assets/kit/metro_icon.png) center/15px no-repeat}
 .tabs .m::before{content:none}
-.metro-sign{aspect-ratio:4/3;border-radius:16px;margin:0 0 10px;background:linear-gradient(165deg,#2c303c 0%,#171920 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;font-size:22px;font-weight:500;letter-spacing:.01em;text-align:center;padding:16px;position:relative;overflow:hidden}
-.metro-sign::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%)}
-.metro-sign img{width:46px;height:46px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
-
-/* Ритм: заголовок → подводка → контент */
-main h2{margin-bottom:40px}
-main h2:has(+p){margin-bottom:14px}
-.section>.container>.lead{margin-bottom:44px}
-.quiz-side h2{margin-bottom:24px}
-.header-rating small{text-decoration:none;color:var(--muted)}
-.quiz-body{min-height:0;justify-content:center}
-.quiz-nav{margin-top:0;padding-top:28px}
-.problem-grid .card .photo{aspect-ratio:3/2}
-.final-art{right:28px;top:28px;width:250px;opacity:.95}
+.tabs button[data-route="petrovsky"] .m{background-image:url(../assets/kit/petrovsky_park_icon.png)}
 
 /* Адаптив */
 @media (max-width:1000px){
@@ -393,7 +387,6 @@ main h2:has(+p){margin-bottom:14px}
   .plan-art{position:static;width:200px;margin:12px 0 0}
 }
 @media (max-width:760px){
-  .promo-art{display:none}
   .choice-art{width:80px;opacity:.75}
   .choice h3{max-width:70%}
   .brand-art{width:58px;top:50px}
