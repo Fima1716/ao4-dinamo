@@ -629,3 +629,8 @@ main .smile-aesthetic-lead{grid-column:2;margin:0 0 10px;max-width:none;font-siz
 .closing-awards span{font-size:13.5px;line-height:1.35;color:var(--ink-2)}
 .closing-awards b{display:block;font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
 @media(max-width:700px){.closing-awards{grid-template-columns:1fr}}
+.closing-chief{align-items:start;row-gap:16px;padding:20px}
+.closing-chief .closing-photo{height:auto;aspect-ratio:1}
+.closing-awards{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr));margin:0}
+@media(max-width:1000px){.closing-awards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.closing-awards{grid-template-columns:1fr}}
