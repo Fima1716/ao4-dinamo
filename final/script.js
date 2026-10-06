@@ -3,14 +3,13 @@
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
   /* появление секций при прокрутке */
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('reveal-on');
     const seen = new IntersectionObserver(es => es.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('is-seen'); seen.unobserve(e.target); }
     }), { rootMargin: '0px 0px -12% 0px' });
     $$('.section, .promo').forEach(el => seen.observe(el));
     setTimeout(() => $$('.section, .promo').forEach(el => el.classList.add('is-seen')), 2500);
-  } else {
-    $$('.section, .promo').forEach(el => el.classList.add('is-seen'));
   }
 
   /* появление блоков */
