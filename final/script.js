@@ -2,6 +2,17 @@
 (() => {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+  /* появление секций при прокрутке */
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const seen = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-seen'); seen.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -12% 0px' });
+    $$('.section, .promo').forEach(el => seen.observe(el));
+    setTimeout(() => $$('.section, .promo').forEach(el => el.classList.add('is-seen')), 2500);
+  } else {
+    $$('.section, .promo').forEach(el => el.classList.add('is-seen'));
+  }
+
   /* появление блоков */
   const reveal = $$('.reveal');
   const check = () => reveal.forEach(el => { if (el.getBoundingClientRect().top < innerHeight * .95) el.classList.add('is-in'); });
@@ -66,12 +77,12 @@
   const qf = $('#quizForm');
   if (qf) {
     const steps = $$('.qstep', qf), prev = $('#quizPrev'), next = $('#quizNext'), submit = $('#quizSubmit');
-    const bar = $('.quiz-progress i'), num = $('#quizStepNum');
+    const segs = $$('.quiz-progress i'), num = $('#quizStepNum');
     let s = 1;
     const show = () => {
       steps.forEach(st => st.classList.toggle('is-on', +st.dataset.step === s));
       prev.hidden = s === 1; next.hidden = s === 5; submit.hidden = s !== 5;
-      bar.style.setProperty('--p', Math.min((s - 1) / 4, 1));
+      segs.forEach((seg, i) => seg.style.background = i < Math.min(s, 4) ? 'var(--accent)' : '');
       num.textContent = Math.min(s, 4);
       next.disabled = !$(`.qstep[data-step="${s}"] input:checked`);
     };
@@ -81,16 +92,40 @@
     show();
   }
 
-  /* шкала оттенков */
+  /* шкала оттенков: выноска с описанием при наведении и выборе */
   const shade = $('#shade');
   if (shade) {
-    const photo = $('#shadePhoto'), name = $('#shadeName'), desc = $('#shadeDesc');
-    $$('.shade-row button', shade).forEach(b => b.addEventListener('click', () => {
-      $$('.shade-row button', shade).forEach(x => x.setAttribute('aria-checked', x === b));
+    const photo = $('#shadePhoto'), row = $('.shade-row', shade);
+    const tip = document.createElement('div');
+    tip.className = 'shade-tip';
+    tip.innerHTML = '<b></b><span></span>';
+    row.parentNode.insertBefore(tip, row);
+    const tipName = $('b', tip), tipText = $('span', tip);
+
+    const paint = b => {
       photo.style.setProperty('--c', b.dataset.t);
       photo.style.setProperty('--bl', b.dataset.bl ? '.55' : '0');
-      name.textContent = b.dataset.n; desc.textContent = b.dataset.d;
-    }));
+    };
+    const point = b => {
+      tipName.textContent = b.dataset.n;
+      tipText.textContent = b.dataset.d;
+      const r = b.getBoundingClientRect(), rr = tip.getBoundingClientRect();
+      tip.style.setProperty('--x', (r.left - rr.left + r.width / 2) + 'px');
+      tip.classList.add('is-on');
+    };
+    const chosen = () => $('.shade-row button[aria-checked="true"]', shade);
+
+    $$('.shade-row button', shade).forEach(b => {
+      b.addEventListener('pointerenter', () => { paint(b); point(b); });
+      b.addEventListener('focus', () => { paint(b); point(b); });
+      b.addEventListener('click', () => {
+        $$('.shade-row button', shade).forEach(x => x.setAttribute('aria-checked', x === b));
+        paint(b); point(b);
+      });
+    });
+    row.addEventListener('pointerleave', () => { const c = chosen(); if (c) { paint(c); point(c); } });
+    const start = chosen(); if (start) { paint(start); requestAnimationFrame(() => point(start)); }
+    addEventListener('resize', () => { const c = chosen(); if (c) point(c); });
   }
 
   /* загрузка плана лечения */
