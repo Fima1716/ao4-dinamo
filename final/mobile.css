@@ -64,6 +64,51 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 .v1 .hero .reveal{transition-duration:.45s}
 @media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}.v1 .hero__sheet{padding:20px 14px 16px}.v1 .hero__obj{max-width:280px}.v1 .stat:first-child b{font-size:28px!important}}
 
+/* ---------- квиз: компактно, как экран приложения ---------- */
+.match-quiz-section{padding:16px 10px 24px}
+.match-quiz-wrap{padding:18px 16px 18px;border-radius:22px}
+.match-quiz-side{display:block;padding:0 0 14px;gap:0}
+main .match-quiz-eyebrow{display:none}
+main #match-quiz-title{font-size:21px;line-height:1.2;letter-spacing:-.02em;margin:0 0 12px}
+main #match-quiz-title br{display:none}
+.match-quiz-bonuses{display:flex;gap:8px;max-width:none}
+.match-quiz-bonuses>div{flex:1;display:flex;align-items:center;gap:8px;min-height:0;padding:8px 10px;border-radius:12px;background:var(--lav-10);border:0}
+.match-quiz-bonuses img{width:26px;height:26px}
+.match-quiz-bonuses b{font-size:16px;line-height:1}
+.match-quiz-bonuses p{font-size:11px;line-height:1.2}
+.match-quiz-bonuses span{white-space:normal}
+.match-quiz-art{display:none}
+.match-quiz-panel{padding:14px 0 0}
+.match-quiz-progress{font-size:14px;gap:12px;margin-bottom:14px;max-width:none}
+.match-quiz-bars i{height:6px}
+.match-quiz-step legend,main .match-quiz-contact h3{font-size:20px;line-height:1.25;margin-bottom:12px}
+.match-quiz-options,.match-quiz-step[data-question="1"] .match-quiz-options,.match-quiz-step[data-question="3"] .match-quiz-options{grid-template-columns:1fr 1fr;gap:8px}
+.match-quiz-option{min-height:0;margin:0;padding:12px 12px;border-radius:14px;font-size:14px;line-height:1.25;background:#fff;border:1.5px solid var(--lav-20)}
+.match-quiz-option input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.match-quiz-option span{padding:0}
+.match-quiz-option:has(input:checked){border-color:var(--pink);background:var(--pink-10);box-shadow:none;color:var(--ink)}
+.match-quiz-step[data-question="0"] .match-quiz-options{grid-template-columns:repeat(3,1fr)}
+.match-quiz-option:has(.match-quiz-jaw){flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-height:0;padding:8px 6px 10px;text-align:center}
+.match-quiz-jaw{width:100%;height:58px;object-fit:contain}
+.match-quiz-option:has(.match-quiz-jaw) span{font-size:13px;line-height:1.2;white-space:normal;align-self:center;padding:0}
+.match-quiz-nav{display:flex;align-items:center;gap:10px;margin-top:14px;padding:0;min-height:0}
+.match-quiz-back{order:0;margin:0;padding:12px 10px;font-size:14px}
+.match-quiz-next{order:1;flex:1;min-width:0;min-height:52px;font-size:16px;padding:12px 18px;border-radius:999px}
+.match-quiz-nav:has(.match-quiz-back[hidden]) .match-quiz-next{width:100%}
+.match-quiz-contact{max-width:none}
+.match-quiz-contact>p{font-size:14px;margin-bottom:12px}
+.match-quiz-phone input{margin:6px 0 12px;padding:13px 14px;font-size:17px}
+.match-quiz-consent{margin-bottom:14px;font-size:12px}
+.match-quiz-contact .match-quiz-next{min-height:52px;font-size:16px}
+
+/* ---------- «восстановим жевательную функцию»: лента карточек, не столбик ---------- */
+.care-grid{grid-auto-columns:86%}
+.care-item>img{aspect-ratio:16/10}
+.care-item-body{padding:14px 16px 16px}
+main .care-item h3{font-size:18px}
+main .care-item p{font-size:14px}
+.care-item .care-sleep-button{width:100%;justify-content:center}
+
 /* акция и бегущая строка */
 .treatment-results{padding-top:22px}
 .extraction-offer{margin:12px 10px 0;border-radius:24px}
@@ -112,15 +157,15 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-story__tap--prev{left:0}.m-story__tap--next{right:0;width:60%}
 
 /* ---------- ленты со свайпом вместо столбиков ---------- */
-.results-works,.payment-benefits,.solution-cards,.implant-brands-grid,
+.results-works,.care-grid,.payment-benefits,.solution-cards,.implant-brands-grid,
 .opinion-stages,.care-support-steps,.closing-docs,.closing-route-steps{
   display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:84%;gap:12px!important;
   overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
   margin-left:calc(var(--gut) * -1)!important;margin-right:calc(var(--gut) * -1)!important;padding:4px var(--gut) 12px!important;scrollbar-width:none}
-.results-works::-webkit-scrollbar,.payment-benefits::-webkit-scrollbar,
+.results-works::-webkit-scrollbar,.care-grid::-webkit-scrollbar,.payment-benefits::-webkit-scrollbar,
 .solution-cards::-webkit-scrollbar,.implant-brands-grid::-webkit-scrollbar,.opinion-stages::-webkit-scrollbar,.care-support-steps::-webkit-scrollbar,
 .closing-docs::-webkit-scrollbar,.closing-route-steps::-webkit-scrollbar{display:none}
-.results-works>*,.payment-benefits>*,.solution-cards>*,.implant-brands-grid>*,
+.results-works>*,.care-grid>*,.payment-benefits>*,.solution-cards>*,.implant-brands-grid>*,
 .opinion-stages>*,.care-support-steps>*,.closing-docs>*,.closing-route-steps>*{scroll-snap-align:start;min-width:0}
 .closing-route-steps[hidden]{display:none!important}
 .opinion-stages>li:not(:last-child)::after,.closing-route-steps li::after{display:none!important}

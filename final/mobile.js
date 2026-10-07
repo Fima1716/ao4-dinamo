@@ -295,7 +295,7 @@
   }
 
   /* ---------- точки под лентами ---------- */
-  const RAILS = '.results-works,.payment-benefits,.solution-cards,.implant-brands-grid,.opinion-stages,.care-support-steps,.closing-docs';
+  const RAILS = '.results-works,.care-grid,.payment-benefits,.solution-cards,.implant-brands-grid,.opinion-stages,.care-support-steps,.closing-docs';
   $$(RAILS).forEach(r => {
     if (r.closest('.m-sheet')) return;
     const n = r.children.length; if (n < 2) return;
