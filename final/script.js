@@ -12,7 +12,7 @@
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const targets = $$([
       'main section h2', '.network-ratings-date', '.results-sub-h', '.payment-intro', '.solution-intro', '.implant-brands-intro',
-      '.care-support-intro', '.closing-lead', '.extraction-panel', '.network-rating', '.results-story', '.results-work', '.care-card',
+      '.care-support-intro', '.closing-lead', '.extraction-panel', '.network-rating', '.results-story', '.results-work', '.care-item',
       '.care-sleep', '.care-association', '.payment-benefit', '.payment-calculator', '.solution-card', '.solution-alternatives',
       '.match-quiz-wrap', '.implant-brand-card', '.smile-aesthetic-hero', '.smile-shade-panel', '.opinion-stages>li', '.opinion-card',
       '.care-support-step', '.care-contract', '.closing-chief', '.closing-doc', '.closing-faq details', '.closing-route-steps li',
