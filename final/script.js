@@ -234,6 +234,15 @@
     if (cover) cover.closest('.closing-map-frame').classList.add('is-active');
   });
 
+  /* отзывы: «Читать полностью» только там, где текст обрезан */
+  const clampCheck = () => $$('.review-card').forEach(c => { const p = $('p', c); c.classList.toggle('is-clamped', !c.classList.contains('is-open') && p.scrollHeight > p.clientHeight + 2); });
+  clampCheck(); addEventListener('resize', clampCheck); addEventListener('load', clampCheck);
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.review-more'); if (!b) return;
+    const c = b.closest('.review-card'); const open = c.classList.toggle('is-open');
+    b.textContent = open ? 'Свернуть' : 'Читать полностью'; b.setAttribute('aria-expanded', String(open));
+  });
+
   /* табы маршрута */
   const tabs = $$('.closing-tabs [role=tab]');
   const activate = tab => tabs.forEach(t => {
