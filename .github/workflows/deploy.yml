@@ -46,6 +46,12 @@ jobs:
           [ "$bad" = 0 ] || exit 1
           echo "Все ссылки на файлы на месте"
 
+      - name: Проставить версию стилям и скриптам
+        run: |
+          v=$(git rev-parse --short HEAD)
+          sed -i -E "s#(href|src)=\"([^\"?:]+\.(css|js))\"#\1=\"\2?v=$v\"#g" final/index.html
+          grep -o 'mobile.css?v=[0-9a-f]*' final/index.html
+
       - name: Выложить сайт
         run: |
           rsync -rlDz --checksum --delete --no-perms --no-owner --no-group \
