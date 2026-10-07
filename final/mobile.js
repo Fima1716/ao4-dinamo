@@ -93,7 +93,7 @@
     { id: 'route', title: 'Маршрут', cover: A + 'route/metro-dinamo.webp', slides: [
       { img: A + 'route/metro-dinamo.webp', tag: '1', cap: 'Метро «Динамо»', sub: 'Выход к Ленинградскому проспекту' },
       { img: A + 'route/vtb-arena.webp', tag: '2', cap: 'ВТБ Арена Парк', sub: 'Вдоль проспекта до строения 40' },
-      { img: A + 'route/clinic-entrance.webp', tag: '3', cap: 'Вход с улицы, 1 этаж', sub: 'Две минуты пешком от метро' },
+      { img: A + 'route/clinic-entrance.webp?v=2', tag: '3', cap: 'Вход с улицы, 1 этаж', sub: 'Две минуты пешком от метро' },
     ] },
   ];
   const SEEN_KEY = 'as_stories_seen';
