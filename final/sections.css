@@ -703,3 +703,13 @@ main .reviews-intro{margin:0 0 20px;font-size:15px;line-height:1.5;color:var(--i
 .about-section+#closing-team{padding-top:10px}
 @media(max-width:1000px){.about-wrap{grid-template-columns:1fr;gap:20px}}
 @media(max-width:650px){.about-facts{grid-template-columns:1fr}.about-photo{border-radius:16px}}
+
+/* ====================================================================
+   Состояния: квадратные иконки одного размера. Комфорт: три одинаковые
+   карточки с фото сверху, кнопка прижата к низу
+   ==================================================================== */
+.solution-card-top{height:auto;gap:18px;margin-bottom:14px}
+.solution-card-top img,.solution-card-top img{width:88px;height:88px;object-fit:contain}
+@media(max-width:1150px){.solution-card-top img{width:76px;height:76px}}
+@media(max-width:600px){.solution-card-top{height:auto}.solution-card-top img{width:88px;height:88px}}
+
