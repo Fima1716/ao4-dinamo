@@ -108,7 +108,7 @@
     b.addEventListener('click', () => openStory(i));
     rail.append(b);
   });
-  const afterHero = $('.extraction-offer') || $('.network-ratings');
+  const afterHero = $('.extraction-offer') || $('.reviews-section');
   if (afterHero) afterHero.before(rail);
 
   const viewer = nav('m-story', `<div class="m-story__media"></div><div class="m-story__bars"></div>
@@ -288,7 +288,7 @@
   }
 
   /* ---------- точки под лентами ---------- */
-  const RAILS = '.network-ratings-grid,.results-works,.payment-benefits,.solution-cards,.implant-brands-grid,.opinion-stages,.care-support-steps,.closing-docs';
+  const RAILS = '.results-works,.payment-benefits,.solution-cards,.implant-brands-grid,.opinion-stages,.care-support-steps,.closing-docs';
   $$(RAILS).forEach(r => {
     if (r.closest('.m-sheet')) return;
     const n = r.children.length; if (n < 2) return;
