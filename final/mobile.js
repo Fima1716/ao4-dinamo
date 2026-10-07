@@ -240,7 +240,7 @@
     }),
     menu: makeSheet('menu', 'Меню', body => {
       const items = [
-        ['cases', 'Результаты лечения', ICO.smile], ['reviews', 'Отзывы пациентов', ICO.smile], ['finance', 'Рассрочка и кредит', ICO.percent], ['quiz', 'Подбор за минуту', ICO.list],
+        ['about', 'О клинике', ICO.pin], ['cases', 'Результаты лечения', ICO.smile], ['reviews', 'Отзывы пациентов', ICO.smile], ['finance', 'Рассрочка и кредит', ICO.percent], ['quiz', 'Подбор за минуту', ICO.list],
         ['implant-brands', 'Импланты и цены', ICO.tooth], ['smile-aesthetic', 'Эстетика улыбки', ICO.smile], ['second-opinion', 'Второе мнение – скидка 15%', ICO.file],
         ['care-support', 'Сопровождение и гарантии', ICO.shield], ['closing-team', 'Врачи', ICO.doc], ['closing-faq', 'Вопросы и ответы', ICO.help], ['closing-route', 'Как добраться', ICO.pin],
       ].filter(([id]) => document.getElementById(id));

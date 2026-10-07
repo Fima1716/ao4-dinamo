@@ -121,6 +121,7 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .network-rating-score>span{font-size:34px}
 .care-card{grid-template-columns:1fr;height:100%}
 .care-card>img{height:170px;min-height:0;max-height:none}
+.about-wrap{gap:14px}
 .payment-benefit{display:block;height:100%}
 .payment-benefit svg{margin-bottom:12px}
 .solution-card,.implant-brand-card,.care-support-step,.closing-doc{height:100%}
