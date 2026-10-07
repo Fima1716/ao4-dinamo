@@ -109,6 +109,11 @@ main .care-item h3{font-size:18px}
 main .care-item p{font-size:14px}
 .care-item .care-sleep-button{width:100%;justify-content:center}
 
+/* отзывы лентой */
+.reviews-grid{grid-auto-columns:86%}
+.review-card{height:100%}
+.reviews-badge{width:100%;justify-content:flex-start}
+
 /* акция и бегущая строка */
 .treatment-results{padding-top:22px}
 .extraction-offer{margin:12px 10px 0;border-radius:24px}
@@ -157,15 +162,15 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-story__tap--prev{left:0}.m-story__tap--next{right:0;width:60%}
 
 /* ---------- ленты со свайпом вместо столбиков ---------- */
-.results-works,.care-grid,.payment-benefits,.solution-cards,.implant-brands-grid,
+.results-works,.care-grid,.reviews-grid,.payment-benefits,.solution-cards,.implant-brands-grid,
 .opinion-stages,.care-support-steps,.closing-docs,.closing-route-steps{
   display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:84%;gap:12px!important;
   overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gut);
   margin-left:calc(var(--gut) * -1)!important;margin-right:calc(var(--gut) * -1)!important;padding:4px var(--gut) 12px!important;scrollbar-width:none}
-.results-works::-webkit-scrollbar,.care-grid::-webkit-scrollbar,.payment-benefits::-webkit-scrollbar,
+.results-works::-webkit-scrollbar,.care-grid::-webkit-scrollbar,.reviews-grid::-webkit-scrollbar,.payment-benefits::-webkit-scrollbar,
 .solution-cards::-webkit-scrollbar,.implant-brands-grid::-webkit-scrollbar,.opinion-stages::-webkit-scrollbar,.care-support-steps::-webkit-scrollbar,
 .closing-docs::-webkit-scrollbar,.closing-route-steps::-webkit-scrollbar{display:none}
-.results-works>*,.care-grid>*,.payment-benefits>*,.solution-cards>*,.implant-brands-grid>*,
+.results-works>*,.care-grid>*,.reviews-grid>*,.payment-benefits>*,.solution-cards>*,.implant-brands-grid>*,
 .opinion-stages>*,.care-support-steps>*,.closing-docs>*,.closing-route-steps>*{scroll-snap-align:start;min-width:0}
 .closing-route-steps[hidden]{display:none!important}
 .opinion-stages>li:not(:last-child)::after,.closing-route-steps li::after{display:none!important}
