@@ -257,12 +257,19 @@
   $('button', menuBtn).addEventListener('click', sheets.menu.open);
 
   /* ---------- таб-бар ---------- */
+  const ICO2 = {
+    call: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    cases: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 4v16M6.5 15.5l2.5-3 2 2.5M14.5 13l2-2.5 2.5 3"/>',
+    doctors: '<path d="M5 3v6a6 6 0 0 0 12 0V3"/><path d="M11 15v2a4 4 0 0 0 8 0v-3"/><circle cx="19" cy="11" r="2"/>',
+    route: '<path d="M12 21s-7-6-7-12a7 7 0 0 1 14 0c0 6-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  };
+  const smile = '<svg class="m-tab-smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="#fff" stroke="#fff" stroke-width="15" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="10" stroke="none"/><circle cx="160" cy="12" r="10" stroke="none"/></g></svg>';
   const tab = nav('m-tabbar', `
-    <a href="tel:+74950650077">${svg(ICO.call)}Звонок</a>
-    <button type="button" data-sheet="results">${svg(ICO.cases)}Результаты</button>
-    <button type="button" class="m-tab-cta"><span>${svg(ICO.plus)}</span>Расчёт</button>
-    <button type="button" data-sheet="doctors">${svg(ICO.doc)}Врачи</button>
-    <button type="button" data-sheet="route">${svg(ICO.pin)}Маршрут</button>`);
+    <a href="tel:+74950650077">${svg(ICO2.call)}<span>Звонок</span></a>
+    <button type="button" data-sheet="results">${svg(ICO2.cases)}<span>До / после</span></button>
+    <button type="button" class="m-tab-cta" aria-label="Рассчитать стоимость"><i>${smile}</i><span>Расчёт</span></button>
+    <button type="button" data-sheet="doctors">${svg(ICO2.doctors)}<span>Врачи</span></button>
+    <button type="button" data-sheet="route">${svg(ICO2.route)}<span>Маршрут</span></button>`);
   tab.setAttribute('aria-label', 'Быстрые действия');
   document.body.append(tab);
   $('.m-tab-cta', tab).addEventListener('click', openLead);

@@ -242,15 +242,19 @@ html.kb-open .modal-body{border-radius:0 0 26px 26px!important;padding-top:18px!
 html.kb-open .modal-body::before{display:none}
 html.kb-open .modal-body>p,html.kb-open .modal-list{display:none}
 
-/* ---------- таб-бар ---------- */
-.m-tabbar{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:120;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;height:var(--tab-h);padding:0 4px;border-radius:22px;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(46,46,53,.16),0 0 0 1px rgba(226,220,244,.9);transition:transform .3s ease}
-.m-tabbar a,.m-tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;padding:0;border:0;background:none;color:#8d8c96;font:600 10.5px/1 var(--ui);text-decoration:none}
-.m-tabbar svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* ---------- таб-бар: пилюля с круглой кнопкой-улыбкой по центру ---------- */
+.m-tabbar{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;display:grid;grid-template-columns:1fr 1fr 1.15fr 1fr 1fr;align-items:end;height:var(--tab-h);padding:0 6px;border-radius:999px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 12px 32px rgba(46,46,53,.18),0 0 0 1px rgba(226,220,244,.9);transition:transform .3s ease}
+.m-tabbar a,.m-tabbar button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;padding:0 0 9px;border:0;background:none;color:#8d8c96;font:600 10.5px/1 var(--ui);text-decoration:none;-webkit-user-select:none;user-select:none}
+.m-tabbar a svg,.m-tabbar button:not(.m-tab-cta) svg{width:24px;height:24px;padding:3px;border-radius:10px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:background .2s,transform .15s}
+.m-tabbar a:active svg,.m-tabbar button:active svg{transform:scale(.9)}
 .m-tabbar .on{color:#e93d8d}
-.m-tabbar .m-tab-cta{position:relative;color:#2e2e35}
-.m-tabbar .m-tab-cta span{display:grid;place-items:center;width:52px;height:52px;margin-top:-22px;border-radius:18px;background:#e93d8d;color:#fff;box-shadow:0 8px 20px rgba(233,61,141,.4)}
-.m-tabbar .m-tab-cta svg{stroke-width:2.2}
+.m-tabbar .on svg{background:var(--pink-10,#fce4ef)}
+.m-tabbar .m-tab-cta{color:#e93d8d;padding-bottom:9px}
+.m-tabbar .m-tab-cta i{display:grid;place-items:center;width:62px;height:62px;margin-top:-34px;border-radius:50%;background:var(--pink);border:4px solid #fff;box-shadow:0 10px 24px rgba(233,61,141,.38);transition:transform .15s}
+.m-tabbar .m-tab-cta:active i{transform:scale(.94)}
+.m-tab-smile{width:32px;height:auto;display:block;margin-top:2px}
 html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{transform:translateY(140%)}
+@media (max-width:360px){.m-tabbar{left:8px;right:8px}.m-tabbar a,.m-tabbar button{font-size:10px}.m-tabbar .m-tab-cta i{width:58px;height:58px;margin-top:-32px}}
 
 /* появление: на телефоне без задержек */
 .anim-on .rv{transition-delay:0s!important}
