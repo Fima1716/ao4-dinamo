@@ -96,6 +96,10 @@
   }));
   $('.modal-close', dlg).addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', e => {
+    if (e.target.closest('.modal-body')) return; // клик по самой форме не закрывает окно
+    const act = document.activeElement;
+    // поле только что получило фокус и окно уехало под клавиатуру — это не клик по фону
+    if (act && act !== dlg && dlg.contains(act)) return;
     const r = dlg.getBoundingClientRect();
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
   });
