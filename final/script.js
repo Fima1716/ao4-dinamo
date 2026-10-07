@@ -72,10 +72,10 @@
   const dlgTitle = $('h3', dlg), dlgText = $('.modal-body>p', dlg), dlgList = $('.modal-list', dlg);
   const dlgDefault = { title: dlgTitle.textContent, text: dlgText.textContent };
   const variants = {
-    extraction: ['Удаление зубов за 99 ₽', 'Вместо 10 000 ₽ — при тотальной имплантации. Оставьте телефон, чтобы уточнить условия акции в клинике.'],
-    sleep: ['Обсудить лечение во сне', 'Оставьте телефон — администратор поможет записаться на консультацию, чтобы обсудить лечение во сне и подходящий вариант обезболивания.'],
-    choice: ['Разобрать мой случай', 'Оставьте телефон — администратор поможет записаться на консультацию. Врач оценит, какие зубы можно сохранить, и объяснит доступные варианты восстановления.'],
-    contract: ['Запросить образец договора', 'Оставьте телефон — администратор свяжется с вами, уточнит, куда прислать образец договора, или предложит ознакомиться с ним на консультации.'],
+    extraction: ['Удаление зубов за 99 ₽', 'Вместо 10 000 ₽ – при тотальной имплантации. Оставьте телефон, чтобы уточнить условия акции в клинике.'],
+    sleep: ['Обсудить лечение во сне', 'Оставьте телефон – администратор поможет записаться на консультацию, чтобы обсудить лечение во сне и подходящий вариант обезболивания.'],
+    choice: ['Разобрать мой случай', 'Оставьте телефон – администратор поможет записаться на консультацию. Врач оценит, какие зубы можно сохранить, и объяснит доступные варианты восстановления.'],
+    contract: ['Запросить образец договора', 'Оставьте телефон – администратор свяжется с вами, уточнит, куда прислать образец договора, или предложит ознакомиться с ним на консультации.'],
   };
   const openModal = (title, text) => {
     dlgTitle.textContent = title || dlgDefault.title;
@@ -88,7 +88,7 @@
   $$('[data-modal]').forEach(b => b.addEventListener('click', e => {
     e.preventDefault();
     if (b.hasAttribute('data-finance') && payAmount) {
-      openModal('Получить точный расчёт', 'Предварительный расчёт: ' + payAmount.selectedOptions[0].textContent + ' на ' + payMonths.value + ' мес. — ' + payResult.textContent + ' в месяц без учёта процентов. Оставьте телефон, чтобы уточнить доступную программу и условия оплаты.');
+      openModal('Получить точный расчёт', 'Предварительный расчёт: ' + payAmount.selectedOptions[0].textContent + ' на ' + payMonths.value + ' мес. – ' + payResult.textContent + ' в месяц без учёта процентов. Оставьте телефон, чтобы уточнить доступную программу и условия оплаты.');
       return;
     }
     const key = Object.keys(variants).find(k => b.hasAttribute('data-' + k));
@@ -132,7 +132,7 @@
     const answers = $('input[name=answers]', contact);
     quiz.addEventListener('change', () => {
       render();
-      answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '—').join(' | ');
+      answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '–').join(' | ');
     });
     next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) { s++; render(true); } });
     back.addEventListener('click', () => { if (s > 0) { s--; render(true); } });
@@ -164,7 +164,7 @@
         selected = item;
         items.forEach(i => $('button', i).setAttribute('aria-pressed', String(i === selected)));
         preview(item);
-        status.textContent = item.dataset.shade + ' — ' + $('.smile-shade-tip span', item).textContent;
+        status.textContent = item.dataset.shade + ' – ' + $('.smile-shade-tip span', item).textContent;
       });
       b.addEventListener('keydown', e => {
         let n;
@@ -220,10 +220,16 @@
       e.preventDefault();
       if (!files.length) { msg.textContent = 'Добавьте фото или PDF плана лечения.'; input.focus(); return; }
       console.log('lead', 'opinion', files.map(f => f.name)); // TODO: загрузка файлов и отправка в CRM
-      openModal('Получить расчёт со скидкой 15%', 'Файлов выбрано: ' + files.length + '. Оставьте телефон — администратор свяжется с вами и пришлёт расчёт со скидкой.');
+      openModal('Получить расчёт со скидкой 15%', 'Файлов выбрано: ' + files.length + '. Оставьте телефон – администратор свяжется с вами и пришлёт расчёт со скидкой.');
     });
   }
 
+
+  /* карта: включается по нажатию, чтобы не перехватывать прокрутку */
+  document.addEventListener('click', e => {
+    const cover = e.target.closest('.closing-map-cover');
+    if (cover) cover.closest('.closing-map-frame').classList.add('is-active');
+  });
 
   /* табы маршрута */
   const tabs = $$('.closing-tabs [role=tab]');

@@ -212,6 +212,9 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-menu-contacts{display:grid;gap:8px;margin-top:12px;padding:14px;border-radius:16px;background:var(--paper);font-size:14px;color:var(--ink-2)}
 .m-menu-contacts a{color:var(--ink);font-weight:700;text-decoration:none;font-size:18px}
 .m-menu-contacts b{font-weight:600;color:var(--ink)}
+.m-menu-contacts .m-menu-policy{font-size:13px;font-weight:600;color:var(--violet);text-decoration:underline}
+.m-sheet .closing-map{margin-top:12px}
+.m-sheet .closing-map-frame{height:260px}
 
 /* ---------- форма: шторка снизу, при клавиатуре — к верху видимой области ---------- */
 .modal{margin:auto 0 0!important;width:100%!important;max-width:none!important;max-height:calc(var(--vv-h) - 24px)!important;border-radius:26px 26px 0 0!important;overflow:hidden!important;transition:transform .2s}

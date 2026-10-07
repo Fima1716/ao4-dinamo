@@ -49,10 +49,10 @@ ol li::before{content:counter(s);flex:none;display:grid;place-items:center;width
   <section class="card">
     <svg class="smile" viewBox="0 0 200 118" aria-hidden="true"><g fill="#fff" stroke="#fff" stroke-width="13" stroke-linecap="round"><path d="M26 30a74 74 0 0 0 148 0" fill="none"/><circle cx="40" cy="12" r="9" stroke="none"/><circle cx="160" cy="12" r="9" stroke="none"/></g></svg>
     <h1 id="title">Спасибо, заявка принята</h1>
-    <p class="lead" id="lead">Администратор перезвонит в рабочее время — ежедневно с 9:00 до 21:00.</p>
+    <p class="lead" id="lead">Администратор перезвонит в рабочее время – ежедневно с 9:00 до 21:00.</p>
     <ol>
       <li>Уточним вашу ситуацию и подберём удобное время консультации.</li>
-      <li>На приёме сделаем 3D КТ с ИИ-анализом Diagnocat — 0&nbsp;₽ вместо 7&nbsp;000&nbsp;₽.</li>
+      <li>На приёме сделаем 3D КТ с ИИ-анализом Diagnocat – 0&nbsp;₽ вместо 7&nbsp;000&nbsp;₽.</li>
       <li>Три специалиста предложат план лечения с полной стоимостью до начала работ.</li>
     </ol>
     <div class="actions">
@@ -67,7 +67,7 @@ ol li::before{content:counter(s);flex:none;display:grid;place-items:center;width
 (() => {
   const form = new URLSearchParams(location.search).get('form');
   const t = {
-    quiz: ['Спасибо, ответы получили', 'Подготовим варианты лечения и условия бонусов и перезвоним в рабочее время — ежедневно с 9:00 до 21:00.'],
+    quiz: ['Спасибо, ответы получили', 'Подготовим варианты лечения и условия бонусов и перезвоним в рабочее время – ежедневно с 9:00 до 21:00.'],
   }[form];
   if (t) { document.getElementById('title').textContent = t[0]; document.getElementById('lead').textContent = t[1]; }
   /* событие для аналитики: сюда подключается цель Метрики, когда появится счётчик */

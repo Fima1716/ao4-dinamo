@@ -56,7 +56,7 @@
   /* ---------- первый экран: кнопка вместо формы ---------- */
   const heroGrid = $('.v1 .hero__grid');
   if (heroGrid) {
-    const cta = nav('m-hero-cta', `<button type="button">Рассчитать стоимость <span>→</span></button><p>* План работ и финальная стоимость — в договоре</p>`);
+    const cta = nav('m-hero-cta', `<button type="button">Рассчитать стоимость <span>→</span></button><p>* План работ и финальная стоимость – в договоре</p>`);
     $('button', cta).addEventListener('click', openLead);
     heroGrid.append(cta);
   }
@@ -71,7 +71,7 @@
     ] },
     { id: 'cases', title: 'До и после', cover: A + 'cases/shklyaeva-face-after.jpg', fit: true, slides: [
       { img: A + 'cases/shklyaeva-face-before.jpg', tag: 'До', cap: 'Пациентка Е. Ш.', sub: 'Полное отсутствие зубов на обеих челюстях' },
-      { img: A + 'cases/shklyaeva-face-after.jpg', tag: 'После', cap: 'All-on-4 на обе челюсти', sub: 'Адаптационный протез — в день операции' },
+      { img: A + 'cases/shklyaeva-face-after.jpg', tag: 'После', cap: 'All-on-4 на обе челюсти', sub: 'Адаптационный протез – в день операции' },
       { img: A + 'land/vladimir-before.jpg', tag: 'До', cap: 'Владимир', sub: 'Носил съёмный протез' },
       { img: A + 'land/vladimir-after.jpg', tag: 'После', cap: 'All-on-4 на имплантах Snucon', sub: 'Несъёмный протез в день операции' },
       { img: A + 'land/vitaliy-before.jpg', tag: 'До', cap: 'Виталий', sub: 'Атрофия костной ткани' },
@@ -86,9 +86,9 @@
     ] },
     { id: 'clinic', title: 'Клиника', cover: A + 'stories/clinic-entrance.webp', slides: [
       { img: A + 'stories/clinic-entrance.webp', cap: 'Вход с улицы, 1 этаж', sub: 'Ленинградский проспект, 36, стр. 40' },
-      { img: A + 'stories/clinic-ct.webp', cap: 'Диагностика на месте', sub: '3D КТ с ИИ-анализом — 0 ₽' },
-      { img: A + 'stories/clinic-surgery.webp', cap: 'Операционная', sub: 'Имплантация и протез — в один визит' },
-      { img: A + 'stories/clinic-consult.webp', cap: 'Консультация', sub: 'План и стоимость — до начала лечения' },
+      { img: A + 'stories/clinic-ct.webp', cap: 'Диагностика на месте', sub: '3D КТ с ИИ-анализом – 0 ₽' },
+      { img: A + 'stories/clinic-surgery.webp', cap: 'Операционная', sub: 'Имплантация и протез – в один визит' },
+      { img: A + 'stories/clinic-consult.webp', cap: 'Консультация', sub: 'План и стоимость – до начала лечения' },
     ] },
     { id: 'route', title: 'Маршрут', cover: A + 'route/metro-dinamo.webp', slides: [
       { img: A + 'route/metro-dinamo.webp', tag: '1', cap: 'Метро «Динамо»', sub: 'Выход к Ленинградскому проспекту' },
@@ -231,10 +231,7 @@
       ['.closing-chief', '.closing-docs'].forEach(s => { const c = clone(s); if (c) body.append(c); });
     }),
     route: makeSheet('route', 'Как добраться', body => {
-      ['.closing-tabs', '.closing-route-panels', '.closing-route-addr'].forEach(s => { const c = clone(s); if (c) body.append(c); });
-      const maps = nav('m-maps', `<a href="https://yandex.ru/maps/org/all_smiles/35087973041/" target="_blank" rel="noopener noreferrer"><img src="${A}marks/yandex-maps.svg" alt="">Яндекс Карты</a>
-        <a href="https://2gis.ru/moscow/firm/70000001055164514" target="_blank" rel="noopener noreferrer"><img src="${A}marks/2gis.png" alt="">2ГИС</a>`);
-      body.append(maps);
+      ['.closing-tabs', '.closing-route-panels', '.closing-route-addr', '.closing-map'].forEach(s => { const c = clone(s); if (c) body.append(c); });
       const tabs = $$('.closing-tabs [data-route]', body), panels = $$('.closing-route-steps', body);
       tabs.forEach(t => t.addEventListener('click', () => {
         tabs.forEach(x => x.setAttribute('aria-selected', String(x === t)));
@@ -243,8 +240,8 @@
     }),
     menu: makeSheet('menu', 'Меню', body => {
       const items = [
-        ['cases', 'Результаты лечения', ICO.smile], ['finance', 'Рассрочка и кредит', ICO.percent], ['quiz', 'Подбор за минуту', ICO.list],
-        ['implant-brands', 'Импланты и цены', ICO.tooth], ['smile-aesthetic', 'Эстетика улыбки', ICO.smile], ['second-opinion', 'Второе мнение — скидка 15%', ICO.file],
+        ['cases', 'Результаты лечения', ICO.smile], ['reviews', 'Отзывы пациентов', ICO.smile], ['finance', 'Рассрочка и кредит', ICO.percent], ['quiz', 'Подбор за минуту', ICO.list],
+        ['implant-brands', 'Импланты и цены', ICO.tooth], ['smile-aesthetic', 'Эстетика улыбки', ICO.smile], ['second-opinion', 'Второе мнение – скидка 15%', ICO.file],
         ['care-support', 'Сопровождение и гарантии', ICO.shield], ['closing-team', 'Врачи', ICO.doc], ['closing-faq', 'Вопросы и ответы', ICO.help], ['closing-route', 'Как добраться', ICO.pin],
       ].filter(([id]) => document.getElementById(id));
       const list = document.createElement('ul'); list.className = 'm-menu-list';
@@ -253,7 +250,7 @@
         e.preventDefault(); const target = document.getElementById(a.getAttribute('href').slice(1));
         sheets.menu.close(); setTimeout(() => target && target.scrollIntoView({ block: 'start' }), 60);
       }));
-      const contacts = nav('m-menu-contacts', `<a href="tel:+74950650077">+7 (495) 065-00-77</a><span><b>Ежедневно</b> с 9:00 до 21:00</span><span>Москва, Ленинградский проспект, д. 36, стр. 40 · 2 минуты от метро «Динамо»</span>`);
+      const contacts = nav('m-menu-contacts', `<a href="tel:+74950650077">+7 (495) 065-00-77</a><span><b>Ежедневно</b> с 9:00 до 21:00</span><span>Москва, Ленинградский проспект, д. 36, стр. 40 · 2 минуты от метро «Динамо»</span><span><a class="m-menu-policy" href="policy/">Политика обработки персональных данных</a></span>`);
       body.append(list, contacts);
     }),
   };
