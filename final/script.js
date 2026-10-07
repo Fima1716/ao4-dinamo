@@ -130,8 +130,11 @@
     };
     fit(); addEventListener('resize', fit); addEventListener('load', fit);
     const answers = $('input[name=answers]', contact);
-    quiz.addEventListener('change', () => {
+    const auto = matchMedia('(max-width:760px)');
+    quiz.addEventListener('change', e => {
       render();
+      /* на телефоне выбор варианта сам открывает следующий вопрос, как в приложении */
+      if (auto.matches && e.target.type === 'radio' && s < 3) setTimeout(() => { if (s < 3 && $('input:checked', steps[s])) { s++; render(true); } }, 260);
       answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '–').join(' | ');
     });
     next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) { s++; render(true); } });
