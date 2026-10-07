@@ -87,7 +87,7 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-story__media{position:absolute;inset:0}
 .m-story__media img{width:100%;height:100%;object-fit:cover}
 .m-story--fit .m-story__media img{object-fit:contain}
-.m-story--doctors .m-story__media{background:#e93d8d var(--smiles) center/420px}
+.m-story--doctors .m-story__media{background:#f6f4f7}
 .m-story__media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 22%,transparent 55%,rgba(0,0,0,.72))}
 .m-story__promo{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:32px;background:#e93d8d var(--smiles) right -80px top -60px/420px no-repeat}
 .m-story__promo b{font-size:84px;line-height:1;font-weight:700;letter-spacing:-.04em}

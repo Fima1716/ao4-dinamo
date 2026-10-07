@@ -77,12 +77,12 @@
       { img: A + 'land/vitaliy-before.jpg', tag: 'До', cap: 'Виталий', sub: 'Атрофия костной ткани' },
       { img: A + 'land/vitaliy-after.jpg', tag: 'После', cap: 'Nobel по 3D-шаблону', sub: 'Протез с армирующей балкой' },
     ] },
-    { id: 'doctors', title: 'Врачи', cover: A + 'doctors/berlov.jpg', fit: true, doctors: true, slides: [
-      { img: A + 'doctors/berlov.jpg', cap: 'Берлов Антон Владимирович', sub: 'Главный врач сети, д. м. н., профессор · стаж более 30 лет' },
-      { img: A + 'doctors/kogon.jpg', cap: 'Когон Борис Александрович', sub: 'Стоматолог-ортопед · стаж 17 лет' },
-      { img: A + 'doctors/akchurin.jpg', cap: 'Акчурин Руслан Дамирович', sub: 'Стоматолог-хирург · стаж 18 лет' },
-      { img: A + 'doctors/ovsepyan.jpg', cap: 'Овсепян Симон Левонович', sub: 'Стоматолог-ортопед · стаж 4 года' },
-      { img: A + 'doctors/kalandarov.jpg', cap: 'Каландаров Махмуд Маъмурович', sub: 'Стоматолог-хирург · стаж 16 лет' },
+    { id: 'doctors', title: 'Врачи', cover: A + 'doctors/berlov.webp', fit: true, doctors: true, slides: [
+      { img: A + 'doctors/berlov.webp', cap: 'Берлов Антон Владимирович', sub: 'Главный врач сети, д. м. н., профессор · стаж более 30 лет' },
+      { img: A + 'doctors/kogon.webp', cap: 'Когон Борис Александрович', sub: 'Стоматолог-ортопед · стаж 17 лет' },
+      { img: A + 'doctors/akchurin.webp', cap: 'Акчурин Руслан Дамирович', sub: 'Стоматолог-хирург · стаж 18 лет' },
+      { img: A + 'doctors/ovsepyan.webp', cap: 'Овсепян Симон Левонович', sub: 'Стоматолог-ортопед · стаж 4 года' },
+      { img: A + 'doctors/kalandarov.webp', cap: 'Каландаров Махмуд Маъмурович', sub: 'Стоматолог-хирург · стаж 16 лет' },
     ] },
     { id: 'clinic', title: 'Клиника', cover: A + 'stories/clinic-entrance.webp', slides: [
       { img: A + 'stories/clinic-entrance.webp', cap: 'Вход с улицы, 1 этаж', sub: 'Ленинградский проспект, 36, стр. 40' },
