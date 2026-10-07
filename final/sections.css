@@ -611,7 +611,7 @@ main .smile-aesthetic-lead{grid-column:2;margin:0 0 10px;max-width:none;font-siz
 /* ---------- отзывы: официальный виджет Яндекс Карт ---------- */
 .reviews-section{padding:8px 28px 34px;background:var(--paper);scroll-margin-top:100px}
 .reviews-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,640px);gap:24px 40px;align-items:start}
-.reviews-head{position:sticky;top:110px}
+.reviews-head{position:static}
 main #reviews-title{margin:0 0 12px}
 main .reviews-intro{margin:0 0 20px;font-size:15px;line-height:1.5;color:var(--ink-2);max-width:46ch}
 .reviews-links{display:grid;gap:8px}
