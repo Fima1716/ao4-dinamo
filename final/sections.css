@@ -782,7 +782,7 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 .match-quiz-messenger input:checked+span{border-color:var(--pink);background:var(--pink-10);color:var(--pink)}
 .match-quiz-messenger input:focus-visible+span{outline:2px solid var(--violet);outline-offset:2px}
 /* логотип Neodent (by Straumann) в карточке бренда */
-.neodent-logo img{max-height:64px;width:auto;object-fit:contain;object-position:left center}
+.neodent-logo img{max-height:56px;width:auto;object-fit:contain;object-position:left center}
 
 /* блок врачей: теперь три карточки в ряд */
 .closing-docs{grid-template-columns:repeat(3,minmax(0,1fr))}
