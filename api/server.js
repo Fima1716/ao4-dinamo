@@ -43,7 +43,7 @@ function send(res, code, body, extra = {}) {
 function body(req) {
   return new Promise((resolve, reject) => {
     let s = '';
-    req.on('data', c => { s += c; if (s.length > 2e6) req.destroy(); });
+    req.on('data', c => { s += c; if (s.length > 12e6) req.destroy(); });
     req.on('end', () => { try { resolve(JSON.parse(s || '{}')); } catch (e) { reject(e); } });
     req.on('error', reject);
   });
@@ -83,8 +83,14 @@ http.createServer(async (req, res) => {
     const cur = readJSON(file);
     const patch = b.data && typeof b.data === 'object' ? b.data : {};
     for (const [k, v] of Object.entries(patch)) {
-      if (v === null) delete cur[k];
-      else cur[k] = String(v).slice(0, 20000);
+      if (v === null) { delete cur[k]; continue; }
+      // разные лимиты: картинки большие (data URL), скрипты и SEO поменьше
+      const cap = k.startsWith('img:') ? 4_000_000
+        : k === 'scripts' ? 200_000
+        : k.startsWith('seo:') ? 4_000
+        : k === 'order:main' ? 20_000
+        : 20_000;
+      cur[k] = String(v).slice(0, cap);
     }
     fs.writeFileSync(file, JSON.stringify(cur, null, 1));
     return send(res, 200, { ok: true, count: Object.keys(cur).length });
