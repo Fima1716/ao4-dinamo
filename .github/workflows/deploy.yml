@@ -83,7 +83,8 @@ jobs:
           changed=$(rsync -az --itemize-changes api/server.js deploy:/var/www/ao4-api/server.js)
           if [ -n "$changed" ]; then
             echo "server.js обновлён, перезапускаю"
-            ssh deploy 'pm2 reload ao4-api --update-env'
+            # без --update-env: окружение процесса (в т.ч. EDITOR_PASSWORD) сохраняется
+            ssh deploy 'pm2 reload ao4-api'
           else
             echo "server.js без изменений, перезапуск не нужен"
           fi
