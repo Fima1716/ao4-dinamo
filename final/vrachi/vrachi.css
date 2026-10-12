@@ -9,7 +9,7 @@ body.doc-page{margin:0;background:#fff;color:var(--ink);font-family:var(--ui);-w
 .doc-wrap{max-width:var(--doc-max);margin:0 auto;padding:0 24px}
 
 /* верхняя панель */
-.doc-topbar{position:sticky;top:0;z-index:20;background:#fffffff2;backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--line)}
+.doc-topbar{background:#fff;border-bottom:1px solid var(--line)}
 .doc-topbar-in{max-width:var(--doc-max);margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:20px}
 .doc-topbar a.doc-logo{display:flex;align-items:center}
 .doc-topbar a.doc-logo img{height:34px;width:auto;display:block}
@@ -27,7 +27,7 @@ body.doc-page{margin:0;background:#fff;color:var(--ink);font-family:var(--ui);-w
 
 /* герой */
 .doc-hero{display:grid;grid-template-columns:420px minmax(0,1fr);gap:48px;padding:26px 0 40px;align-items:start}
-.doc-photo{position:sticky;top:90px;border-radius:22px;overflow:hidden;background:var(--paper)}
+.doc-photo{border-radius:22px;overflow:hidden;background:var(--paper)}
 .doc-photo img{display:block;width:100%;height:auto}
 .doc-info{padding-top:4px}
 .doc-eyebrow{color:var(--pink);text-transform:uppercase;letter-spacing:.06em;font:600 13px var(--ui)}
