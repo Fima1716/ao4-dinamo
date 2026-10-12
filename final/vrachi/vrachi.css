@@ -1,5 +1,10 @@
-/* Страницы отдельных врачей */
-:root{--doc-max:1160px}
+/* Страницы отдельных врачей — самодостаточный стиль, без общего CSS сайта */
+:root{
+ --ui:'Nunito','Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+ --ink:#2e2e35; --muted:#5f5d68; --pink:#e93d8d; --paper:#f4f3f7;
+ --lavender:#b9a7ea; --violet:#5e5391; --line:#e3e0eb; --doc-max:1160px;
+}
+*{box-sizing:border-box}
 body.doc-page{margin:0;background:#fff;color:var(--ink);font-family:var(--ui);-webkit-font-smoothing:antialiased}
 .doc-wrap{max-width:var(--doc-max);margin:0 auto;padding:0 24px}
 
@@ -23,7 +28,7 @@ body.doc-page{margin:0;background:#fff;color:var(--ink);font-family:var(--ui);-w
 /* герой */
 .doc-hero{display:grid;grid-template-columns:420px minmax(0,1fr);gap:48px;padding:26px 0 40px;align-items:start}
 .doc-photo{position:sticky;top:90px;border-radius:22px;overflow:hidden;background:var(--paper)}
-.doc-photo img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top}
+.doc-photo img{display:block;width:100%;height:auto}
 .doc-info{padding-top:4px}
 .doc-eyebrow{color:var(--pink);text-transform:uppercase;letter-spacing:.06em;font:600 13px var(--ui)}
 .doc-info h1{font:600 clamp(30px,3.4vw,46px)/1.12 var(--ui);letter-spacing:-.03em;color:var(--ink);margin:10px 0 18px}
@@ -59,8 +64,7 @@ body.doc-page{margin:0;background:#fff;color:var(--ink);font-family:var(--ui);-w
 
 @media(max-width:900px){
  .doc-hero{grid-template-columns:1fr;gap:24px;padding:18px 0 30px}
- .doc-photo{position:static;max-width:360px}
- .doc-photo img{aspect-ratio:1}
+ .doc-photo{position:static;max-width:340px;margin:0 auto}
 }
 @media(max-width:560px){
  .doc-wrap,.doc-topbar-in,.doc-foot-in{padding-left:16px;padding-right:16px}
