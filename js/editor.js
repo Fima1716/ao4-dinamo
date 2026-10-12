@@ -65,6 +65,9 @@
       + `(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");ym(${JSON.stringify(id)},"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});<\/script>`
       + `<noscript><div><img src="https://mc.yandex.ru/watch/${encodeURIComponent(id)}" style="position:absolute;left:-9999px" alt=""/></div><\/noscript>`;
   }
+  function calltouchSnippet(id) {
+    return `<script>(function(w,d,n,c){w.CalltouchDataObject=n;w[n]=function(){w[n]["callbacks"].push(arguments)};if(!w[n]["callbacks"]){w[n]["callbacks"]=[]}w[n]["loaded"]=false;if(typeof c!=="object"){c=[c]}w[n]["counters"]=c;for(var i=0;i<c.length;i+=1){p(c[i])}function p(cId){var a=d.getElementsByTagName("script")[0],s=d.createElement("script"),i=function(){a.parentNode.insertBefore(s,a)},m=typeof Array.prototype.find === "function",n=m?"init-min.js":"init.js";s.async=true;s.src="https://mod.calltouch.ru/"+n+"?id="+cId;if(w.opera=="[object Opera]"){d.addEventListener("DOMContentLoaded",i,false)}else{i()}}})(window,document,"ct",${JSON.stringify(String(id))});<\/script>`;
+  }
   function applySettings(s) {
     if (!s) return;
     const seo = s.seo || {};
@@ -85,6 +88,7 @@
       if (s.metrika) injectHTML(s.metrika);
       else if (s.metrikaId) injectHTML(metrikaSnippet(s.metrikaId));
       if (s.calltracking) injectHTML(s.calltracking);
+      else if (s.calltrackingId) injectHTML(calltouchSnippet(s.calltrackingId));
       if (s.headExtra) injectHTML(s.headExtra);
     }
   }
@@ -248,11 +252,17 @@ body.ed-on main>section[id]{position:relative;outline:1px dashed rgba(94,83,145,
     });
     picker.addEventListener('change', async () => {
       const f = picker.files[0]; if (!f || !target) return;
-      toast('Обрабатываю фото…');
+      toast('Загружаю фото…');
       try {
-        const url = await fileToDataURL(f);
-        target.src = url; target.removeAttribute('srcset'); target.classList.add('ed-dirty');
-        dirty.set('img:' + target.dataset.edimg, url); bump(); toast('Фото заменено, не забудьте сохранить');
+        const data = await fileToDataURL(f);
+        // грузим файлом на сервер, чтобы не раздувать правки; если не вышло — храним как data URL
+        let src = data;
+        try {
+          const r = await fetch(`${API}/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() }, body: JSON.stringify({ data }) });
+          if (r.ok) { const j = await r.json(); if (j.path) src = j.path; }
+        } catch {}
+        target.src = src; target.removeAttribute('srcset'); target.classList.add('ed-dirty');
+        dirty.set('img:' + target.dataset.edimg, src); bump(); toast('Фото заменено, не забудьте сохранить');
       } catch { toast('Не удалось обработать фото'); }
     });
 

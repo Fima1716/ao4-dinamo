@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Админка · All Smiles</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
 <style>
 :root{--pink:#e93d8d;--pink-d:#c9247a;--violet:#5e5391;--lav:#eeeaf9;--lav2:#e2dcf4;--ink:#2e2e35;--ink2:#5f5d68;--muted:#8d8c96;--paper:#f4f3f7;--line:#e2dcf4}
 *{box-sizing:border-box}
@@ -65,6 +71,12 @@ td a{font-weight:700;text-decoration:none;color:var(--ink)}
 td .ans{color:var(--ink2);font-size:13px}
 td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padding:2px 6px}
 .empty{padding:40px;text-align:center;color:var(--muted)}
+.CodeMirror{border:1.5px solid var(--lav2);border-radius:11px;height:auto;min-height:150px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+.CodeMirror-focused{border-color:var(--pink)}
+.upload-row{display:flex;gap:10px;align-items:center;margin-top:4px}
+.upload-row .btn{padding:9px 14px}
+.og-prev{max-width:220px;max-height:120px;border-radius:10px;border:1px solid var(--line);margin-top:10px;display:none}
+.og-prev.on{display:block}
 @media(max-width:760px){
   .app{grid-template-columns:1fr}
   .side{position:sticky;top:0;z-index:5;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;padding:10px}
@@ -129,7 +141,10 @@ td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padd
         <label>Индексация (meta robots)<small>например: index,follow или noindex,nofollow</small></label><input type="text" id="s_robots">
         <label>OG заголовок</label><input type="text" id="s_ogTitle">
         <label>OG описание</label><input type="text" id="s_ogDescription">
-        <label>OG картинка (URL)</label><input type="text" id="s_ogImage">
+        <label>OG картинка<small>показывается при репосте ссылки. Загрузите файл или вставьте URL. Лучший размер 1200×630.</small></label>
+        <input type="text" id="s_ogImage" placeholder="https://… или загрузите файл">
+        <div class="upload-row"><button type="button" class="btn" id="ogUpload">Загрузить файл</button><input type="file" id="ogFile" accept="image/*" style="display:none"></div>
+        <img class="og-prev" id="ogPrev" alt="">
       </div>
       <div class="card">
         <h3>robots.txt</h3>
@@ -156,7 +171,9 @@ td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padd
       <div class="head"><h2>Колтрекинг</h2></div>
       <div class="card">
         <h3>Код коллтрекинга</h3>
-        <p class="hint">Код подмены номера от сервиса колтрекинга (Calltouch, Comagic, Mango и т.п.). Вставьте целиком со скриптами — он добавится в &lt;head&gt; всех страниц.</p>
+        <p class="hint">Для Calltouch достаточно вписать ID счётчика — код подключится автоматически. Для других сервисов (Comagic, Mango) вставьте полный код ниже, он имеет приоритет.</p>
+        <label>ID Calltouch<small>то, что в коде вместо ХХХХХХХХ</small></label><input type="text" id="s_calltrackingId">
+        <label>Или полный код<small>добавляется в &lt;head&gt; всех страниц</small></label>
         <textarea id="s_calltracking" placeholder="<script>...</script>"></textarea>
       </div>
       <div class="save-row"><button class="btn go" data-save>Сохранить</button><span class="ok hide" data-ok>Сохранено</span></div>
@@ -201,10 +218,24 @@ $('#loginForm').addEventListener('submit', async e=>{
 });
 $('#logout').addEventListener('click',()=>{ localStorage.removeItem(TK); location.reload(); });
 
+/* редактор кода (CodeMirror) для полей со скриптами */
+const CM={};
+function initCM(){
+  if(CM.ready||typeof CodeMirror==='undefined')return;
+  [['s_metrika','htmlmixed'],['s_calltracking','htmlmixed'],['s_headExtra','htmlmixed'],['s_robotsTxt',null]].forEach(([id,mode])=>{
+    const ta=document.getElementById(id); if(!ta)return;
+    CM[id]=CodeMirror.fromTextArea(ta,{mode:mode?{name:mode}:null,lineNumbers:true,lineWrapping:true,viewportMargin:Infinity,tabSize:2});
+  });
+  CM.ready=true;
+}
+const cmVal=id=>CM[id]?CM[id].getValue():(document.getElementById(id)||{}).value||'';
+const cmSet=(id,v)=>{ if(CM[id])CM[id].setValue(v||''); else {const e=document.getElementById(id); if(e)e.value=v||'';} };
+
 /* вкладки */
 $$('#nav button').forEach(b=>b.addEventListener('click',()=>{
   $$('#nav button').forEach(x=>x.classList.toggle('on',x===b));
   $$('.pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===b.dataset.tab));
+  Object.keys(CM).forEach(k=>CM[k]&&CM[k].refresh&&CM[k].refresh());
 }));
 
 /* заявки */
@@ -246,22 +277,41 @@ $('#csv').addEventListener('click',()=>{
 
 /* настройки */
 async function loadSettings(){
+  initCM();
   try{
     const s=await (await fetch(API+'/settings',{cache:'no-store'})).json(); const seo=s.seo||{};
     $('#s_title').value=seo.title||''; $('#s_description').value=seo.description||''; $('#s_robots').value=seo.robots||'';
     $('#s_ogTitle').value=seo.ogTitle||''; $('#s_ogDescription').value=seo.ogDescription||''; $('#s_ogImage').value=seo.ogImage||'';
-    $('#s_robotsTxt').value=s.robotsTxt||''; $('#s_metrikaId').value=s.metrikaId||''; $('#s_metrika').value=s.metrika||'';
-    $('#s_calltracking').value=s.calltracking||''; $('#s_headExtra').value=s.headExtra||'';
+    $('#s_metrikaId').value=s.metrikaId||''; $('#s_calltrackingId').value=s.calltrackingId||'';
+    cmSet('s_robotsTxt',s.robotsTxt); cmSet('s_metrika',s.metrika); cmSet('s_calltracking',s.calltracking); cmSet('s_headExtra',s.headExtra);
+    ogPreview(seo.ogImage);
   }catch{}
 }
 function gather(){
   return { data:{
     seo:{ title:$('#s_title').value, description:$('#s_description').value, robots:$('#s_robots').value,
       ogTitle:$('#s_ogTitle').value, ogDescription:$('#s_ogDescription').value, ogImage:$('#s_ogImage').value },
-    robotsTxt:$('#s_robotsTxt').value, metrikaId:$('#s_metrikaId').value.replace(/\D/g,''), metrika:$('#s_metrika').value,
-    calltracking:$('#s_calltracking').value, headExtra:$('#s_headExtra').value,
+    robotsTxt:cmVal('s_robotsTxt'), metrikaId:$('#s_metrikaId').value.replace(/\D/g,''), metrika:cmVal('s_metrika'),
+    calltracking:cmVal('s_calltracking'), calltrackingId:$('#s_calltrackingId').value.replace(/\D/g,''), headExtra:cmVal('s_headExtra'),
   }};
 }
+/* OG-картинка: загрузка файлом */
+function ogPreview(url){ const p=$('#ogPrev'); if(url){ p.src=url; p.classList.add('on'); } else p.classList.remove('on'); }
+function shrink(file,max){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>{ const s=Math.min(1,max/Math.max(i.width,i.height)); const c=document.createElement('canvas'); c.width=Math.round(i.width*s); c.height=Math.round(i.height*s); c.getContext('2d').drawImage(i,0,0,c.width,c.height); URL.revokeObjectURL(i.src); res(c.toDataURL(/png/i.test(file.type)?'image/png':'image/jpeg',0.9)); }; i.onerror=rej; i.src=URL.createObjectURL(file); }); }
+$('#ogUpload').addEventListener('click',()=>$('#ogFile').click());
+$('#ogFile').addEventListener('change',async()=>{
+  const f=$('#ogFile').files[0]; if(!f)return;
+  $('#ogUpload').disabled=true; $('#ogUpload').textContent='Загружаю…';
+  try{
+    const data=await shrink(f,1200);
+    const r=await fetch(API+'/upload',{method:'POST',headers:auth(),body:JSON.stringify({data})});
+    if(r.status===401){ localStorage.removeItem(TK); return tryShow(); }
+    const j=await r.json(); if(!r.ok)throw 0;
+    $('#s_ogImage').value=j.url||j.path; ogPreview(j.path||j.url);
+  }catch{ alert('Не удалось загрузить файл'); }
+  $('#ogUpload').disabled=false; $('#ogUpload').textContent='Загрузить файл';
+});
+$('#s_ogImage').addEventListener('input',()=>ogPreview($('#s_ogImage').value));
 $$('[data-save]').forEach(btn=>btn.addEventListener('click',async()=>{
   btn.disabled=true; const ok=btn.parentElement.querySelector('[data-ok]');
   try{

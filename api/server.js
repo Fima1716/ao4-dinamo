@@ -13,7 +13,40 @@ if (!process.env.EDITOR_PASSWORD) console.warn('EDITOR_PASSWORD не задан 
 const TTL = 30 * 24 * 3600 * 1000;
 
 fs.mkdirSync(DATA, { recursive: true });
+const UPLOADS = path.join(DATA, 'uploads');
+fs.mkdirSync(UPLOADS, { recursive: true });
 const sessions = new Map();
+
+// секреты (токен Telegram и chat_id) — из окружения или из файла рядом с данными,
+// в репозиторий не попадают
+function secrets() {
+  const f = path.join(DATA, 'secrets.json');
+  let s = {}; try { s = JSON.parse(fs.readFileSync(f, 'utf8')); } catch {}
+  return {
+    tgToken: process.env.TG_TOKEN || s.tgToken || '',
+    tgChat: process.env.TG_CHAT || s.tgChat || '',
+  };
+}
+function notifyTelegram(lead) {
+  const { tgToken, tgChat } = secrets();
+  if (!tgToken || !tgChat) return;
+  const forms = { hero: 'Первый экран', modal: 'Окно «Рассчитать»', quiz: 'Квиз', final: 'Финальная форма', opinion: 'Второе мнение' };
+  const lines = [
+    '🦷 <b>Новая заявка</b> — All Smiles Динамо',
+    `Форма: ${forms[lead.form] || lead.form || '—'}`,
+    lead.name ? `Имя: ${lead.name}` : '',
+    `Телефон: ${lead.phone}`,
+    lead.messenger ? `Мессенджер: ${lead.messenger}` : '',
+    lead.answers ? `Ответы: ${lead.answers}` : '',
+  ].filter(Boolean);
+  const text = lines.join('\n');
+  fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: tgChat, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+  }).catch(() => {});
+}
+const MIME_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/svg+xml': 'svg' };
+const EXT_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml' };
 
 function slug(page) {
   const p = String(page || '/').replace(/[^a-zA-Z0-9/_-]/g, '').replace(/\/+/g, '/');
@@ -107,7 +140,19 @@ http.createServer(async (req, res) => {
     arr.push(lead);
     while (arr.length > 5000) arr.shift();
     fs.writeFileSync(LEADS, JSON.stringify(arr));
+    notifyTelegram(lead);
     return send(res, 200, { ok: true });
+  }
+
+  // отдача загруженных файлов (картинки OG и т.п.) — публично
+  if (req.method === 'GET' && route.startsWith('/uploads/')) {
+    const name = route.slice('/uploads/'.length);
+    if (!/^[a-zA-Z0-9_.-]+$/.test(name)) return send(res, 404, { error: 'not found' });
+    const file = path.join(UPLOADS, name);
+    let data; try { data = fs.readFileSync(file); } catch { return send(res, 404, { error: 'not found' }); }
+    const ext = (name.split('.').pop() || '').toLowerCase();
+    res.writeHead(200, { 'Content-Type': EXT_MIME[ext] || 'application/octet-stream', 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*' });
+    return res.end(data);
   }
 
   /* ---------- вход ---------- */
@@ -157,7 +202,8 @@ http.createServer(async (req, res) => {
       },
       metrika: str(p.metrika, 20000),       // код счётчика Яндекс Метрики
       metrikaId: str(p.metrikaId, 20),      // или только номер счётчика
-      calltracking: str(p.calltracking, 40000), // код коллтрекинга
+      calltracking: str(p.calltracking, 40000), // полный код коллтрекинга
+      calltrackingId: str(p.calltrackingId, 40), // или ID Calltouch
       robotsTxt: str(p.robotsTxt, 8000),
       headExtra: str(p.headExtra, 40000),   // любой дополнительный код в <head>
     };
@@ -179,6 +225,20 @@ http.createServer(async (req, res) => {
     }
     fs.writeFileSync(file, JSON.stringify(cur, null, 1));
     return send(res, 200, { ok: true, count: Object.keys(cur).length });
+  }
+
+  // загрузка файла (OG-картинка и пр.) — только админ
+  if (req.method === 'POST' && route === '/upload') {
+    if (!authed(req)) return needAuth();
+    let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
+    const m = /^data:([\w/+.-]+);base64,(.+)$/s.exec(String(b.data || ''));
+    if (!m || !MIME_EXT[m[1]]) return send(res, 400, { error: 'Нужна картинка' });
+    let buf; try { buf = Buffer.from(m[2], 'base64'); } catch { return send(res, 400, { error: 'bad data' }); }
+    if (buf.length > 8_000_000) return send(res, 413, { error: 'Файл больше 8 МБ' });
+    const file = crypto.randomBytes(8).toString('hex') + '.' + MIME_EXT[m[1]];
+    fs.writeFileSync(path.join(UPLOADS, file), buf);
+    const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
+    return send(res, 200, { ok: true, path: '/api/uploads/' + file, url: 'https://' + host + '/api/uploads/' + file });
   }
 
   if (req.method === 'POST' && route === '/reset') {
