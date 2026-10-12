@@ -116,6 +116,19 @@
       const v = data['img:' + keyOf(img)];
       if (v != null && okImgSrc(v) && img.getAttribute('src') !== v) { img.src = v; img.removeAttribute('srcset'); }
     });
+    // флаги (замена инлайн-SVG на картинку)
+    document.querySelectorAll('.implant-country > svg, .implant-country > img.ed-flag-img').forEach(node => {
+      const v = data['flag:' + keyOf(node.parentElement)];
+      if (v == null || !okImgSrc(v)) return;
+      if (node.tagName === 'IMG') { if (node.getAttribute('src') !== v) node.src = v; }
+      else { const img = flagImg(v); node.replaceWith(img); }
+    });
+  }
+  function flagImg(src) {
+    const img = document.createElement('img');
+    img.className = 'ed-flag-img'; img.src = src; img.alt = '';
+    img.style.cssText = 'width:30px;height:22px;object-fit:cover;border-radius:3px;display:inline-block;flex:none';
+    return img;
   }
 
   // быстро из кэша
@@ -132,6 +145,7 @@
       if (cr.ok) { serverData = await cr.json(); applyContent(serverData); try { localStorage.setItem(CACHE_KEY, JSON.stringify(serverData)); } catch {} }
       if (sr.ok) { const s = await sr.json(); applySettings(s); try { localStorage.setItem(SET_CACHE, JSON.stringify(s)); } catch {} }
     } catch {}
+    try { document.dispatchEvent(new Event('as:content-applied')); } catch {}
   }
 
   const token = () => localStorage.getItem(TOKEN_KEY);
@@ -169,7 +183,20 @@ body.ed-on main>section[id]{position:relative;outline:1px dashed rgba(94,83,145,
 .ed-login button{width:100%;height:48px;border:0;border-radius:12px;background:#e93d8d;color:#fff;font:inherit;font-weight:700;cursor:pointer}
 .ed-login .err{color:#d8305f;font-size:13px;min-height:18px;margin:6px 0 0}
 .ed-toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:100001;background:#1f1b33;color:#fff;padding:11px 20px;border-radius:999px;font:600 14px 'Nunito',sans-serif;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
-.ed-toast.on{opacity:1}`;
+.ed-toast.on{opacity:1}
+/* всё кликабельно в режиме правки */
+body.ed-on [data-edimg]{pointer-events:auto!important;position:relative;z-index:5}
+body.ed-on [data-edflag]{pointer-events:auto!important;cursor:pointer;outline:2px dashed rgba(94,83,145,.6);outline-offset:3px;border-radius:4px;position:relative;z-index:5}
+body.ed-on [data-edflag]:hover{outline-color:#5e5391}
+body.ed-on [data-modal],body.ed-on a[href]{position:relative}
+.ed-mbtn{all:unset;display:inline-flex;align-items:center;gap:4px;margin:0 0 0 6px;padding:5px 10px;border-radius:999px;background:#5e5391;color:#fff;font:700 12px/1 'Nunito','Segoe UI',sans-serif;cursor:pointer;vertical-align:middle;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.ed-mbtn:hover{background:#e93d8d}
+body.ed-on .modal-variants{display:block!important;margin-top:18px;border-top:1px dashed #d8d4e8;padding-top:14px}
+body.ed-on .modal-variants-head{font:700 13px 'Nunito',sans-serif;color:#8a86a0;margin:0 0 10px;text-transform:uppercase;letter-spacing:.03em}
+body.ed-on .modal-variants [data-variant]{margin:0 0 12px;padding-left:12px;border-left:3px solid #e9d8f0}
+body.ed-on .modal-variants [data-variant] b{display:block;font-size:16px;color:#2e2e35}
+body.ed-on .modal-variants [data-variant] span{display:block;font-size:13px;color:#7a7790;margin-top:3px}
+body.ed-on .modal[open]{z-index:100000}`;
     const el = document.createElement('style'); el.textContent = css; document.head.appendChild(el);
   }
   function toast(msg) {
@@ -219,7 +246,7 @@ body.ed-on main>section[id]{position:relative;outline:1px dashed rgba(94,83,145,
     const dirty = new Map(); let orderDirty = false;
     const bar = document.createElement('div'); bar.className = 'ed-bar';
     bar.innerHTML = `<span class="ed-dot"></span><b>Правка страницы</b>
-      <small>текст · фото · порядок блоков</small>
+      <small>текст · фото · флаги · окна · порядок блоков</small>
       <span class="ed-sp"><small class="ed-cnt">0 изм.</small>
       <a class="btn" href="admin/">Панель</a>
       <button type="button" class="ed-reset">Сбросить всё</button>
@@ -244,12 +271,19 @@ body.ed-on main>section[id]{position:relative;outline:1px dashed rgba(94,83,145,
     const picker = document.createElement('input');
     picker.type = 'file'; picker.accept = 'image/*'; picker.className = 'ed-picker'; picker.style.display = 'none';
     document.body.appendChild(picker);
-    let target = null;
-    document.querySelectorAll('img').forEach(img => {
+    let target = null, targetKind = 'img';
+    const bindImg = img => {
       if (img.closest(SKIP)) return;
       img.dataset.edimg = keyOf(img);
-      img.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); target = img; picker.value = ''; picker.click(); });
-    });
+      img.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); target = img; targetKind = 'img'; picker.value = ''; picker.click(); });
+    };
+    document.querySelectorAll('img').forEach(bindImg);
+    // флаги стран (инлайн-SVG) — тоже заменяемы картинкой
+    const bindFlag = el => {
+      el.dataset.edflag = keyOf(el.parentElement);
+      el.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); target = el; targetKind = 'flag'; picker.value = ''; picker.click(); });
+    };
+    document.querySelectorAll('.implant-country > svg, .implant-country > img.ed-flag-img').forEach(bindFlag);
     picker.addEventListener('change', async () => {
       const f = picker.files[0]; if (!f || !target) return;
       toast('Загружаю фото…');
@@ -261,9 +295,42 @@ body.ed-on main>section[id]{position:relative;outline:1px dashed rgba(94,83,145,
           const r = await fetch(`${API}/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() }, body: JSON.stringify({ data }) });
           if (r.ok) { const j = await r.json(); if (j.path) src = j.path; }
         } catch {}
-        target.src = src; target.removeAttribute('srcset'); target.classList.add('ed-dirty');
-        dirty.set('img:' + target.dataset.edimg, src); bump(); toast('Фото заменено, не забудьте сохранить');
+        if (targetKind === 'flag') {
+          const key = target.dataset.edflag;
+          const img = flagImg(src); img.dataset.edflag = key; img.classList.add('ed-dirty');
+          img.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); target = img; targetKind = 'flag'; picker.value = ''; picker.click(); });
+          target.replaceWith(img); target = img;
+          dirty.set('flag:' + key, src); bump(); toast('Флаг заменён, не забудьте сохранить');
+        } else {
+          target.src = src; target.removeAttribute('srcset'); target.classList.add('ed-dirty');
+          dirty.set('img:' + target.dataset.edimg, src); bump(); toast('Фото заменено, не забудьте сохранить');
+        }
       } catch { toast('Не удалось обработать фото'); }
+    });
+
+    /* блокируем действия сайта в режиме правки: клики по кнопкам/ссылкам/квизу
+       не открывают модалку и не уводят со страницы — редактируем их текст */
+    const KEEP = '.ed-bar,.ed-reorder,.ed-login,.ed-toast,.ed-mbtn,.modal-close,[data-edimg],[data-edflag]';
+    document.addEventListener('click', e => {
+      if (e.target.closest(KEEP)) return;
+      const t = e.target.closest('a[href],button,label,summary,[data-modal],[role=tab],[role=button]');
+      if (t) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    /* у каждой кнопки, открывающей окно заявки, — кнопка «✎ окно» для правки окна */
+    const dlg = document.getElementById('lead');
+    const openModalForEdit = () => {
+      if (!dlg) return;
+      try { dlg.showModal(); } catch { dlg.setAttribute('open', ''); }
+      toast('Правьте текст окна, закройте крестиком и нажмите «Сохранить»');
+    };
+    if (dlg) document.querySelectorAll('[data-modal]').forEach(btn => {
+      if (btn.closest(SKIP)) return;
+      const chip = document.createElement('button');
+      chip.type = 'button'; chip.className = 'ed-mbtn'; chip.dataset.noedit = '';
+      chip.textContent = '✎ окно';
+      chip.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); openModalForEdit(); });
+      btn.insertAdjacentElement('afterend', chip);
     });
 
     const main = document.querySelector('main');

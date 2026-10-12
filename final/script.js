@@ -82,11 +82,24 @@
   const dlg = $('#lead');
   const dlgTitle = $('h3', dlg), dlgText = $('.modal-body>p', dlg), dlgList = $('.modal-list', dlg);
   const dlgDefault = { title: dlgTitle.textContent, text: dlgText.textContent };
-  const variants = {
+  // заголовок окна по умолчанию берём из текущей разметки (учитываем правки из админки)
+  const syncDefault = () => { dlgDefault.title = dlgTitle.textContent; dlgDefault.text = dlgText.textContent; };
+  document.addEventListener('as:content-applied', syncDefault);
+  // тексты вариантов под кнопки — из блока .modal-variants, с запасным значением
+  const FALLBACK = {
     extraction: ['Удаление зубов за 99 ₽', 'Вместо 10 000 ₽ – при тотальной имплантации. Оставьте телефон, чтобы уточнить условия акции в клинике.'],
     sleep: ['Обсудить лечение во сне', 'Оставьте телефон – администратор поможет записаться на консультацию, чтобы обсудить лечение во сне и подходящий вариант обезболивания.'],
     choice: ['Разобрать мой случай', 'Оставьте телефон – администратор поможет записаться на консультацию. Врач оценит, какие зубы можно сохранить, и объяснит доступные варианты восстановления.'],
     contract: ['Запросить образец договора', 'Оставьте телефон – администратор свяжется с вами, уточнит, куда прислать образец договора, или предложит ознакомиться с ним на консультации.'],
+  };
+  const getVariant = key => {
+    const d = dlg.querySelector(`.modal-variants [data-variant="${key}"]`);
+    if (d) {
+      const b = $('b', d), s = $('span', d);
+      const t = b && b.textContent.trim(), x = s && s.textContent.trim();
+      if (t || x) return [t || FALLBACK[key][0], x || FALLBACK[key][1]];
+    }
+    return FALLBACK[key] || [];
   };
   const openModal = (title, text) => {
     dlgTitle.textContent = title || dlgDefault.title;
@@ -102,8 +115,8 @@
       openModal('Получить точный расчёт', 'Предварительный расчёт: ' + payAmount.selectedOptions[0].textContent + ' на ' + payMonths.value + ' мес. – ' + payResult.textContent + ' в месяц без учёта процентов. Оставьте телефон, чтобы уточнить доступную программу и условия оплаты.');
       return;
     }
-    const key = Object.keys(variants).find(k => b.hasAttribute('data-' + k));
-    openModal(...(key ? variants[key] : []));
+    const key = ['extraction', 'sleep', 'choice', 'contract'].find(k => b.hasAttribute('data-' + k));
+    openModal(...(key ? getVariant(key) : []));
   }));
   $('.modal-close', dlg).addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', e => {
