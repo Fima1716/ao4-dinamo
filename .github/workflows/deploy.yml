@@ -52,15 +52,31 @@ jobs:
           sed -i -E "s#(href|src)=\"([^\"?:]+\.(css|js))\"#\1=\"\2?v=$v\"#g" final/index.html
           grep -o 'mobile.css?v=[0-9a-f]*' final/index.html
 
-      - name: Выложить сайт
+      - name: Собрать веб-корень (финалка на базовом URL)
         run: |
-          rsync -rlDz --checksum --delete --no-perms --no-owner --no-group \
+          rm -rf _site
+          rsync -rlD \
             --exclude '.git' --exclude '.github' --exclude '.gitignore' \
-            --exclude 'pravki' --exclude 'api' \
+            --exclude 'pravki' --exclude 'api' --exclude '_site' \
             --exclude 'README.md' --exclude 'AGENTS.md' \
             --exclude 'All-Smiles-*' --exclude 'assets/brand/guidebook.pdf' \
             --exclude '_t.html' --exclude '_d.html' --exclude '_m.html' \
-            ./ deploy:/var/www/ao4-dinamo/
+            ./ _site/
+          # старый выбор вариантов (корневой index.html) уводим на /varianty/
+          mkdir -p _site/varianty
+          mv _site/index.html _site/varianty/index.html
+          # у селектора относительные пути от корня — добавляем <base href="/">
+          sed -i 's#<head>#<head><base href="/">#' _site/varianty/index.html
+          # финалка становится базовым URL: её содержимое кладём в корень.
+          # /final/ остаётся как алиас, варианты — на /variant1 /variant2 /variant2-full
+          cp -a _site/final/. _site/
+          echo "=== содержимое веб-корня ==="; ls -1 _site
+
+      - name: Выложить сайт
+        run: |
+          rsync -rlDz --checksum --delete --no-perms --no-owner --no-group \
+            --exclude 'api' --exclude 'pravki' \
+            _site/ deploy:/var/www/ao4-dinamo/
 
       - name: Обновить API редактора, если он менялся
         run: |
@@ -76,7 +92,7 @@ jobs:
         run: |
           base="https://allsmiles.217-18-60-60.sslip.io"
           ok=1
-          for p in "" variant1/ variant2/ variant2-full/ final/ api/content?page=/final/; do
+          for p in "" vrachi/tsahaev/ final/ final/vrachi/tsahaev/ varianty/ variant1/ variant2/ variant2-full/ api/content?page=/final/; do
             for try in 1 2 3; do
               code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$base/$p" || true)
               [ "$code" = "200" ] && break

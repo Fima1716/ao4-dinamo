@@ -5,7 +5,11 @@
    SEO, Метрика, колтрекинг и заявки живут в отдельной панели /final/admin/. */
 (() => {
   const API = '/api';
-  const PAGE = location.pathname.replace(/index\.html$/, '') || '/';
+  // Ключ правок. Финалка отдаётся и с корня, и с /final/ — чтобы правки не
+  // потерялись при переезде, страницы финалки задают логический ключ через
+  // <body data-page="…">. Остальные страницы ключуются по своему пути.
+  const PAGE = (document.body && document.body.getAttribute('data-page'))
+    || location.pathname.replace(/index\.html$/, '') || '/';
   const TOKEN_KEY = 'as_editor_token';
   const CACHE_KEY = 'as_content:' + PAGE;
   const SET_CACHE = 'as_settings';
