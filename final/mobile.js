@@ -81,7 +81,7 @@
       { img: A + 'doctors/berlov.webp', cap: 'Берлов Антон Владимирович', sub: 'Главный врач сети, д. м. н., профессор · стаж более 30 лет' },
       { img: A + 'doctors/akchurin.webp', cap: 'Акчурин Руслан Дамирович', sub: 'Стоматолог-хирург · стаж 18 лет' },
       { img: A + 'doctors/tsahaev.webp', cap: 'Цахаев Марат Халилович', sub: 'Стоматолог-хирург-имплантолог · стаж 11 лет' },
-      { img: A + 'doctors/dzhanumova.webp', cap: 'Джанумова Валерия Александровна', sub: 'Стоматолог-ортопед · протезирование на имплантах' },
+      { img: A + 'doctors/dzhanumova.webp', cap: 'Джанумова Валерия Александровна', sub: 'Стоматолог-ортопед · стаж 9 лет' },
     ] },
     { id: 'clinic', title: 'Клиника', cover: A + 'stories/clinic-entrance.webp', slides: [
       { img: A + 'stories/clinic-entrance.webp', cap: 'Вход с улицы, 1 этаж', sub: 'Ленинградский проспект, 36, стр. 40' },
