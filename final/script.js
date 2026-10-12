@@ -275,4 +275,27 @@
       if (n !== undefined) { e.preventDefault(); activate(tabs[n]); tabs[n].focus(); }
     });
   });
+
+  /* слайдер врачей */
+  const docSlider = document.querySelector('[data-doc-slider]');
+  if (docSlider) {
+    const track = docSlider.querySelector('.closing-track');
+    const prev = docSlider.querySelector('.closing-nav--prev');
+    const next = docSlider.querySelector('.closing-nav--next');
+    const step = () => {
+      const card = track.querySelector('.closing-doc');
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 16;
+      return card ? card.offsetWidth + gap : track.clientWidth;
+    };
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max;
+    };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step() * 2, behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step() * 2, behavior: 'smooth' }));
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  }
 })();

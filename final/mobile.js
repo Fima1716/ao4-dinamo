@@ -79,9 +79,14 @@
     ] },
     { id: 'doctors', title: 'Врачи', cover: A + 'doctors/berlov.webp', fit: true, doctors: true, slides: [
       { img: A + 'doctors/berlov.webp', cap: 'Берлов Антон Владимирович', sub: 'Главный врач сети, д. м. н., профессор · стаж более 30 лет' },
-      { img: A + 'doctors/akchurin.webp', cap: 'Акчурин Руслан Дамирович', sub: 'Стоматолог-хирург · стаж 18 лет' },
       { img: A + 'doctors/tsahaev.webp', cap: 'Цахаев Марат Халилович', sub: 'Стоматолог-хирург-имплантолог · стаж 11 лет' },
+      { img: A + 'doctors/arslanbekov.webp', cap: 'Арсланбеков Айдемир Бийсолтанович', sub: 'Стоматолог-хирург-имплантолог · стаж 6 лет' },
+      { img: A + 'doctors/bayzurkaev.webp', cap: 'Байзуркаев Абдула Шамсутдинович', sub: 'Стоматолог-ортопед · стаж 12 лет' },
+      { img: A + 'doctors/kulikov.webp', cap: 'Куликов Алексей Андреевич', sub: 'Стоматолог-ортопед · стаж 17 лет' },
       { img: A + 'doctors/dzhanumova.webp', cap: 'Джанумова Валерия Александровна', sub: 'Стоматолог-ортопед · стаж 9 лет' },
+      { img: A + 'doctors/dzhalilov.webp', cap: 'Джалилов Ислам Вайзуллаевич', sub: 'Стоматолог-ортопед · стаж 7 лет' },
+      { img: A + 'doctors/muradov.webp', cap: 'Мурадов Эмин Акифович', sub: 'Стоматолог-терапевт · стаж 6 лет' },
+      { img: A + 'doctors/mahmudova.webp', cap: 'Махмудова Иман Дзаиндиевна', sub: 'Стоматолог-терапевт · стаж 4 года' },
     ] },
     { id: 'clinic', title: 'Клиника', cover: A + 'stories/clinic-entrance.webp', slides: [
       { img: A + 'stories/clinic-entrance.webp', cap: 'Вход с улицы, 1 этаж', sub: 'Ленинградский проспект, 36, стр. 40' },
