@@ -55,7 +55,18 @@
     const t = $('input[type=tel]', f);
     const msg = $('.lead__msg,.form-message', f);
     if (t.value.replace(/\D/g, '').length !== 11) { t.focus(); msg.textContent = 'Проверьте номер телефона'; return; }
-    console.log('lead', f.dataset.lead, Object.fromEntries(new FormData(f).entries())); // TODO: отправка в CRM
+    const fd = new FormData(f);
+    const lead = {
+      form: f.dataset.lead,
+      name: fd.get('name') || '',
+      phone: t.value,
+      messenger: fd.get('messenger') || '',
+      answers: fd.get('answers') || '',
+      page: location.pathname,
+      ref: document.referrer || '',
+    };
+    // заявка уходит в админку; переход на «Спасибо» не ждёт ответа сервера
+    try { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead), keepalive: true }); } catch {}
     try { sessionStorage.setItem('as_lead', JSON.stringify({ form: f.dataset.lead, at: Date.now() })); } catch {}
     location.href = 'thanks/?form=' + encodeURIComponent(f.dataset.lead);
   }));

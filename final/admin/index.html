@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Админка · All Smiles</title>
+<style>
+:root{--pink:#e93d8d;--pink-d:#c9247a;--violet:#5e5391;--lav:#eeeaf9;--lav2:#e2dcf4;--ink:#2e2e35;--ink2:#5f5d68;--muted:#8d8c96;--paper:#f4f3f7;--line:#e2dcf4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.5 'Nunito','Segoe UI',system-ui,sans-serif}
+a{color:var(--violet)}
+button{font:inherit;cursor:pointer}
+.hide{display:none!important}
+/* логин */
+.login{position:fixed;inset:0;display:grid;place-items:center;padding:16px}
+.login form{background:#fff;border-radius:22px;padding:30px;width:min(380px,100%);box-shadow:0 30px 70px rgba(46,46,53,.18)}
+.login h1{margin:0 0 4px;font-size:22px}
+.login p{margin:0 0 18px;color:var(--muted);font-size:14px}
+.login input{width:100%;height:50px;padding:0 16px;border:1.5px solid var(--lav2);border-radius:12px;font:inherit;outline:0;margin-bottom:12px}
+.login input:focus{border-color:var(--pink)}
+.login button{width:100%;height:50px;border:0;border-radius:12px;background:var(--pink);color:#fff;font-weight:700}
+.login .err{color:#d8305f;font-size:13px;min-height:18px;margin:8px 0 0}
+/* каркас */
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.side{background:#1f1b33;color:#fff;padding:18px 14px;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 16px;font-weight:800;letter-spacing:-.02em}
+.brand img{width:34px;height:34px;border-radius:9px;background:#fff;padding:3px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;text-align:left;border:0;background:none;color:#cfc9e6;border-radius:11px;padding:11px 12px;font-weight:600}
+.nav button .b{margin-left:auto;background:#e93d8d;color:#fff;border-radius:999px;font-size:12px;font-weight:700;padding:1px 8px;min-width:22px;text-align:center}
+.nav button:hover{background:#2c2746;color:#fff}
+.nav button.on{background:var(--pink);color:#fff}
+.side .foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:14px}
+.side .foot a,.side .foot button{display:block;text-align:center;border-radius:11px;padding:11px;font-weight:700;text-decoration:none}
+.side .foot .edit{background:#fff;color:var(--ink)}
+.side .foot .out{background:#3a3358;color:#fff;border:0}
+.main{padding:26px clamp(16px,4vw,40px);overflow:auto}
+.head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.head h2{margin:0;font-size:24px}
+.head .act{display:flex;gap:8px;flex-wrap:wrap}
+.pane{display:none}
+.pane.on{display:block}
+.btn{border:0;border-radius:999px;padding:10px 18px;font-weight:700;background:var(--lav);color:var(--violet)}
+.btn.go{background:var(--pink);color:#fff}
+.btn.red{background:#fde7ef;color:#c9247a}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:16px}
+.card h3{margin:0 0 4px;font-size:17px}
+.card .hint{margin:0 0 14px;color:var(--muted);font-size:13px}
+label{display:block;font-weight:700;font-size:13px;margin:14px 0 5px}
+label small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:1px}
+input[type=text],textarea{width:100%;padding:11px 13px;border:1.5px solid var(--lav2);border-radius:11px;font:inherit;outline:0;background:#fff}
+input[type=text]:focus,textarea:focus{border-color:var(--pink)}
+textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+.save-row{display:flex;gap:10px;align-items:center;margin-top:18px}
+.ok{color:#2a9d63;font-size:13px;font-weight:700}
+/* заявки */
+.leads-wrap{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--paper);font-size:12px;letter-spacing:.03em;color:var(--muted);text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+td .tag{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--lav);color:var(--violet);font-size:12px;font-weight:700}
+td a{font-weight:700;text-decoration:none;color:var(--ink)}
+td .ans{color:var(--ink2);font-size:13px}
+td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padding:2px 6px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+@media(max-width:760px){
+  .app{grid-template-columns:1fr}
+  .side{position:sticky;top:0;z-index:5;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px;padding:10px}
+  .brand{padding:0 8px 0 2px}
+  .nav{flex-direction:row;flex-wrap:wrap;flex:1}
+  .nav button{padding:8px 10px;font-size:13px}
+  .side .foot{flex-direction:row;margin:0;padding:0}
+  .side .foot a,.side .foot button{padding:8px 12px}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+}
+</style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <form id="loginForm">
+    <h1>Админка All Smiles</h1>
+    <p>Войдите паролем администратора</p>
+    <input type="password" id="pwd" autocomplete="current-password" placeholder="Пароль">
+    <button type="submit">Войти</button>
+    <p class="err" id="loginErr"></p>
+  </form>
+</div>
+
+<div class="app hide" id="app">
+  <aside class="side">
+    <div class="brand"><img src="../../assets/brand/logo.svg" alt="">Админка</div>
+    <nav class="nav" id="nav">
+      <button data-tab="leads" class="on">Заявки <span class="b" id="leadCount">0</span></button>
+      <button data-tab="seo">SEO и robots</button>
+      <button data-tab="metrika">Яндекс Метрика</button>
+      <button data-tab="call">Колтрекинг</button>
+      <button data-tab="scripts">Доп. скрипты</button>
+    </nav>
+    <div class="foot">
+      <a class="edit" href="../?admin">Редактирование страницы</a>
+      <button class="out" id="logout">Выйти</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- Заявки -->
+    <section class="pane on" data-pane="leads">
+      <div class="head"><h2>Заявки</h2>
+        <div class="act">
+          <button class="btn" id="refresh">Обновить</button>
+          <button class="btn" id="csv">Скачать CSV</button>
+          <button class="btn red" id="clear">Очистить всё</button>
+        </div>
+      </div>
+      <div class="leads-wrap"><div id="leads"></div></div>
+    </section>
+
+    <!-- SEO -->
+    <section class="pane" data-pane="seo">
+      <div class="head"><h2>SEO и robots</h2></div>
+      <div class="card">
+        <h3>Теги страницы</h3>
+        <p class="hint">Заголовок и описание для поиска и ссылок в мессенджерах.</p>
+        <label>Заголовок (title)</label><input type="text" id="s_title">
+        <label>Описание (description)<small>до 160 символов</small></label><textarea id="s_description" style="min-height:70px;font-family:inherit;font-size:14px"></textarea>
+        <label>Индексация (meta robots)<small>например: index,follow или noindex,nofollow</small></label><input type="text" id="s_robots">
+        <label>OG заголовок</label><input type="text" id="s_ogTitle">
+        <label>OG описание</label><input type="text" id="s_ogDescription">
+        <label>OG картинка (URL)</label><input type="text" id="s_ogImage">
+      </div>
+      <div class="card">
+        <h3>robots.txt</h3>
+        <p class="hint">Файл для поисковых роботов. Отдаётся по адресу /robots.txt.</p>
+        <textarea id="s_robotsTxt" placeholder="User-agent: *&#10;Allow: /"></textarea>
+      </div>
+      <div class="save-row"><button class="btn go" data-save>Сохранить</button><span class="ok hide" data-ok>Сохранено</span></div>
+    </section>
+
+    <!-- Метрика -->
+    <section class="pane" data-pane="metrika">
+      <div class="head"><h2>Яндекс Метрика</h2></div>
+      <div class="card">
+        <h3>Счётчик</h3>
+        <p class="hint">Проще всего вписать номер счётчика — код подключится автоматически (с вебвизором и картой кликов). Если нужен свой код — вставьте его целиком ниже, он имеет приоритет.</p>
+        <label>Номер счётчика<small>только цифры, например 98765432</small></label><input type="text" id="s_metrikaId" inputmode="numeric">
+        <label>Или полный код счётчика<small>вставьте вместе с тегами &lt;script&gt;…&lt;/script&gt;</small></label><textarea id="s_metrika" placeholder="<!-- Yandex.Metrika counter -->"></textarea>
+      </div>
+      <div class="save-row"><button class="btn go" data-save>Сохранить</button><span class="ok hide" data-ok>Сохранено</span></div>
+    </section>
+
+    <!-- Колтрекинг -->
+    <section class="pane" data-pane="call">
+      <div class="head"><h2>Колтрекинг</h2></div>
+      <div class="card">
+        <h3>Код коллтрекинга</h3>
+        <p class="hint">Код подмены номера от сервиса колтрекинга (Calltouch, Comagic, Mango и т.п.). Вставьте целиком со скриптами — он добавится в &lt;head&gt; всех страниц.</p>
+        <textarea id="s_calltracking" placeholder="<script>...</script>"></textarea>
+      </div>
+      <div class="save-row"><button class="btn go" data-save>Сохранить</button><span class="ok hide" data-ok>Сохранено</span></div>
+    </section>
+
+    <!-- Доп. скрипты -->
+    <section class="pane" data-pane="scripts">
+      <div class="head"><h2>Доп. скрипты</h2></div>
+      <div class="card">
+        <h3>Код в &lt;head&gt;</h3>
+        <p class="hint">Любые другие счётчики и пиксели: Google, VK, чат и т.п. Добавляются в &lt;head&gt; всех страниц.</p>
+        <textarea id="s_headExtra" placeholder="<script>...</script>"></textarea>
+      </div>
+      <div class="save-row"><button class="btn go" data-save>Сохранить</button><span class="ok hide" data-ok>Сохранено</span></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const API='/api', TK='as_editor_token';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const token=()=>localStorage.getItem(TK);
+const auth=()=>({'Content-Type':'application/json',Authorization:'Bearer '+token()});
+
+/* вход */
+async function tryShow(){
+  if(!token()){ $('#login').classList.remove('hide'); $('#app').classList.add('hide'); setTimeout(()=>$('#pwd').focus(),50); return; }
+  // проверим токен запросом заявок
+  const r=await fetch(API+'/leads',{headers:auth()});
+  if(r.status===401){ localStorage.removeItem(TK); return tryShow(); }
+  $('#login').classList.add('hide'); $('#app').classList.remove('hide');
+  loadLeads(); loadSettings();
+}
+$('#loginForm').addEventListener('submit', async e=>{
+  e.preventDefault(); $('#loginErr').textContent='';
+  try{
+    const r=await fetch(API+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$('#pwd').value})});
+    const j=await r.json();
+    if(!r.ok){ $('#loginErr').textContent=j.error||'Ошибка'; return; }
+    localStorage.setItem(TK,j.token); tryShow();
+  }catch{ $('#loginErr').textContent='Сервер недоступен'; }
+});
+$('#logout').addEventListener('click',()=>{ localStorage.removeItem(TK); location.reload(); });
+
+/* вкладки */
+$$('#nav button').forEach(b=>b.addEventListener('click',()=>{
+  $$('#nav button').forEach(x=>x.classList.toggle('on',x===b));
+  $$('.pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===b.dataset.tab));
+}));
+
+/* заявки */
+const FORM_NAMES={hero:'Первый экран',modal:'Окно «Рассчитать»',quiz:'Квиз',final:'Финальная форма',opinion:'Второе мнение'};
+let LEADS=[];
+function fmtDate(ts){ const d=new Date(ts); return d.toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+async function loadLeads(){
+  const r=await fetch(API+'/leads',{headers:auth()});
+  if(r.status===401){ localStorage.removeItem(TK); return tryShow(); }
+  const j=await r.json(); LEADS=j.leads||[];
+  $('#leadCount').textContent=LEADS.length;
+  const box=$('#leads');
+  if(!LEADS.length){ box.innerHTML='<div class="empty">Заявок пока нет. Они появятся здесь сразу после отправки формы на сайте.</div>'; return; }
+  box.innerHTML=`<table><thead><tr><th>Когда</th><th>Форма</th><th>Имя</th><th>Телефон</th><th>Мессенджер</th><th>Ответы квиза</th><th></th></tr></thead><tbody>`+
+    LEADS.map(l=>`<tr>
+      <td>${fmtDate(l.ts)}</td>
+      <td><span class="tag">${esc(FORM_NAMES[l.form]||l.form||'—')}</span></td>
+      <td>${esc(l.name)||'—'}</td>
+      <td><a href="tel:${esc((l.phone||'').replace(/[^+\d]/g,''))}">${esc(l.phone)}</a></td>
+      <td>${esc(l.messenger)||'—'}</td>
+      <td><span class="ans">${esc(l.answers)||'—'}</span></td>
+      <td><button class="del" data-id="${l.id}" title="Удалить">×</button></td>
+    </tr>`).join('')+`</tbody></table>`;
+  box.querySelectorAll('.del').forEach(b=>b.addEventListener('click',async()=>{
+    if(!confirm('Удалить заявку?'))return;
+    await fetch(API+'/leads/delete',{method:'POST',headers:auth(),body:JSON.stringify({id:b.dataset.id})}); loadLeads();
+  }));
+}
+$('#refresh').addEventListener('click',loadLeads);
+$('#clear').addEventListener('click',async()=>{ if(!confirm('Удалить ВСЕ заявки без возможности восстановления?'))return; await fetch(API+'/leads/delete',{method:'POST',headers:auth(),body:JSON.stringify({all:true})}); loadLeads(); });
+$('#csv').addEventListener('click',()=>{
+  if(!LEADS.length)return;
+  const rows=[['Дата','Форма','Имя','Телефон','Мессенджер','Ответы','Страница']].concat(
+    LEADS.map(l=>[fmtDate(l.ts),FORM_NAMES[l.form]||l.form||'',l.name||'',l.phone||'',l.messenger||'',(l.answers||'').replace(/\n/g,' '),l.page||'']));
+  const csv='﻿'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='leads.csv'; a.click();
+});
+
+/* настройки */
+async function loadSettings(){
+  try{
+    const s=await (await fetch(API+'/settings',{cache:'no-store'})).json(); const seo=s.seo||{};
+    $('#s_title').value=seo.title||''; $('#s_description').value=seo.description||''; $('#s_robots').value=seo.robots||'';
+    $('#s_ogTitle').value=seo.ogTitle||''; $('#s_ogDescription').value=seo.ogDescription||''; $('#s_ogImage').value=seo.ogImage||'';
+    $('#s_robotsTxt').value=s.robotsTxt||''; $('#s_metrikaId').value=s.metrikaId||''; $('#s_metrika').value=s.metrika||'';
+    $('#s_calltracking').value=s.calltracking||''; $('#s_headExtra').value=s.headExtra||'';
+  }catch{}
+}
+function gather(){
+  return { data:{
+    seo:{ title:$('#s_title').value, description:$('#s_description').value, robots:$('#s_robots').value,
+      ogTitle:$('#s_ogTitle').value, ogDescription:$('#s_ogDescription').value, ogImage:$('#s_ogImage').value },
+    robotsTxt:$('#s_robotsTxt').value, metrikaId:$('#s_metrikaId').value.replace(/\D/g,''), metrika:$('#s_metrika').value,
+    calltracking:$('#s_calltracking').value, headExtra:$('#s_headExtra').value,
+  }};
+}
+$$('[data-save]').forEach(btn=>btn.addEventListener('click',async()=>{
+  btn.disabled=true; const ok=btn.parentElement.querySelector('[data-ok]');
+  try{
+    const r=await fetch(API+'/settings',{method:'POST',headers:auth(),body:JSON.stringify(gather())});
+    if(r.status===401){ localStorage.removeItem(TK); return tryShow(); }
+    if(!r.ok)throw 0;
+    try{ localStorage.removeItem('as_settings'); }catch{}
+    ok.classList.remove('hide'); setTimeout(()=>ok.classList.add('hide'),2000);
+  }catch{ alert('Не удалось сохранить'); }
+  btn.disabled=false;
+}));
+
+tryShow();
+</script>
+</body>
+</html>
