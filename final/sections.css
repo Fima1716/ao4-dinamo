@@ -751,3 +751,33 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 .care-contract-list li{padding:7px 12px;border-radius:999px;background:var(--lav-10);color:var(--ink-2);font-size:13.5px;font-weight:600}
 .care-contract-copy .care-contract-note{margin-top:12px}
 @media(max-width:900px){.care-contract{grid-template-columns:1fr;gap:16px}.care-contract-art{height:200px}.care-contract-copy{padding:4px 6px 8px}}
+
+/* ====================================================================
+   Правки 12 окт: блок «99 ₽» перенесён под квиз; срок рассрочки 24;
+   Straumann вместо Nobel; выбор мессенджера в квизе
+   ==================================================================== */
+/* первый экран снова скруглён снизу — под ним больше нет плашки акции */
+.v1 .hero__sheet{border-radius:36px}
+@media(max-width:860px){.v1 .hero__sheet{border-radius:28px}}
+
+/* акция «99 ₽» теперь самостоятельная розовая карточка, как другие акцентные блоки */
+.extraction-offer{max-width:1240px;margin:clamp(28px,4vw,48px) auto 0;border-radius:32px;padding:clamp(18px,2.4vw,28px) clamp(16px,3vw,36px)}
+.extraction-panel::before{display:none}
+@media(min-width:1600px){.extraction-offer{max-width:1320px}}
+@media(max-width:860px){.extraction-offer{margin:22px 16px 0;border-radius:26px;padding:16px}}
+@media(max-width:600px){.extraction-offer{margin:18px 10px 0}}
+
+/* словесный логотип Straumann (Neodent) вместо картинки */
+.implant-wordmark{display:flex;flex-direction:column;line-height:1;font-weight:700;font-size:26px;letter-spacing:-.02em;color:var(--ink)}
+.implant-wordmark small{margin-top:3px;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
+
+/* выбор мессенджера в контактной форме квиза */
+.match-quiz-messenger{border:0;padding:0;margin:0 0 16px;min-width:0}
+.match-quiz-messenger legend{float:none;width:100%;padding:0;margin:0 0 8px;font:600 14px/1.3 var(--ui);color:var(--ink-2)}
+.match-quiz-messenger-row{display:flex;gap:8px;flex-wrap:wrap}
+.match-quiz-messenger label{flex:1;min-width:88px}
+.match-quiz-messenger input{position:absolute;opacity:0;width:0;height:0}
+.match-quiz-messenger span{display:flex;align-items:center;justify-content:center;min-height:46px;padding:0 14px;border-radius:12px;border:1.5px solid var(--lav-20);background:#fff;font:600 15px/1 var(--ui);color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+.match-quiz-messenger label:hover span{border-color:var(--lavender)}
+.match-quiz-messenger input:checked+span{border-color:var(--pink);background:var(--pink-10);color:var(--pink)}
+.match-quiz-messenger input:focus-visible+span{outline:2px solid var(--violet);outline-offset:2px}

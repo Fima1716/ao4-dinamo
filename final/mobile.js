@@ -108,7 +108,7 @@
     b.addEventListener('click', () => openStory(i));
     rail.append(b);
   });
-  const afterHero = $('.extraction-offer') || $('.reviews-section');
+  const afterHero = $('.ratings-section') || $('.treatment-results') || $('.reviews-section');
   if (afterHero) afterHero.before(rail);
 
   const viewer = nav('m-story', `<div class="m-story__media"></div><div class="m-story__bars"></div>
