@@ -150,8 +150,8 @@ function notifyEmail(lead) {
     { to, subject: 'Заявка с сайта — ' + (lead.phone || ''), text: lines.join('\n'), fromName: 'Сайт All Smiles' }
   ).catch((e) => console.warn('email lead error:', e.message));
 }
-const MIME_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/svg+xml': 'svg' };
-const EXT_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml' };
+const MIME_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
+const EXT_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif' };
 
 function slug(page) {
   const p = String(page || '/').replace(/[^a-zA-Z0-9/_-]/g, '').replace(/\/+/g, '/');
@@ -197,6 +197,23 @@ function authed(req) {
 }
 const str = (v, n = 300) => String(v == null ? '' : v).slice(0, n);
 
+const rl = new Map();
+function hit(key, max, windowMs) {
+  const now = Date.now();
+  let e = rl.get(key);
+  if (!e || e.reset < now) { e = { count: 0, reset: now + windowMs }; rl.set(key, e); }
+  e.count++;
+  return e.count <= max;
+}
+function clientIp(req) {
+  return (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || '?';
+}
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, e] of rl) if (e.reset < now) rl.delete(k);
+  for (const [t, exp] of sessions) if (exp < now) sessions.delete(t);
+}, 300000).unref();
+
 http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   const route = url.pathname.replace(/\/+$/, '') || '/';
@@ -225,6 +242,7 @@ http.createServer(async (req, res) => {
 
   // приём заявки с формы — публично
   if (req.method === 'POST' && route === '/lead') {
+    if (!hit('lead:' + clientIp(req), 6, 60000)) return send(res, 429, { error: 'Слишком часто, попробуйте позже' });
     let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
     const phone = str(b.phone, 40);
     if (phone.replace(/\D/g, '').length < 10) return send(res, 400, { error: 'phone' });
@@ -257,12 +275,13 @@ http.createServer(async (req, res) => {
     const file = path.join(UPLOADS, name);
     let data; try { data = fs.readFileSync(file); } catch { return send(res, 404, { error: 'not found' }); }
     const ext = (name.split('.').pop() || '').toLowerCase();
-    res.writeHead(200, { 'Content-Type': EXT_MIME[ext] || 'application/octet-stream', 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*' });
+    res.writeHead(200, { 'Content-Type': EXT_MIME[ext] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*' });
     return res.end(data);
   }
 
   /* ---------- вход ---------- */
   if (req.method === 'POST' && route === '/login') {
+    if (!hit('login:' + clientIp(req), 12, 60000)) return send(res, 429, { error: 'Слишком много попыток входа, подождите минуту' });
     let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
     if (String(b.password || '') !== PASSWORD) return send(res, 401, { error: 'Неверный пароль' });
     const token = crypto.randomBytes(24).toString('hex');

@@ -58,6 +58,7 @@ jobs:
           rsync -rlD \
             --exclude '.git' --exclude '.github' --exclude '.gitignore' \
             --exclude 'pravki' --exclude 'api' --exclude '_site' \
+            --exclude 'photozone' --exclude 'render-3d' --exclude '.DS_Store' \
             --exclude 'README.md' --exclude 'AGENTS.md' \
             --exclude 'All-Smiles-*' --exclude 'assets/brand/guidebook.pdf' \
             --exclude '_t.html' --exclude '_d.html' --exclude '_m.html' \
