@@ -344,8 +344,8 @@ main #smile-aesthetic-title span{color:var(--violet)}
    Акцентные блоки — фирменный розовый фон (гайдбук, стр. 6):
    удаление за 99 ₽, квиз, второе мнение, финальная запись
    ==================================================================== */
-.extraction-offer{background:var(--pink) var(--smiles) right -40px top -150px/420px 420px no-repeat}
-.extraction-panel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.38);box-shadow:0 20px 40px rgba(201,36,122,.22);backdrop-filter:none}
+.extraction-offer{background:transparent;margin:0;padding:22px 16px;border-radius:0}
+.extraction-panel{max-width:1240px;margin:0 auto;align-items:center;background:var(--pink) var(--smiles) right -40px top -150px/420px 420px no-repeat;border:1px solid rgba(255,255,255,.25);box-shadow:0 20px 40px rgba(201,36,122,.22);backdrop-filter:none}
 .extraction-panel::before{border-color:rgba(255,255,255,.25);background:none}
 .extraction-panel::after{display:none}
 .extraction-now{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#fff;-webkit-text-fill-color:#fff}
