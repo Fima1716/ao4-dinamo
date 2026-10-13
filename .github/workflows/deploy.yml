@@ -32,59 +32,56 @@ jobs:
 
       - name: Проверить вёрстку на битые ссылки
         run: |
-          bad=0
-          for page in index.html variant1/index.html variant2/index.html variant2-full/index.html final/index.html; do
-            dir=$(dirname "$page")
-            refs=$(grep -oE '(src|href)="[^"#?:]+\.(png|jpg|jpeg|svg|webp|css|js)"' "$page" | sed -E 's/.*="([^"]+)"/\1/' | sort -u)
-            for ref in $refs; do
-              if [ ! -f "$dir/$ref" ]; then
-                echo "::error file=$page::нет файла $ref"
-                bad=1
-              fi
-            done
-          done
-          [ "$bad" = 0 ] || exit 1
+          python3 - <<'PY'
+          import os, re, glob, sys
+          pages = ['index.html'] + sorted(glob.glob('vrachi/*/index.html')) + \
+                  [p for p in ('policy/index.html', 'thanks/index.html', 'admin/index.html') if os.path.isfile(p)]
+          bad = 0
+          for page in pages:
+              d = os.path.dirname(page)
+              html = open(page, encoding='utf-8').read()
+              for m in re.finditer(r'(?:src|href)="([^"#?]+\.(?:png|jpg|jpeg|svg|webp|css|js))"', html):
+                  ref = m.group(1)
+                  if ref.startswith(('http', '//', 'data:')):
+                      continue
+                  stack = []
+                  for seg in (d + '/' + ref).split('/'):
+                      if seg in ('', '.'):
+                          continue
+                      if seg == '..':
+                          if stack:
+                              stack.pop()
+                          continue
+                      stack.append(seg)
+                  target = '/'.join(stack)
+                  if not os.path.isfile(target):
+                      print(f'::error file={page}::нет файла {ref} -> {target}')
+                      bad = 1
+          sys.exit(1 if bad else 0)
+          PY
           echo "Все ссылки на файлы на месте"
 
       - name: Проставить версию стилям и скриптам
         run: |
           v=$(git rev-parse --short HEAD)
-          sed -i -E "s#(href|src)=\"([^\"?:]+\.(css|js))\"#\1=\"\2?v=$v\"#g" final/index.html
-          grep -o 'mobile.css?v=[0-9a-f]*' final/index.html
-
-      - name: Собрать веб-корень (финалка на базовом URL)
-        run: |
-          rm -rf _site
-          rsync -rlD \
-            --exclude '.git' --exclude '.github' --exclude '.gitignore' \
-            --exclude 'pravki' --exclude 'api' --exclude '_site' \
-            --exclude 'photozone' --exclude 'render-3d' --exclude '.DS_Store' \
-            --exclude 'README.md' --exclude 'AGENTS.md' \
-            --exclude 'All-Smiles-*' --exclude 'assets/brand/guidebook.pdf' \
-            --exclude '_t.html' --exclude '_d.html' --exclude '_m.html' \
-            ./ _site/
-          # старый выбор вариантов (корневой index.html) уводим на /varianty/
-          mkdir -p _site/varianty
-          mv _site/index.html _site/varianty/index.html
-          # у селектора относительные пути от корня — добавляем <base href="/">
-          sed -i 's#<head>#<head><base href="/">#' _site/varianty/index.html
-          # финалка становится базовым URL: её содержимое кладём в корень.
-          # /final/ остаётся как алиас, варианты — на /variant1 /variant2 /variant2-full
-          cp -a _site/final/. _site/
-          echo "=== содержимое веб-корня ==="; ls -1 _site
+          sed -i -E "s#(href|src)=\"([^\"?:]+\.(css|js))\"#\1=\"\2?v=$v\"#g" index.html
+          grep -o 'mobile.css?v=[0-9a-f]*' index.html
 
       - name: Выложить сайт
         run: |
           rsync -rlDz --checksum --delete --no-perms --no-owner --no-group \
-            --exclude 'api' --exclude 'pravki' \
-            _site/ deploy:/var/www/ao4-dinamo/
+            --exclude '.git' --exclude '.github' --exclude '.gitignore' \
+            --exclude 'api' --exclude 'pravki' --exclude 'photozone' --exclude 'render-3d' \
+            --exclude 'README.md' --exclude 'AGENTS.md' --exclude '.DS_Store' \
+            --exclude 'All-Smiles-*' --exclude 'assets/brand/guidebook.pdf' \
+            --exclude '_t.html' --exclude '_d.html' --exclude '_m.html' \
+            ./ deploy:/var/www/ao4-dinamo/
 
       - name: Обновить API редактора, если он менялся
         run: |
           changed=$(rsync -az --itemize-changes api/server.js deploy:/var/www/ao4-api/server.js)
           if [ -n "$changed" ]; then
             echo "server.js обновлён, перезапускаю"
-            # без --update-env: окружение процесса (в т.ч. EDITOR_PASSWORD) сохраняется
             ssh deploy 'pm2 reload ao4-api'
           else
             echo "server.js без изменений, перезапуск не нужен"
@@ -94,7 +91,7 @@ jobs:
         run: |
           base="https://allsmiles.217-18-60-60.sslip.io"
           ok=1
-          for p in "" vrachi/tsahaev/ final/ final/vrachi/tsahaev/ varianty/ variant1/ variant2/ variant2-full/ api/content?page=/final/; do
+          for p in "" vrachi/tsahaev/ policy/ docs/dogovor-obrazec.pdf robots.txt sitemap.xml api/content?page=/final/; do
             for try in 1 2 3; do
               code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$base/$p" || true)
               [ "$code" = "200" ] && break
