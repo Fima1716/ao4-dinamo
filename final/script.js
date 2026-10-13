@@ -71,10 +71,16 @@
     location.href = 'thanks/?form=' + encodeURIComponent(f.dataset.lead);
   }));
 
-  /* калькулятор платежа */
+  /* калькулятор платежа: имплант задаёт цену, 3 и 6 мес — без переплат, 12 мес — +10% */
   const payAmount = $('#payment-amount'), payMonths = $('#payment-months'), payResult = $('#payment-result');
+  const payMonthly = () => {
+    const sum = Number(payAmount.value) || 0;
+    const m = Number(payMonths.value) || 1;
+    const total = m >= 12 ? sum * 1.1 : sum; // 12 мес — переплата 10%, короче — без переплат
+    return Math.ceil(total / m);
+  };
   if (payAmount) {
-    const update = () => { payResult.textContent = Math.ceil(payAmount.value / payMonths.value).toLocaleString('ru-RU') + ' ₽'; };
+    const update = () => { payResult.textContent = payMonthly().toLocaleString('ru-RU') + ' ₽'; };
     payAmount.addEventListener('change', update); payMonths.addEventListener('change', update); update();
   }
 
@@ -112,7 +118,7 @@
   $$('[data-modal]').forEach(b => b.addEventListener('click', e => {
     e.preventDefault();
     if (b.hasAttribute('data-finance') && payAmount) {
-      openModal('Получить точный расчёт', 'Предварительный расчёт: ' + payAmount.selectedOptions[0].textContent + ' на ' + payMonths.value + ' мес. – ' + payResult.textContent + ' в месяц без учёта процентов. Оставьте телефон, чтобы уточнить доступную программу и условия оплаты.');
+      openModal('Получить точный расчёт', 'Ориентировочно: ' + payAmount.selectedOptions[0].textContent + ', ' + payMonths.value + ' мес. – ' + payResult.textContent + ' в месяц (рассрочка клиники: 3 и 6 месяцев без переплат, 12 месяцев – переплата 10%). Оставьте телефон, чтобы уточнить доступную программу и условия оплаты.');
       return;
     }
     const key = ['extraction', 'sleep', 'choice', 'contract'].find(k => b.hasAttribute('data-' + k));
@@ -138,8 +144,9 @@
       steps.forEach((st, i) => { st.hidden = i !== s; st.disabled = i !== s; });
       contact.hidden = s !== 4;
       $$('input', contact).forEach(i => i.disabled = s !== 4);
-      next.hidden = s === 4; back.hidden = s === 0;
-      next.disabled = s < 4 && !$('input:checked', steps[s]);
+      // «Дальше» нужна только на шаге с мультивыбором (шаг 3); на одиночных шагах выбор ведёт сам
+      next.hidden = s !== 3; back.hidden = s === 0;
+      next.disabled = s === 3 && !$('input:checked', steps[s]);
       count.textContent = (s === 4 ? 4 : s + 1) + ' / 4';
       bars.forEach((b, i) => b.classList.toggle('is-active', i <= s));
       if (focus) (s === 4 ? $('h3', contact) : $('legend', steps[s])).focus({ preventScroll: true });
@@ -158,12 +165,17 @@
     };
     fit(); addEventListener('resize', fit); addEventListener('load', fit);
     const answers = $('input[name=answers]', contact);
-    const auto = matchMedia('(max-width:760px)');
     quiz.addEventListener('change', e => {
       render();
-      /* на телефоне выбор варианта сам открывает следующий вопрос, как в приложении */
-      if (auto.matches && e.target.type === 'radio' && s < 3) setTimeout(() => { if (s < 3 && $('input:checked', steps[s])) { s++; render(true); } }, 260);
       answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '–').join(' | ');
+    });
+    /* первые три шага — одиночный выбор: клик по варианту сам ведёт к следующему вопросу */
+    quiz.addEventListener('click', e => {
+      if (s >= 3) return;
+      const opt = e.target.closest('.match-quiz-option');
+      const input = opt && $('input', opt);
+      if (!input || input.type !== 'radio') return;
+      setTimeout(() => { if (s < 3 && $('input:checked', steps[s])) { s++; render(true); } }, 220);
     });
     next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) { s++; render(true); } });
     back.addEventListener('click', () => { if (s > 0) { s--; render(true); } });
