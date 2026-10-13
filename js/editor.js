@@ -75,18 +75,21 @@
   function applySettings(s) {
     if (!s) return;
     const seo = s.seo || {};
-    if (seo.title) document.title = seo.title;
-    const setMeta = (sel, create, val) => {
-      if (val == null || val === '') return;
-      let m = document.head.querySelector(sel);
-      if (!m) { m = create(); document.head.appendChild(m); }
-      m.setAttribute('content', val);
-    };
-    setMeta('meta[name="description"]', () => { const m = document.createElement('meta'); m.name = 'description'; return m; }, seo.description);
-    setMeta('meta[name="robots"]', () => { const m = document.createElement('meta'); m.name = 'robots'; return m; }, seo.robots);
-    setMeta('meta[property="og:title"]', () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:title'); return m; }, seo.ogTitle);
-    setMeta('meta[property="og:description"]', () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:description'); return m; }, seo.ogDescription);
-    setMeta('meta[property="og:image"]', () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:image'); return m; }, seo.ogImage);
+    // SEO-теги применяем только на главной (у страниц врачей — свои заголовки)
+    if (PAGE === '/final/') {
+      if (seo.title) document.title = seo.title;
+      const setMeta = (sel, create, val) => {
+        if (val == null || val === '') return;
+        let m = document.head.querySelector(sel);
+        if (!m) { m = create(); document.head.appendChild(m); }
+        m.setAttribute('content', val);
+      };
+      setMeta('meta[name="description"]', () => { const m = document.createElement('meta'); m.name = 'description'; return m; }, seo.description);
+      setMeta('meta[name="robots"]', () => { const m = document.createElement('meta'); m.name = 'robots'; return m; }, seo.robots);
+      setMeta('meta[property="og:title"]', () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:title'); return m; }, seo.ogTitle);
+      setMeta('meta[property="og:description"]', () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:description'); return m; }, seo.ogDescription);
+      setMeta('meta[property="og:image"]', () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:image'); return m; }, seo.ogImage);
+    }
     if (!injected) {
       injected = true;
       if (s.metrika) injectHTML(s.metrika);
