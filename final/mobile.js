@@ -67,13 +67,13 @@
       { promo: ['99 ₽', '10 000 ₽', 'Удаление зубов при тотальной имплантации'] },
       { promo: ['0 ₽', '7 000 ₽', '3D КТ с ИИ-анализом Diagnocat'] },
       { promo: ['0 ₽', '2 000 ₽', 'Консультация имплантолога'] },
-      { promo: ['0 %', '', 'Рассрочка от клиники без переплат до 36 месяцев'] },
+      { promo: ['0 %', '', 'Рассрочка от клиники на 3 и 6 месяцев'] },
     ] },
     { id: 'cases', title: 'До и после', cover: A + 'cases/shklyaeva-face-after.jpg', fit: true, slides: [
       { img: A + 'cases/shklyaeva-face-before.jpg', tag: 'До', cap: 'Пациентка Е. Ш.', sub: 'Полное отсутствие зубов на обеих челюстях' },
       { img: A + 'cases/shklyaeva-face-after.jpg', tag: 'После', cap: 'All-on-4 на обе челюсти', sub: 'Адаптационный протез – в день операции' },
       { img: A + 'land/vladimir-before.jpg', tag: 'До', cap: 'Владимир', sub: 'Носил съёмный протез' },
-      { img: A + 'land/vladimir-after.jpg', tag: 'После', cap: 'All-on-4 на имплантах Snucon', sub: 'Несъёмный протез в день операции' },
+      { img: A + 'land/vladimir-after.jpg', tag: 'После', cap: 'All-on-4 на имплантах Snucone', sub: 'Несъёмный протез в день операции' },
       { img: A + 'land/vitaliy-before.jpg', tag: 'До', cap: 'Виталий', sub: 'Атрофия костной ткани' },
       { img: A + 'land/vitaliy-after.jpg', tag: 'После', cap: 'Nobel по 3D-шаблону', sub: 'Протез с армирующей балкой' },
     ] },
@@ -94,10 +94,10 @@
       { img: A + 'stories/clinic-surgery.webp', cap: 'Операционная', sub: 'Имплантация и протез – в один визит' },
       { img: A + 'stories/clinic-consult.webp', cap: 'Консультация', sub: 'План и стоимость – до начала лечения' },
     ] },
-    { id: 'route', title: 'Маршрут', cover: A + 'route/metro-dinamo.webp', slides: [
-      { img: A + 'route/metro-dinamo.webp', tag: '1', cap: 'Метро «Динамо»', sub: 'Выход к Ленинградскому проспекту' },
-      { img: A + 'route/vtb-arena.webp', tag: '2', cap: 'ВТБ Арена Парк', sub: 'Вдоль проспекта до строения 40' },
-      { img: A + 'route/clinic-entrance.webp?v=2', tag: '3', cap: 'Вход с улицы, 1 этаж', sub: 'Две минуты пешком от метро' },
+    { id: 'route', title: 'Маршрут', cover: A + 'route/din-01.webp', slides: [
+      { img: A + 'route/din-01.webp', tag: '1', cap: 'Метро «Динамо»', sub: 'Выход к Ленинградскому проспекту' },
+      { img: A + 'route/din-03.webp', tag: '2', cap: 'Площадь ВТБ Арена Парк', sub: 'Вдоль проспекта до строения 40' },
+      { img: A + 'route/din-09.webp', tag: '3', cap: 'Вход в клинику, 1 этаж', sub: 'Две минуты пешком от метро' },
     ] },
   ];
   const SEEN_KEY = 'as_stories_seen';
