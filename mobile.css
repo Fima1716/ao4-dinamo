@@ -320,6 +320,6 @@ html.kb-open .modal-body>p,html.kb-open .modal-list{display:none}
 html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{transform:translateY(140%)}
 @media (max-width:360px){.m-tabbar{left:8px;right:8px}.m-tabbar a,.m-tabbar button{font-size:10px}.m-tabbar .m-tab-cta i{width:58px;height:58px;margin-top:-32px}}
 
-/* появление: на телефоне без задержек */
-.anim-on .rv{transition-delay:0s!important}
+/* появление: на телефоне без задержек и без вертикального сдвига (только плавное проявление) */
+.anim-on .rv{transition-delay:0s!important;transform:none!important}
 }
