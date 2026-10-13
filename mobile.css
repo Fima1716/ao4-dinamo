@@ -194,9 +194,22 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-compare-line::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#e93d8d;font:700 16px var(--ui);box-shadow:0 4px 14px rgba(0,0,0,.25)}
 
 /* ---------- прочие секции ---------- */
-.smile-shade-hint{display:none}
-.smile-shade-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:84px 8px;padding-top:84px}
-.smile-shade-button img{height:84px}
+.smile-shade-hint,.smile-shade-row{display:none}
+.smile-shade-slider{display:block;padding:8px 6px 0}
+.smile-shade-slide-hint{margin:0 0 18px;text-align:center;font:500 13px/1.3 var(--ui);color:var(--muted)}
+.smile-shade-range{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:999px;background:var(--track);outline:none;margin:0;cursor:grab}
+.smile-shade-range:active{cursor:grabbing}
+.smile-shade-range::-webkit-slider-runnable-track{height:12px;border-radius:999px}
+.smile-shade-range::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;margin-top:-10px;border-radius:50%;background:#fff;border:4px solid var(--pink);box-shadow:0 3px 11px rgba(93,67,145,.33)}
+.smile-shade-range::-moz-range-track{height:12px;border-radius:999px;background:var(--track)}
+.smile-shade-range::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:4px solid var(--pink);box-shadow:0 3px 11px rgba(93,67,145,.33)}
+.smile-shade-range:focus-visible{outline:3px solid var(--lavender);outline-offset:6px}
+.smile-shade-ticks{display:flex;justify-content:space-between;margin-top:15px}
+.smile-shade-tick{display:flex;flex-direction:column;align-items:center;gap:7px;width:36px;padding:0;border:0;background:none;cursor:pointer;color:var(--muted)}
+.smile-shade-tick i{width:24px;height:24px;border-radius:7px;background:var(--tc);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.smile-shade-tick span{font:600 12px/1 var(--ui)}
+.smile-shade-tick.is-on i{box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 0 0 2px #fff,0 0 0 4px var(--pink)}
+.smile-shade-tick.is-on span{color:var(--ink)}
 .closing-faq summary{min-height:52px}
 .closing-chief{padding:14px}
 .closing-route-head{display:block}

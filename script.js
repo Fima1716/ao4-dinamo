@@ -197,6 +197,44 @@
       $('b', label).textContent = item.dataset.shade;
       $('small', label).textContent = $('.smile-shade-tip span', item).textContent;
     };
+    const note = $('.smile-shade-note', shade);
+    const slider = document.createElement('div');
+    slider.className = 'smile-shade-slider';
+    slider.innerHTML = '<p class="smile-shade-slide-hint">Потяните ползунок, чтобы сравнить оттенки</p>';
+    const range = document.createElement('input');
+    range.type = 'range'; range.min = 0; range.max = items.length - 1; range.step = 1;
+    range.className = 'smile-shade-range';
+    range.setAttribute('aria-label', 'Оттенок зубов');
+    const grad = items.map((it, i) => it.dataset.t + ' ' + Math.round(i / (items.length - 1) * 100) + '%').join(',');
+    range.style.setProperty('--track', 'linear-gradient(90deg,' + grad + ')');
+    const ticks = document.createElement('div');
+    ticks.className = 'smile-shade-ticks';
+    items.forEach((it, i) => {
+      const t = document.createElement('button');
+      t.type = 'button'; t.className = 'smile-shade-tick'; t.dataset.i = i;
+      t.style.setProperty('--tc', it.dataset.t);
+      t.setAttribute('aria-label', 'Оттенок ' + it.dataset.shade);
+      t.innerHTML = '<i></i><span>' + it.dataset.shade + '</span>';
+      ticks.appendChild(t);
+    });
+    slider.appendChild(range); slider.appendChild(ticks);
+    if (note) shade.insertBefore(slider, note); else shade.appendChild(slider);
+    const tickEls = $$('.smile-shade-tick', ticks);
+    const syncSlider = idx => { range.value = idx; tickEls.forEach((t, i) => t.classList.toggle('is-on', i === idx)); };
+    range.addEventListener('input', () => {
+      const i = +range.value, item = items[i];
+      selected = item;
+      items.forEach(x => $('button', x).setAttribute('aria-pressed', String(x === item)));
+      preview(item);
+      tickEls.forEach((t, ti) => t.classList.toggle('is-on', ti === i));
+      status.textContent = item.dataset.shade + ' – ' + $('.smile-shade-tip span', item).textContent;
+    });
+    ticks.addEventListener('click', e => {
+      const t = e.target.closest('.smile-shade-tick');
+      if (!t) return;
+      range.value = t.dataset.i;
+      range.dispatchEvent(new Event('input'));
+    });
     items.forEach((item, index) => {
       const b = $('button', item);
       b.addEventListener('pointerenter', () => { if (mouse.matches) preview(item); });
@@ -207,6 +245,7 @@
         selected = item;
         items.forEach(i => $('button', i).setAttribute('aria-pressed', String(i === selected)));
         preview(item);
+        syncSlider(index);
         status.textContent = item.dataset.shade + ' – ' + $('.smile-shade-tip span', item).textContent;
       });
       b.addEventListener('keydown', e => {
@@ -220,6 +259,7 @@
       });
     });
     preview(selected);
+    syncSlider(items.indexOf(selected));
   }
 
   /* второе мнение: выбор файлов плана, затем телефон в модалке */
