@@ -43,7 +43,14 @@
   /* ---------- клавиатура: высота и сдвиг видимой области ---------- */
   const vv = window.visualViewport;
   const applyVV = () => { if (!vv) return; html.style.setProperty('--vv-h', Math.round(vv.height) + 'px'); html.style.setProperty('--vv-top', Math.round(vv.offsetTop) + 'px'); };
-  if (vv) { vv.addEventListener('resize', applyVV); vv.addEventListener('scroll', applyVV); applyVV(); }
+  if (vv) {
+    vv.addEventListener('resize', applyVV);
+    // при обычной прокрутке адресная строка Android то прячется, то показывается и шлёт visualViewport scroll
+    // десятками раз в секунду; запись CSS-переменных в <html> на каждый кадр = полный пересчёт стилей и рывки.
+    // --vv-h/--vv-top нужны только пока открыта клавиатура (модалка пришпилена над ней) — только тогда и обновляем.
+    vv.addEventListener('scroll', () => { if (html.classList.contains('kb-open')) applyVV(); });
+    applyVV();
+  }
   const isField = el => el && el.matches && el.matches('input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select');
   document.addEventListener('focusin', e => { if (mq.matches && isField(e.target)) html.classList.add('kb-open'); });
   document.addEventListener('focusout', () => setTimeout(() => { if (!isField(document.activeElement)) html.classList.remove('kb-open'); }, 60));
