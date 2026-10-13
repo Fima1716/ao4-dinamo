@@ -810,3 +810,28 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 .closing-nav:disabled{opacity:0;pointer-events:none}
 @media(max-width:1000px){.closing-track .closing-doc{flex-basis:calc((100% - 32px)/3)}}
 @media(max-width:760px){.closing-track{gap:12px;scroll-padding-left:12px}.closing-track .closing-doc{flex-basis:72%}.closing-nav{display:none}}
+
+/* === галерея фото маршрута === */
+.route-gallery{position:relative;margin-top:22px}
+.route-gallery[hidden]{display:none}
+.route-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 2px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.route-track::-webkit-scrollbar{display:none}
+.route-shot{flex:0 0 calc((100% - 36px)/2.2);scroll-snap-align:start;margin:0;background:#fff;border:1px solid var(--lav-10);border-radius:18px;overflow:hidden;box-shadow:0 6px 20px #5e53910f}
+.route-shot img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
+.route-shot figcaption{padding:16px 20px 18px;font:400 16px/1.4 var(--ui);color:var(--ink-2)}
+.route-shot figcaption b{display:block;font:600 14px var(--ui);color:var(--pink);letter-spacing:.02em;margin-bottom:5px}
+.route-nav{position:absolute;top:34%;transform:translateY(-50%);z-index:4;width:48px;height:48px;border-radius:50%;border:1px solid var(--lav-10);background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px #5e539124;transition:opacity .2s,background .2s}
+.route-nav svg{width:22px;height:22px}
+.route-nav:hover:not(:disabled){background:var(--paper)}
+.route-nav--prev{left:-16px}.route-nav--next{right:-16px}
+.route-nav:disabled{opacity:0;pointer-events:none}
+@media(max-width:900px){.route-shot{flex-basis:calc((100% - 18px)/1.35)}.route-nav{display:none}.route-shot figcaption{font-size:15px}}
+@media(max-width:600px){.route-track{gap:12px;scroll-padding-left:2px}.route-shot{flex-basis:85%}}
+
+/* Neodent соразмерно соседним логотипам */
+.neodent-logo img{max-height:68px}
+.nobel .implant-brand-logo{overflow:visible}
+
+/* баннер 99 ₽: по центру по вертикали, во всю ширину, фон как у страницы */
+.extraction-offer{max-width:none;margin:clamp(30px,4.5vw,54px) 0;padding:0 16px;background:transparent;border-radius:0}
+.extraction-panel{max-width:1240px;margin-inline:auto}

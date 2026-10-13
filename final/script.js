@@ -285,11 +285,14 @@
 
   /* табы маршрута */
   const tabs = $$('.closing-tabs [role=tab]');
-  const activate = tab => tabs.forEach(t => {
-    const on = t === tab;
-    t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
-    document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
-  });
+  const activate = tab => {
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    dispatchEvent(new Event('resize')); // пересчитать стрелки галереи показанного маршрута
+  };
   tabs.forEach((tab, i) => {
     tab.addEventListener('click', () => activate(tab));
     tab.addEventListener('keydown', e => {
@@ -299,6 +302,25 @@
       if (e.key === 'End') n = tabs.length - 1;
       if (n !== undefined) { e.preventDefault(); activate(tabs[n]); tabs[n].focus(); }
     });
+  });
+
+  /* стрелки галереи маршрута */
+  document.querySelectorAll('.route-gallery').forEach(g => {
+    const track = g.querySelector('.route-track');
+    const prev = g.querySelector('.route-nav--prev'), next = g.querySelector('.route-nav--next');
+    if (!track || !prev || !next) return;
+    const step = () => { const c = track.querySelector('.route-shot'); const gap = parseFloat(getComputedStyle(track).columnGap) || 18; return c ? c.offsetWidth + gap : track.clientWidth; };
+    const sync = () => { const max = track.scrollWidth - track.clientWidth - 2; prev.disabled = track.scrollLeft <= 2; next.disabled = track.scrollLeft >= max; };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step() * 2, behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step() * 2, behavior: 'smooth' }));
+    track.addEventListener('scroll', sync, { passive: true });
+    addEventListener('resize', sync); sync();
+  });
+
+  /* калькулятор: клик по полю сразу открывает выпадающий список */
+  document.querySelectorAll('.payment-field').forEach(f => {
+    const sel = f.querySelector('select'); if (!sel) return;
+    f.addEventListener('click', e => { if (e.target !== sel && typeof sel.showPicker === 'function') { try { sel.showPicker(); } catch {} } });
   });
 
   /* слайдер врачей */
