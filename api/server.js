@@ -5,6 +5,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const tls = require('tls');
+const net = require('net');
 
 const PORT = process.env.PORT || 8791;
 const DATA = process.env.DATA_DIR || path.join(__dirname, 'data');
@@ -19,21 +21,30 @@ const sessions = new Map();
 
 // секреты (токен Telegram и chat_id) — из окружения или из файла рядом с данными,
 // в репозиторий не попадают
+const FORM_NAMES = { hero: 'Первый экран', modal: 'Окно «Рассчитать»', quiz: 'Квиз', final: 'Финальная форма', opinion: 'Второе мнение' };
+
 function secrets() {
   const f = path.join(DATA, 'secrets.json');
   let s = {}; try { s = JSON.parse(fs.readFileSync(f, 'utf8')); } catch {}
   return {
     tgToken: process.env.TG_TOKEN || s.tgToken || '',
     tgChat: process.env.TG_CHAT || s.tgChat || '',
+    smtp: {
+      host: process.env.SMTP_HOST || s.smtpHost || '',
+      port: Number(process.env.SMTP_PORT || s.smtpPort || 465),
+      user: process.env.SMTP_USER || s.smtpUser || '',
+      pass: process.env.SMTP_PASS || s.smtpPass || '',
+      from: process.env.SMTP_FROM || s.smtpFrom || '',
+      to: process.env.SMTP_TO || s.smtpTo || '',
+    },
   };
 }
 function notifyTelegram(lead) {
   const { tgToken, tgChat } = secrets();
   if (!tgToken || !tgChat) return;
-  const forms = { hero: 'Первый экран', modal: 'Окно «Рассчитать»', quiz: 'Квиз', final: 'Финальная форма', opinion: 'Второе мнение' };
   const lines = [
     '🦷 <b>Новая заявка</b> — All Smiles Динамо',
-    `Форма: ${forms[lead.form] || lead.form || '—'}`,
+    `Форма: ${FORM_NAMES[lead.form] || lead.form || '—'}`,
     lead.name ? `Имя: ${lead.name}` : '',
     `Телефон: ${lead.phone}`,
     lead.messenger ? `Мессенджер: ${lead.messenger}` : '',
@@ -44,6 +55,100 @@ function notifyTelegram(lead) {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: tgChat, text, parse_mode: 'HTML', disable_web_page_preview: true }),
   }).catch(() => {});
+}
+
+/* Минимальный SMTP-клиент (без внешних зависимостей).
+   port 465 — неявный TLS; 587/25 — STARTTLS. Логин AUTH LOGIN, тело в base64/UTF-8. */
+function sendMail(cfg, mail) {
+  return new Promise((resolve, reject) => {
+    const port = Number(cfg.port) || 465;
+    const host = cfg.host, user = cfg.user, pass = cfg.pass, from = cfg.from || cfg.user;
+    const sni = /^\d{1,3}(\.\d{1,3}){3}$/.test(host) ? undefined : host; // SNI только для доменов, не для IP
+    const to = (Array.isArray(mail.to) ? mail.to : [mail.to]).filter(Boolean);
+    if (!host || !user || !pass || !to.length) return reject(new Error('SMTP не настроен'));
+
+    let settled = false, active = null;
+    const finish = (err) => { if (settled) return; settled = true; clearTimeout(tm); try { active && active.destroy(); } catch {} err ? reject(err) : resolve(); };
+    const tm = setTimeout(() => finish(new Error('SMTP timeout')), 25000);
+
+    const b64 = (s) => Buffer.from(String(s), 'utf8').toString('base64');
+    const mimeWord = (s) => /[^\x00-\x7F]/.test(String(s)) ? '=?UTF-8?B?' + b64(s) + '?=' : String(s);
+    const headers = [
+      'From: ' + (mail.fromName ? mimeWord(mail.fromName) + ' <' + from + '>' : from),
+      'To: ' + to.join(', '),
+      'Subject: ' + mimeWord(mail.subject || ''),
+      'Date: ' + new Date().toUTCString(),
+      'MIME-Version: 1.0',
+      'Content-Type: text/plain; charset=UTF-8',
+      'Content-Transfer-Encoding: base64',
+    ];
+    const payload = headers.join('\r\n') + '\r\n\r\n'
+      + Buffer.from(String(mail.text || ''), 'utf8').toString('base64').replace(/(.{76})/g, '$1\r\n') + '\r\n.\r\n';
+    const authSteps = [
+      { cmd: 'AUTH LOGIN', expect: [334] },
+      { cmd: b64(user), expect: [334] },
+      { cmd: b64(pass), expect: [235] },
+      { cmd: 'MAIL FROM:<' + from + '>', expect: [250] },
+      ...to.map((t) => ({ cmd: 'RCPT TO:<' + t + '>', expect: [250, 251] })),
+      { cmd: 'DATA', expect: [354] },
+      { cmd: payload, raw: true, expect: [250], success: true },
+    ];
+
+    function runOn(sock, steps) {
+      let buf = '', i = 0;
+      const nextReply = () => { const m = /^(\d{3}) [^\r\n]*\r\n/m.exec(buf); if (!m) return null; buf = buf.slice(m.index + m[0].length); return parseInt(m[1], 10); };
+      const prime = () => { const s = steps[i]; if (s && s.cmd !== undefined) { try { sock.write(s.cmd + (s.raw ? '' : '\r\n')); } catch (e) { finish(e); } } };
+      sock.setEncoding('utf8');
+      sock.on('error', (e) => finish(e));
+      sock.on('data', (chunk) => {
+        buf += chunk; let code;
+        while ((code = nextReply()) !== null) {
+          const s = steps[i]; if (!s) return;
+          if (!s.expect.includes(code)) return finish(new Error('SMTP ' + code + ' на «' + (s.cmd ? s.cmd.split('\r')[0].slice(0, 20) : 'greeting') + '»'));
+          if (s.success) { try { sock.write('QUIT\r\n'); sock.end(); } catch {} return finish(); }
+          if (s.upgrade) return s.upgrade(sock);
+          i++; prime();
+        }
+      });
+      prime();
+    }
+
+    if (port === 465) {
+      active = tls.connect({ host, port, servername: sni, rejectUnauthorized: false });
+      runOn(active, [{ expect: [220] }, { cmd: 'EHLO allsmiles', expect: [250] }, ...authSteps]);
+    } else {
+      active = net.connect({ host, port });
+      runOn(active, [
+        { expect: [220] },
+        { cmd: 'EHLO allsmiles', expect: [250] },
+        { cmd: 'STARTTLS', expect: [220], upgrade: (plain) => {
+          const sec = tls.connect({ socket: plain, servername: sni, rejectUnauthorized: false }, () => {
+            runOn(sec, [{ cmd: 'EHLO allsmiles', expect: [250] }, ...authSteps]);
+          });
+          active = sec; sec.on('error', (e) => finish(e));
+        } },
+      ]);
+    }
+  });
+}
+function notifyEmail(lead) {
+  const { smtp } = secrets();
+  if (!smtp.host || !smtp.user || !smtp.pass || !smtp.to) return;
+  const lines = [
+    'Новая заявка с сайта All Smiles Динамо', '',
+    'Форма: ' + (FORM_NAMES[lead.form] || lead.form || '—'),
+    lead.name ? 'Имя: ' + lead.name : '',
+    'Телефон: ' + lead.phone,
+    lead.messenger ? 'Мессенджер: ' + lead.messenger : '',
+    lead.answers ? 'Ответы: ' + lead.answers : '',
+    lead.page ? 'Страница: ' + lead.page : '',
+    'Время: ' + new Date(lead.ts).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
+  ].filter(Boolean);
+  const to = String(smtp.to).split(/[,;\s]+/).filter(Boolean);
+  sendMail(
+    { host: smtp.host, port: smtp.port, user: smtp.user, pass: smtp.pass, from: smtp.from || smtp.user },
+    { to, subject: 'Заявка с сайта — ' + (lead.phone || ''), text: lines.join('\n'), fromName: 'Сайт All Smiles' }
+  ).catch((e) => console.warn('email lead error:', e.message));
 }
 const MIME_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/svg+xml': 'svg' };
 const EXT_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml' };
@@ -141,6 +246,7 @@ http.createServer(async (req, res) => {
     while (arr.length > 5000) arr.shift();
     fs.writeFileSync(LEADS, JSON.stringify(arr));
     notifyTelegram(lead);
+    notifyEmail(lead);
     return send(res, 200, { ok: true });
   }
 
