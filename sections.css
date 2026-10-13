@@ -626,6 +626,8 @@ main .smile-aesthetic-lead{grid-column:2;margin:0 0 10px;max-width:none;font-siz
 .closing-map-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .closing-map-links a{display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 18px;border-radius:999px;background:#fff;border:1px solid var(--lav-20);color:var(--ink);font-weight:600;font-size:14px;text-decoration:none;transition:border-color .2s,color .2s}
 .closing-map-links a:hover{border-color:var(--pink);color:var(--pink)}
+.closing-map-links a.closing-map-route{background:var(--pink);border-color:var(--pink);color:#fff}
+.closing-map-links a.closing-map-route:hover{background:var(--pink-ink,#c82f74);border-color:var(--pink-ink,#c82f74);color:#fff}
 .closing-map-links img{width:22px;height:22px;object-fit:contain}
 @media(max-width:760px){.closing-map-frame{height:300px;border-radius:16px}.closing-map-links a{flex:1;justify-content:center;padding:0 12px}}
 

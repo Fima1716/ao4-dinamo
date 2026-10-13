@@ -241,7 +241,7 @@
         tabs.forEach(x => x.setAttribute('aria-selected', String(x === t)));
         panels.forEach(p => { p.hidden = p.dataset.route !== t.dataset.route; });
       }));
-    }),
+    }, false),
     menu: makeSheet('menu', 'Меню', body => {
       const items = [
         ['about', 'О клинике', ICO.pin], ['cases', 'Результаты лечения', ICO.smile], ['reviews', 'Отзывы пациентов', ICO.smile], ['finance', 'Рассрочка и кредит', ICO.percent], ['quiz', 'Подбор за минуту', ICO.list],
