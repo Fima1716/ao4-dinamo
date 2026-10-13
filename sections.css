@@ -792,7 +792,7 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 
 /* слайдер врачей */
 .closing-slider{position:relative;margin-top:22px}
-.closing-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;scroll-behavior:smooth;padding:4px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.closing-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:none;scroll-behavior:smooth;padding:4px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .closing-track::-webkit-scrollbar{display:none}
 .closing-track .closing-doc{flex:0 0 calc((100% - 48px)/4);scroll-snap-align:start;margin:0;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:box-shadow .2s,transform .2s}
 .closing-track .closing-doc:hover{box-shadow:0 12px 32px #5e539120;transform:translateY(-3px)}
@@ -819,7 +819,7 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 /* === галерея фото маршрута === */
 .route-gallery{position:relative;margin-top:22px}
 .route-gallery[hidden]{display:none}
-.route-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x proximity;scroll-behavior:smooth;padding:4px 2px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.route-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:none;scroll-behavior:smooth;padding:4px 2px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .route-track::-webkit-scrollbar{display:none}
 .route-shot{flex:0 0 calc((100% - 36px)/2.2);scroll-snap-align:start;margin:0;background:#fff;border:1px solid var(--lav-10);border-radius:18px;overflow:hidden;box-shadow:0 6px 20px #5e53910f}
 .route-shot img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
