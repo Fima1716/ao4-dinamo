@@ -235,7 +235,7 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-sheet .m-dots{display:none}
 
 /* содержимое шторок: вертикальные списки из клонов секций */
-.m-sheet .closing-docs,.m-sheet .results-works,.m-sheet .closing-route-steps{display:grid!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;grid-template-columns:1fr!important;gap:10px!important;overflow:visible;margin:0!important;padding:0!important}
+.m-sheet .closing-track,.m-sheet .results-works,.m-sheet .closing-route-steps{display:grid!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;grid-template-columns:1fr!important;gap:10px!important;overflow:visible;margin:0!important;padding:0!important}
 .m-sheet .closing-route-steps[hidden]{display:none!important}
 .m-sheet .closing-chief{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:center;padding:12px;background:var(--paper);border-radius:16px}
 .m-sheet .closing-chief .closing-photo{height:auto;aspect-ratio:1;border-radius:12px;overflow:hidden}
@@ -245,7 +245,7 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-sheet .closing-eyebrow{font-size:11px}
 .m-sheet .closing-awards{grid-column:1/-1;grid-template-columns:1fr;gap:8px;margin:2px 0 0}
 .m-sheet .closing-awards li{background:#fff}
-.m-sheet .closing-docs{margin-top:10px!important}
+.m-sheet .closing-slider{margin-top:10px!important}
 .m-sheet .closing-doc{display:grid;grid-template-columns:92px 1fr;grid-template-rows:auto auto auto;gap:0 12px;align-items:start;align-content:center;padding:10px;border-radius:16px;background:var(--paper)}
 .m-sheet .closing-doc .closing-photo{grid-column:1;grid-row:1/4;align-self:center}
 .m-sheet .closing-doc h3,.m-sheet .closing-doc small,.m-sheet .closing-doc p{grid-column:2}

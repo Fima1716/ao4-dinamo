@@ -232,7 +232,7 @@
       initCompare($('.results-story-pics', body));
     }),
     doctors: makeSheet('doctors', 'Врачи', body => {
-      ['.closing-chief', '.closing-docs'].forEach(s => { const c = clone(s); if (c) body.append(c); });
+      ['.closing-chief', '.closing-slider'].forEach(s => { const c = clone(s); if (c) body.append(c); });
     }),
     route: makeSheet('route', 'Как добраться', body => {
       ['.closing-tabs', '.closing-route-panels', '.closing-route-addr', '.closing-map'].forEach(s => { const c = clone(s); if (c) body.append(c); });
