@@ -828,9 +828,9 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 @media(max-width:900px){.route-shot{flex-basis:calc((100% - 18px)/1.35)}.route-nav{display:none}.route-shot figcaption{font-size:15px}}
 @media(max-width:600px){.route-track{gap:12px;scroll-padding-left:2px}.route-shot{flex-basis:85%}}
 
-/* Neodent соразмерно соседним логотипам */
-.neodent-logo img{max-height:68px}
+/* Neodent «by straumann» — крупно, как другие лого имплантов */
 .nobel .implant-brand-logo{overflow:visible}
+.neodent-logo img{max-height:64px;height:auto;width:auto;max-width:100%;object-fit:contain;object-position:left center}
 
 /* баннер 99 ₽: по центру по вертикали, во всю ширину, фон как у страницы */
 .extraction-offer{max-width:none;margin:clamp(30px,4.5vw,54px) 0;padding:0 16px;background:transparent;border-radius:0}
