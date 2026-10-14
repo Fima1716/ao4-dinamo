@@ -149,21 +149,28 @@
       next.disabled = s === 3 && !$('input:checked', steps[s]);
       count.textContent = (s === 4 ? 4 : s + 1) + ' / 4';
       bars.forEach((b, i) => b.classList.toggle('is-active', i <= s));
+      applyH();
       if (focus) (s === 4 ? $('h3', contact) : $('legend', steps[s])).focus({ preventScroll: true });
     };
-    /* одинаковая высота всех шагов: замеряем самый высокий и держим её, чтобы страница не прыгала */
+    /* высота сцены: на десктопе одна на все шаги (по самому высокому), на телефоне —
+       высота текущего шага, перелив между шагами анимируется в CSS (transition height) */
     const stage = $('.match-quiz-stage', quiz);
+    const mqNarrow = matchMedia('(max-width:760px)');
+    let stepH = [];
+    const applyH = () => {
+      if (!stepH.length) return;
+      if (mqNarrow.matches) { stage.style.minHeight = ''; stage.style.height = stepH[s] + 'px'; }
+      else { stage.style.height = ''; stage.style.minHeight = Math.max(...stepH) + 'px'; }
+    };
     const fit = () => {
-      stage.style.minHeight = '';
-      // одна высота на все шаги (включая форму), чтобы блок нигде не прыгал.
-      // короткие шаги центрируются по вертикали через CSS — пустого провала снизу нет.
-      let h = 0;
-      [...steps, contact].forEach(el => {
+      stage.style.minHeight = ''; stage.style.height = '';
+      stepH = [...steps, contact].map(el => {
         const was = el.hidden; el.hidden = false; el.style.position = 'absolute'; el.style.visibility = 'hidden'; el.style.width = stage.clientWidth + 'px';
-        h = Math.max(h, el.offsetHeight);
+        const h = el.offsetHeight;
         el.hidden = was; el.style.position = el.style.visibility = el.style.width = '';
+        return h;
       });
-      stage.style.minHeight = h + 'px';
+      applyH();
     };
     fit(); addEventListener('resize', fit); addEventListener('load', fit);
     const answers = $('input[name=answers]', contact);

@@ -328,14 +328,18 @@ html.kb-open .modal-body>p,html.kb-open .modal-list{display:none}
 html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{transform:translateY(140%)}
 @media (max-width:360px){.m-tabbar{left:8px;right:8px}.m-tabbar a,.m-tabbar button{font-size:10px}.m-tabbar .m-tab-cta i{width:58px;height:58px;margin-top:-32px}}
 
-/* ---------- квиз: экран как в приложении — одна высота, ничего не ездит ---------- */
-/* контент сверху (не центрируем), высоту сцены держит JS по самому высокому шагу */
-.match-quiz-stage{display:block!important}
-/* ряд кнопок одной геометрии на всех шагах: скрытые кнопки резервируют место невидимыми,
-   поэтому «Назад»/«Дальше» никогда не прыгают и ряд не меняет высоту */
-.match-quiz-nav{flex-wrap:nowrap!important;min-height:56px;margin-top:14px!important;gap:12px!important}
-.match-quiz-nav .match-quiz-back[hidden]{display:inline-block;visibility:hidden}
-.match-quiz-nav .match-quiz-next[hidden]{display:flex;visibility:hidden}
+/* ---------- квиз: экран как в приложении — высота переливается плавно, кнопки появляются красиво ---------- */
+/* контент сверху; JS ставит сцене высоту ТЕКУЩЕГО шага, а переход анимируем здесь */
+.match-quiz-stage{display:block!important;overflow:clip;transition:height .35s cubic-bezier(.2,.7,.2,1)}
+/* ряд кнопок: геометрия стабильна, скрытые кнопки держат место невидимыми и появляются с fade+подъёмом */
+.match-quiz-nav{flex-wrap:nowrap!important;min-height:56px;margin-top:14px!important;gap:12px!important;transition:min-height .3s cubic-bezier(.2,.7,.2,1),margin-top .3s cubic-bezier(.2,.7,.2,1)}
+.match-quiz-back,#match-quiz-next{transition:opacity .28s ease,transform .28s cubic-bezier(.2,.7,.2,1)}
+.match-quiz-nav .match-quiz-back[hidden]{display:inline-block;visibility:hidden;opacity:0;transform:translateY(8px)}
+.match-quiz-nav .match-quiz-next[hidden]{display:flex;visibility:hidden;opacity:0;transform:translateY(8px)}
+/* первый вопрос: кнопок ещё нет — пустой ряд схлопнут, на шаге 2 плавно вырастает */
+.match-quiz-nav:has(.match-quiz-back[hidden]):has(.match-quiz-next[hidden]){min-height:0;margin-top:0}
+.match-quiz-nav:has(.match-quiz-back[hidden]):has(.match-quiz-next[hidden])>*{display:none}
+@starting-style{.match-quiz-nav .match-quiz-back,.match-quiz-nav #match-quiz-next{opacity:0;transform:translateY(8px)}}
 /* вопросы: варианты ощутимой высоты, сетки компактные — разброс высот шагов минимальный */
 .match-quiz-option{min-height:82px}
 .match-quiz-option:has(.match-quiz-jaw){min-height:172px;justify-content:center;padding-top:14px;padding-bottom:14px}
