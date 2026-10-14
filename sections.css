@@ -1,8 +1,6 @@
-/* final · секции по макету Ильи «all smiles.html» (октябрь 2026).
-   Подключается после design.css. Все блоки ниже первого экрана —
-   extraction-offer, network-ratings, treatment-results, care-benefits,
-   payment-section, solution-section, match-quiz-section, implant-brands,
-   smile-aesthetic, opinion-section, care-support, closing-* — живут здесь. */
+/* Секции ниже первого экрана: акции, результаты, рассрочка, квиз,
+   бренды имплантов, эстетика, второе мнение, гарантии, врачи, FAQ,
+   маршрут, финальная форма. Подключается после design.css. */
 
 .stars-img{display:block;width:88px;height:auto}
 
@@ -36,7 +34,7 @@ main h2{font-weight:600}
 @media(max-width:1180px){.header-contact{margin-left:auto}}
 @media(max-width:360px){.brand{width:108px}.header-inner{gap:10px;padding-inline:14px}.header-contact a{font-size:14px}.v1 .pill{font-size:11px;padding-inline:10px}.v1 .sticker{width:76px;height:76px;right:-8px;top:48px}}
 
-/* Second section adapted from /variant2/: extraction promotion. */
+/* акция удаления */
 .extraction-offer{padding:12px 16px 32px;font-family:var(--ui);color:var(--ink)}
 .extraction-panel{position:relative;isolation:isolate;overflow:clip;display:grid;grid-template-columns:minmax(180px,.8fr) minmax(300px,1.5fr) auto;align-items:center;gap:clamp(26px,4vw,68px);padding:clamp(36px,4.5vw,68px);border-radius:36px;background:linear-gradient(115deg,var(--lav-10) 0%,var(--paper) 50%,var(--pink-10) 100%);border:1px solid var(--lav-10)}
 .extraction-panel::after{content:'';position:absolute;z-index:-1;right:-100px;top:-140px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,#e93d8d18,transparent 68%);pointer-events:none}
@@ -58,7 +56,7 @@ main .extraction-copy p{font-family:inherit;color:var(--ink-2);font-size:15px;li
 @media(max-width:1050px){.extraction-panel{grid-template-columns:.7fr 1.3fr;gap:20px 36px}.extraction-price{grid-row:1/3}.extraction-action{grid-column:2}.extraction-label{margin-bottom:14px}}
 @media(max-width:600px){.extraction-offer{padding:8px 10px 22px}.extraction-panel{grid-template-columns:1fr;gap:24px;padding:30px 24px;border-radius:28px}.extraction-price{grid-row:2;align-items:flex-start;border-top:1px solid var(--lav-20);padding-top:23px}.extraction-copy{grid-row:1}.extraction-action{grid-column:1;grid-row:3}.extraction-now{font-size:112px;margin-top:3px}.extraction-copy h2{font-size:36px}.extraction-copy p{font-size:14px}.extraction-button{width:100%;justify-content:space-between;padding-inline:24px}.extraction-orbit{left:37%;top:12%;height:100%;width:95%}.extraction-label{font-size:11px}}
 
-/* Compact offer, visually continuous with the first screen. */
+
 .v1 .hero{padding-bottom:0}
 .v1 .hero__sheet{border-radius:36px 36px 0 0}
 .extraction-offer{padding:0 16px;font-family:var(--ui)}
@@ -77,7 +75,7 @@ main .extraction-copy p{font-size:13px;line-height:1.4}
 @media(max-width:600px){.extraction-panel{grid-template-columns:125px minmax(0,1fr);min-height:190px;gap:16px 15px;padding:20px}.extraction-price{grid-row:1;gap:9px}.extraction-now{font-size:49px}.extraction-was{font-size:10px}.extraction-was s{font-size:13px}.extraction-copy{grid-row:1;grid-column:2}main .extraction-copy h2{font-size:22px;margin-bottom:5px}main .extraction-copy p{font-size:11px}.extraction-action{grid-column:1/-1;grid-row:2}.extraction-button{width:100%;justify-content:center;min-height:44px}}
 @media(max-width:360px){.extraction-panel{padding:18px 14px;gap:14px 10px;grid-template-columns:110px minmax(0,1fr)}.extraction-now{font-size:44px}main .extraction-copy h2{font-size:20px}.extraction-was s{font-size:12px}}
 
-/* Glass offer strip based on the supplied visual reference. */
+
 .extraction-offer{position:relative;padding:10px 30px 28px;background:linear-gradient(110deg,var(--lav-20),var(--lav-10) 60%,var(--lav-10));margin:0 16px;border-radius:0 0 36px 36px;isolation:isolate}
 .extraction-panel{overflow:visible;grid-template-columns:230px minmax(225px,1fr) minmax(120px,.65fr) auto;gap:22px;min-height:144px;padding:22px 30px;border:1px solid #f4f3f7ed;border-radius:36px;background:linear-gradient(115deg,#f4f3f785,#f4f3f76b 58%,#f4f3f755);box-shadow:0 20px 34px #5e539126,inset 0 1px 1px #f4f3f799;backdrop-filter:blur(14px)}
 .extraction-panel::before{content:'';position:absolute;inset:-10px;border:1px solid #f4f3f7b0;border-radius:46px;background:linear-gradient(140deg,#f4f3f735,#fff0 60%);z-index:-1;pointer-events:none}
@@ -103,9 +101,9 @@ main .extraction-copy p{font-size:clamp(12px,1.15vw,18px);color:var(--ink-2);lin
 @media(max-width:360px){.extraction-offer{padding-inline:12px}.extraction-panel{padding-inline:12px;grid-template-columns:105px minmax(0,1fr)}.extraction-now{font-size:47px}.extraction-was{font-size:8px;padding-left:6px}.extraction-was s{font-size:10px}main .extraction-copy h2{font-size:21px}.extraction-button{font-size:11px;padding-inline:9px}.extraction-art img{width:140px}}
 @media(max-width:700px){.extraction-price{flex-direction:column;align-items:flex-start;gap:4px}.extraction-was{flex-direction:row;gap:5px;padding-left:0;border:0;font-size:10px}.extraction-was s{font-size:12px}}
 
-/* Review platform cards, matching the supplied next-section reference. */
+/* карточки рейтингов */
 
-/* Patient results, using source photographs without altering treatment images. */
+/* результаты лечения */
 .treatment-results{padding:8px 16px 38px;background:var(--paper);scroll-margin-top:100px;font-family:var(--ui);color:var(--ink)}
 .results-wrap{max-width:1440px;margin:auto}
 main #results-title{font-family:inherit;font-weight:300;font-size:clamp(30px,3.2vw,48px);line-height:1.15;letter-spacing:-.035em;margin:0 0 26px;max-width:none;color:var(--ink)}
@@ -140,7 +138,7 @@ main .results-work p{font:400 14px/1.4 var(--ui);margin:0;color:var(--ink-2)}
 /* у нас фото «ещё историй» — крупные планы улыбок разных пропорций, режем в квадрат */
 .results-work-pair img{aspect-ratio:1;object-fit:cover}
 
-/* Chewing, facial aesthetics, sedation and professional association. */
+/* комфорт, сон, ассоциация */
 .care-benefits{padding:26px 16px 42px;background:var(--paper);font-family:var(--ui);scroll-margin-top:100px}
 .care-wrap{max-width:1440px;margin:auto}
 main #care-title{font:300 clamp(30px,3.2vw,48px)/1.14 var(--ui);letter-spacing:-.04em;color:var(--ink);max-width:none;margin:0 14px 25px}
@@ -166,7 +164,7 @@ main .care-association>p{font:400 15px/1.35 var(--ui);color:var(--ink-2);margin:
 @media(max-width:760px){.care-benefits{padding:24px 10px 30px}main #care-title{font-size:30px;margin:0 6px 20px}#care-title br{display:none}.care-pair{grid-template-columns:1fr}.care-card{grid-template-columns:minmax(115px,.75fr) minmax(0,1fr);gap:14px}.care-card>img{min-height:180px;max-height:260px}main .care-card h3{font-size:20px}main .care-card p{font-size:13px}.care-sleep{grid-template-columns:1fr;gap:18px;padding:12px}.care-sleep>img{min-height:0;height:auto;max-height:none;aspect-ratio:1.9;object-fit:cover}.care-sleep>div{padding:0 6px 8px}main .care-sleep h3{font-size:24px}main .care-sleep p{font-size:15px}.care-sleep-button{width:100%;margin-top:8px}.care-association{grid-template-columns:1fr;gap:18px;padding:22px}.care-association-heading{gap:16px}.care-association-heading img{width:88px;height:90px}main .care-association h3{font-size:clamp(17px,4.4vw,21px);min-width:0;overflow-wrap:break-word}main .care-association>p{border-left:0;border-top:1px solid var(--lav-20);padding:18px 0 0;font-size:14px}}
 @media(max-width:380px){.care-card{grid-template-columns:1fr}.care-card>img{height:210px;min-height:0;object-position:center 35%}.care-card>div{padding:4px 8px 8px}main .care-card p{font-size:14px}}
 .care-association-heading img{width:150px;height:153px;object-fit:contain}@media(max-width:760px){.care-association-heading img{width:88px;height:90px}}
-/* Instalment options and indicative zero-interest monthly payment calculator. */
+/* рассрочка и калькулятор */
 .payment-section{padding:32px 28px 42px;background:var(--paper);scroll-margin-top:100px;font-family:var(--ui);color:var(--ink)}
 .payment-wrap{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(0,1fr);gap:18px;max-width:1440px;margin:auto;align-items:stretch}
 .payment-copy{display:flex;flex-direction:column;min-width:0}
@@ -221,7 +219,7 @@ main .solution-alt-copy .solution-note{margin-top:18px;font-size:14px}
 
 .solution-card-top img{width:116px;height:70px;object-fit:contain}@media(max-width:1150px){.solution-card-top{gap:16px}.solution-card-top img{width:100px;height:62px}}@media(max-width:600px){.solution-card-top img{width:116px;height:70px}.solution-card-top{height:70px}}
 
-/* Transparent implant render, gently floating above a breathing shadow. */
+/* плавающий имплант */
 .solution-alternatives{position:relative;isolation:isolate;overflow:hidden;padding-top:24px;padding-bottom:24px;background:linear-gradient(115deg,var(--lav-10),var(--paper) 58%,var(--lav-10))}
 .solution-brand-watermark{position:absolute;left:50%;bottom:-.15em;transform:translateX(-50%);white-space:nowrap;font:800 clamp(55px,8.5vw,142px)/1 var(--ui);letter-spacing:-.05em;color:var(--violet);opacity:.085;z-index:-1;pointer-events:none;user-select:none}
 .solution-art-stage{position:relative;align-self:center;min-width:0;width:100%;padding:12px 0 20px;isolation:isolate}
@@ -253,7 +251,7 @@ main #match-quiz-title{font:600 clamp(25px,2.35vw,36px)/1.22 var(--ui);letter-sp
 @media(max-width:1100px){.match-quiz-section{padding:20px 16px}.match-quiz-side{padding:24px 0 0}.match-quiz-panel{padding:30px 26px}.match-quiz-bonuses{gap:10px}.match-quiz-bonuses>div{padding:16px 12px;gap:10px}.match-quiz-bonuses img{width:34px}.match-quiz-bonuses p{font-size:12px}}
 @media(max-width:760px){.match-quiz-wrap{grid-template-columns:1fr;gap:0}.match-quiz-side{padding:12px 8px 0}.match-quiz-art{height:200px;margin-top:0}.match-quiz-panel{padding:26px 20px}.match-quiz-section{padding:20px 10px 28px}.match-quiz-progress{margin-bottom:24px}.match-quiz-option{font-size:16px;gap:14px;padding:16px}.match-quiz-next{font-size:16px;min-height:56px}.match-quiz-bonuses>div{padding:14px 10px}.match-quiz-bonuses b{font-size:23px}main #match-quiz-title{font-size:28px}main #match-quiz-title br{display:none}}
 
-/* Quiz: wide illustrated card */
+/* квиз */
 .match-quiz-section{padding:44px 28px 52px;background:radial-gradient(ellipse at 25% 100%,#eeeaf988,transparent 55%),var(--paper)}
 .match-quiz-wrap{position:relative;display:block;padding:38px 44px 36px;border:1.5px solid var(--lav-10);border-radius:25px;background:#f4f3f7a6;max-width:1440px}
 .match-quiz-side{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-items:center;gap:30px;padding:0 0 30px;border-bottom:1px solid var(--lav-10);overflow:visible}
@@ -470,7 +468,7 @@ main #care-title{margin-bottom:18px}
 .match-quiz-bars i{transition:background .45s var(--ease)}
 .match-quiz-option{transition:border-color .25s,background .25s,transform .25s var(--ease)}
 .match-quiz-option:hover{transform:translateY(-2px)}
-/* плавное открытие/закрытие FAQ: анимируем высоту ::details-content (совр. Chrome; иначе — обычный details) */
+/* плавное открытие и закрытие FAQ */
 .closing-faq{interpolate-size:allow-keywords}
 .closing-faq details::details-content{height:0;overflow:hidden;transition:height .32s var(--ease),content-visibility .32s var(--ease) allow-discrete}
 .closing-faq details[open]::details-content{height:auto}
@@ -509,13 +507,11 @@ main #care-title{margin-bottom:18px}
 .match-quiz-option input[type=checkbox]{border-radius:6px}
 .match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in .35s var(--ease)}
 @keyframes quiz-in{from{opacity:0;transform:translateX(12px)}}
-/* View Transitions: кроссфейд шагов — старый тает и уплывает, новый всплывает навстречу,
-   карточка морфится по размеру; направление задаёт html[data-quiz-dir] (ставит script.js) */
+/* кроссфейд шагов квиза через View Transitions; направление задаёт html[data-quiz-dir] */
 .match-quiz-stage{view-transition-name:quiz-stage}
 .match-quiz-nav{view-transition-name:quiz-nav}
 .match-quiz-progress{view-transition-name:quiz-progress}
 .quiz-no-anim .match-quiz-stage{transition:none!important}
-/* с View Transitions свои анимации шагов не нужны вовсе — иначе после перехода они проигрываются заново (рывок) */
 .vt-quiz .match-quiz-step:not([hidden]),.vt-quiz .match-quiz-contact:not([hidden]){animation:none!important}
 ::view-transition-old(root),::view-transition-new(root){animation:none}
 ::view-transition-group(quiz-stage),::view-transition-group(quiz-nav),::view-transition-group(quiz-progress){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,.9,.3,1)}
@@ -775,8 +771,7 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 @media(max-width:900px){.care-contract{grid-template-columns:1fr;gap:16px}.care-contract-art{height:200px}.care-contract-copy{padding:4px 6px 8px}}
 
 /* ====================================================================
-   Правки 12 окт: блок «99 ₽» перенесён под квиз; срок рассрочки 24;
-   Straumann вместо Nobel; выбор мессенджера в квизе
+   Блок 99 р под квизом, Straumann, выбор мессенджера в квизе
    ==================================================================== */
 /* первый экран снова скруглён снизу — под ним больше нет плашки акции */
 .v1 .hero__sheet{border-radius:36px}

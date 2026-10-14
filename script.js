@@ -31,12 +31,9 @@
     setTimeout(() => targets.forEach(el => el.classList.add('is-in')), 4000); // страховка: показать всё, если наблюдатель не сработал
   }
 
-  /* возврат со страницы врача: запоминаем, где был пользователь, и возвращаем туда же.
-     Позиция пишется при уходе на vrachi/, читается при возврате по ссылке «← Все врачи»
-     (#closing-team). Восстановление повторяется после догрузки (load, правки редактора),
-     но отменяется, как только пользователь начал листать сам. */
+  /* возврат на место: позиция запоминается при уходе на страницу врача и при отправке заявки */
   const rememberSpot = () => {
-    // якорь устойчив к поздним сдвигам раскладки: секция + смещение внутри неё, а не голые пиксели
+    // запоминаем секцию и смещение внутри неё
     let best = null;
     $$('main > section[id]').forEach(sec => { if (sec.getBoundingClientRect().top <= 80) best = sec; });
     const spot = { t: Date.now() };
@@ -52,8 +49,7 @@
       let cancelled = false;
       addEventListener('touchstart', () => cancelled = true, { once: true, passive: true });
       addEventListener('wheel', () => cancelled = true, { once: true, passive: true });
-      // первое позиционирование — мгновенно, ещё до отрисовки (страница открывается сразу
-      // на месте); поздние поправки на доехавшую раскладку — мягким глайдом, а не рывком
+      // первая установка мгновенная, поздние поправки плавные
       let first = true;
       const backTo = () => {
         if (cancelled) return;
@@ -108,7 +104,6 @@
     // заявка уходит в админку; переход на «Спасибо» не ждёт ответа сервера
     try { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead), keepalive: true }); } catch {}
     try { sessionStorage.setItem('as_lead', JSON.stringify({ form: f.dataset.lead, at: Date.now() })); } catch {}
-    // запоминаем, где была заявка: «Вернуться на сайт» со страницы «Спасибо» приведёт сюда же
     rememberSpot();
     location.href = 'thanks/?form=' + encodeURIComponent(f.dataset.lead);
   }));
@@ -194,8 +189,7 @@
       applyH();
       if (focus) (s === 4 ? $('h3', contact) : $('legend', steps[s])).focus({ preventScroll: true });
     };
-    /* высота сцены: на десктопе одна на все шаги (по самому высокому), на телефоне —
-       высота текущего шага, перелив между шагами анимируется в CSS (transition height) */
+    /* высота сцены: десктоп держит общую, телефон берёт высоту текущего шага */
     const stage = $('.match-quiz-stage', quiz);
     const mqNarrow = matchMedia('(max-width:760px)');
     let stepH = [];
@@ -220,19 +214,15 @@
       render();
       answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '–').join(' | ');
     });
-    /* смена шага через View Transitions: старый и новый шаг переливаются одновременно
-       (кроссфейд со сдвигом по направлению), размер карточки морфится сам — без пустых кадров.
-       Браузеры без поддержки получают мгновенную смену с лёгкой анимацией входа. */
+    /* смена шага через View Transitions; без поддержки смена мгновенная */
     let moving = false;
-    // при поддержке VT собственные анимации шагов отключены НАВСЕГДА (класс vt-quiz на html):
-    // всё движение рисуют снапшоты браузера, и после перехода ничего не проигрывается заново
     if (document.startViewTransition) document.documentElement.classList.add('vt-quiz');
     const go = (n, focus) => {
       if (moving || n === s) return; moving = true;
       const swap = () => { s = n; render(focus); };
       if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.documentElement.dataset.quizDir = n > s ? 'fwd' : 'back';
-        quiz.classList.add('quiz-no-anim'); // на время смены глушим transition высоты сцены
+        quiz.classList.add('quiz-no-anim');
         const t = document.startViewTransition(swap);
         t.finished.finally(() => { quiz.classList.remove('quiz-no-anim'); moving = false; });
       } else { swap(); moving = false; }
@@ -370,7 +360,6 @@
     opinion.addEventListener('submit', e => {
       e.preventDefault();
       if (!files.length) { msg.textContent = 'Добавьте фото или PDF плана лечения.'; input.focus(); return; }
-      console.log('lead', 'opinion', files.map(f => f.name)); // TODO: загрузка файлов и отправка в CRM
       openModal('Получить расчёт со скидкой 15%', 'Файлов выбрано: ' + files.length + '. Оставьте телефон – администратор свяжется с вами и пришлёт расчёт со скидкой.');
     });
   }

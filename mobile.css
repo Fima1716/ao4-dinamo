@@ -9,7 +9,7 @@
 
 /* ---------- основа ---------- */
 :root{--gut:16px;--tab-h:66px;--vv-h:100dvh;--vv-top:0px}
-/* overflow-anchor:none — главный фикс «прыжков»: при показе/скрытии адресной строки Android меняется высота вьюпорта, и scroll-anchoring Chrome неправильно подкручивал позицию (накапливал сдвиг по ~200px за кадр). Отключаем якорение прокрутки на телефоне — проверено: сдвиг становится нулевым */
+/* без scroll-anchoring: Chrome на Android сдвигал позицию при скрытии адресной строки */
 html{scroll-behavior:auto;scroll-padding-top:70px;overflow-anchor:none}
 *{overflow-anchor:none}
 html.m-lock,html.m-lock body{overflow:hidden;overscroll-behavior:none}
@@ -184,8 +184,7 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .payment-benefit svg{margin-bottom:12px}
 .solution-card,.implant-brand-card,.care-support-step,.closing-doc{height:100%}
 .closing-doc .closing-photo{height:auto;aspect-ratio:1}
-/* карточки врачей в слайдере — шаблонные: фикс-зоны под имя и специальность, направления тянутся, «Подробнее» всегда внизу — все карточки одинаковые */
-/* height:auto вместо 100%: явная высота ломала флексовый stretch, и карточки получались разной высоты */
+/* карточки врачей: единый шаблон, одинаковая высота и позиции текста */
 .closing-track .closing-doc{display:flex;flex-direction:column;height:auto}
 .closing-track .closing-doc h3{min-height:2.5em;margin-bottom:6px}
 .closing-track .closing-doc small{min-height:2.8em}
@@ -329,25 +328,22 @@ html.kb-open .modal-body>p,html.kb-open .modal-list,html.modal-top .modal-body>p
 html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{transform:translateY(140%)}
 @media (max-width:360px){.m-tabbar{left:8px;right:8px}.m-tabbar a,.m-tabbar button{font-size:10px}.m-tabbar .m-tab-cta i{width:58px;height:58px;margin-top:-32px}}
 
-/* ---------- квиз: экран как в приложении — высота переливается плавно, кнопки появляются красиво ---------- */
-/* контент сверху; JS ставит сцене высоту ТЕКУЩЕГО шага, а переход анимируем здесь */
+/* ---------- квиз ---------- */
 .match-quiz-stage{display:block!important;overflow:clip;transition:height .45s cubic-bezier(.22,.9,.3,1)}
-/* приход нового шага: не слайд сбоку, а мягкое всплытие с лёгкой задержкой — высота успевает начать перелив */
 .match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in-m .42s cubic-bezier(.22,.9,.3,1) .07s both}
 @keyframes quiz-in-m{from{opacity:0;transform:translateY(10px)}}
-/* ряд кнопок: геометрия стабильна, скрытые кнопки держат место невидимыми и появляются с fade+подъёмом */
+/* скрытые кнопки держат место невидимыми, ряд не меняет геометрию */
 .match-quiz-nav{flex-wrap:nowrap!important;min-height:56px;margin-top:14px!important;gap:12px!important;transition:min-height .3s cubic-bezier(.2,.7,.2,1),margin-top .3s cubic-bezier(.2,.7,.2,1)}
 .match-quiz-back,#match-quiz-next{transition:opacity .28s ease,transform .28s cubic-bezier(.2,.7,.2,1)}
 .match-quiz-nav .match-quiz-back[hidden]{display:inline-block;visibility:hidden;opacity:0;transform:translateY(8px)}
 .match-quiz-nav .match-quiz-next[hidden]{display:flex;visibility:hidden;opacity:0;transform:translateY(8px)}
-/* первый вопрос: кнопок ещё нет — пустой ряд схлопнут, на шаге 2 плавно вырастает */
+/* на первом вопросе пустой ряд кнопок схлопнут */
 .match-quiz-nav:has(.match-quiz-back[hidden]):has(.match-quiz-next[hidden]){min-height:0;margin-top:0}
 .match-quiz-nav:has(.match-quiz-back[hidden]):has(.match-quiz-next[hidden])>*{display:none}
 @starting-style{.match-quiz-nav .match-quiz-back,.match-quiz-nav #match-quiz-next{opacity:0;transform:translateY(8px)}}
-/* вопросы: варианты ощутимой высоты, сетки компактные — разброс высот шагов минимальный */
 .match-quiz-option{min-height:82px}
 .match-quiz-option:has(.match-quiz-jaw){min-height:172px;justify-content:center;padding-top:14px;padding-bottom:14px}
-/* финальный шаг — компактный, сабмит виден без прокрутки */
+/* финальный шаг компактный */
 main .match-quiz-contact h3{margin-bottom:10px}
 .match-quiz-contact>p{display:none}
 .match-quiz-phone{font-size:0}
@@ -355,6 +351,6 @@ main .match-quiz-contact h3{margin-bottom:10px}
 .match-quiz-consent{margin-bottom:12px}
 .match-quiz-messenger{margin:0 0 12px}
 
-/* появление: на телефоне отключено целиком — блоки всегда видимы, ничего не «впрыгивает» при скролле */
+/* reveal-анимации на телефоне отключены */
 .anim-on .rv{opacity:1!important;transform:none!important;transition:none!important}
 }
