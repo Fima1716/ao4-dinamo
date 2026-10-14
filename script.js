@@ -31,6 +31,29 @@
     setTimeout(() => targets.forEach(el => el.classList.add('is-in')), 4000); // страховка: показать всё, если наблюдатель не сработал
   }
 
+  /* возврат со страницы врача: запоминаем, где был пользователь, и возвращаем туда же.
+     Позиция пишется при уходе на vrachi/, читается при возврате по ссылке «← Все врачи»
+     (#closing-team). Восстановление повторяется после догрузки (load, правки редактора),
+     но отменяется, как только пользователь начал листать сам. */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href*="vrachi/"]');
+    if (a) try { sessionStorage.setItem('as_return_scroll', JSON.stringify({ y: Math.round(scrollY), t: Date.now() })); } catch {}
+  }, true);
+  if (location.hash === '#closing-team') {
+    let saved = null; try { saved = JSON.parse(sessionStorage.getItem('as_return_scroll') || 'null'); } catch {}
+    if (saved && Date.now() - saved.t < 30 * 60e3) {
+      try { sessionStorage.removeItem('as_return_scroll'); } catch {}
+      let cancelled = false;
+      addEventListener('touchstart', () => cancelled = true, { once: true, passive: true });
+      addEventListener('wheel', () => cancelled = true, { once: true, passive: true });
+      const backTo = () => { if (!cancelled) scrollTo({ top: saved.y, behavior: 'instant' }); };
+      backTo();
+      addEventListener('load', backTo);
+      document.addEventListener('as:content-applied', backTo, { once: true });
+      setTimeout(backTo, 1200); // страховка после ленивых картинок
+    }
+  }
+
   /* маска телефона */
   const mask = v => {
     let d = v.replace(/\D/g, '');
