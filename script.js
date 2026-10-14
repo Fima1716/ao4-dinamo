@@ -52,16 +52,22 @@
       let cancelled = false;
       addEventListener('touchstart', () => cancelled = true, { once: true, passive: true });
       addEventListener('wheel', () => cancelled = true, { once: true, passive: true });
+      // первое позиционирование — мгновенно, ещё до отрисовки (страница открывается сразу
+      // на месте); поздние поправки на доехавшую раскладку — мягким глайдом, а не рывком
+      let first = true;
       const backTo = () => {
         if (cancelled) return;
         let y = saved.y || 0;
         if (saved.id) { const el = document.getElementById(saved.id); if (el) y = Math.round(el.getBoundingClientRect().top + scrollY + saved.off); }
-        scrollTo({ top: y, behavior: 'instant' });
+        if (Math.abs(y - scrollY) < 4) return;
+        scrollTo({ top: y, behavior: first ? 'instant' : 'smooth' });
+        first = false;
       };
       backTo();
       addEventListener('load', backTo);
       document.addEventListener('as:content-applied', backTo, { once: true });
-      setTimeout(backTo, 1200); // страховка после ленивых картинок
+      const settle = setInterval(backTo, 250); // стабилизация, пока доезжают картинки и правки
+      setTimeout(() => clearInterval(settle), 1800);
     }
   }
 
