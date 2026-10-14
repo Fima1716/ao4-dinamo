@@ -779,7 +779,9 @@ main .care-contract-copy h3{font-size:clamp(22px,2vw,28px);margin-bottom:8px}
 .match-quiz-messenger-row{display:flex;gap:8px;flex-wrap:wrap}
 .match-quiz-messenger label{flex:1;min-width:88px}
 .match-quiz-messenger input{position:absolute;opacity:0;width:0;height:0}
-.match-quiz-messenger span{display:flex;align-items:center;justify-content:center;min-height:46px;padding:0 14px;border-radius:12px;border:1.5px solid var(--lav-20);background:#fff;font:600 15px/1 var(--ui);color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+.match-quiz-messenger span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 12px;border-radius:12px;border:1.5px solid var(--lav-20);background:#fff;font:600 15px/1 var(--ui);color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+.match-quiz-messenger span img{width:22px;height:22px;object-fit:contain;flex:none}
+@media(max-width:760px){.match-quiz-messenger-row{gap:6px}.match-quiz-messenger label{min-width:0}.match-quiz-messenger span{gap:5px;padding:0 6px;min-height:48px;font-size:13px;white-space:nowrap}.match-quiz-messenger span img{width:19px;height:19px}}
 .match-quiz-messenger label:hover span{border-color:var(--lavender)}
 .match-quiz-messenger input:checked+span{border-color:var(--pink);background:var(--pink-10);color:var(--pink)}
 .match-quiz-messenger input:focus-visible+span{outline:2px solid var(--violet);outline-offset:2px}

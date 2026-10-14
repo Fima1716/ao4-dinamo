@@ -153,8 +153,12 @@
     };
     /* одинаковая высота всех шагов: замеряем самый высокий и держим её, чтобы страница не прыгала */
     const stage = $('.match-quiz-stage', quiz);
+    const mqNarrow = matchMedia('(max-width:760px)');
     const fit = () => {
       stage.style.minHeight = '';
+      // на телефоне фиксированную высоту сцены не держим: короткий шаг под высокий (форма
+      // с телефоном и мессенджерами) давал огромный пустой провал. Каждый шаг — своей высоты.
+      if (mqNarrow.matches) return;
       let h = 0;
       [...steps, contact].forEach(el => {
         const was = el.hidden; el.hidden = false; el.style.position = 'absolute'; el.style.visibility = 'hidden'; el.style.width = stage.clientWidth + 'px';
