@@ -310,10 +310,10 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .modal-body>p{order:3;font-size:13px;line-height:1.45;margin:14px 0 8px;color:var(--muted)}
 .modal-list{order:4;margin:0;gap:6px}
 .modal-list li{font-size:13px}
-html.kb-open .modal{margin:0 0 auto!important;transform:translateY(var(--vv-top));max-height:var(--vv-h)!important;border-radius:0 0 26px 26px!important;animation:none}
-html.kb-open .modal-body{border-radius:0 0 26px 26px!important;padding-top:18px!important}
-html.kb-open .modal-body::before{display:none}
-html.kb-open .modal-body>p,html.kb-open .modal-list{display:none}
+html.kb-open .modal,html.modal-top .modal{margin:0 0 auto!important;transform:translateY(var(--vv-top));max-height:var(--vv-h)!important;border-radius:0 0 26px 26px!important;animation:none}
+html.kb-open .modal-body,html.modal-top .modal-body{border-radius:0 0 26px 26px!important;padding-top:18px!important}
+html.kb-open .modal-body::before,html.modal-top .modal-body::before{display:none}
+html.kb-open .modal-body>p,html.kb-open .modal-list,html.modal-top .modal-body>p,html.modal-top .modal-list{display:none}
 
 /* ---------- таб-бар: пилюля с круглой кнопкой-улыбкой по центру ---------- */
 .m-tabbar{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;display:grid;grid-template-columns:1fr 1fr 1.15fr 1fr 1fr;align-items:end;height:var(--tab-h);padding:0 6px;border-radius:999px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 12px 32px rgba(46,46,53,.18),0 0 0 1px rgba(226,220,244,.9);transition:transform .3s ease}

@@ -45,7 +45,12 @@
   const applyVV = () => { if (!vv) return; html.style.setProperty('--vv-h', Math.round(vv.height) + 'px'); html.style.setProperty('--vv-top', Math.round(vv.offsetTop) + 'px'); };
   if (vv) { vv.addEventListener('resize', applyVV); vv.addEventListener('scroll', applyVV); applyVV(); }
   const isField = el => el && el.matches && el.matches('input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select');
-  document.addEventListener('focusin', e => { if (mq.matches && isField(e.target)) html.classList.add('kb-open'); });
+  document.addEventListener('focusin', e => {
+    if (!mq.matches || !isField(e.target)) return;
+    html.classList.add('kb-open');
+    // модалка, поднятая клавиатурой, остаётся вверху до закрытия — без обратного прыжка вниз
+    if (e.target.closest('dialog[open]')) html.classList.add('modal-top');
+  });
   document.addEventListener('focusout', () => setTimeout(() => { if (!isField(document.activeElement)) html.classList.remove('kb-open'); }, 60));
 
   /* ---------- шапка: кнопка меню ---------- */
@@ -282,7 +287,7 @@
       html.classList.toggle('sheet-open', dlg.open);
       if (dlg.open) pushLayer(closeLead);
     }).observe(dlg, { attributes: true, attributeFilter: ['open'] });
-    dlg.addEventListener('close', () => { html.classList.remove('kb-open'); popLayer(closeLead); });
+    dlg.addEventListener('close', () => { html.classList.remove('kb-open'); html.classList.remove('modal-top'); popLayer(closeLead); });
     let sy = null;
     dlg.addEventListener('touchstart', e => { if (mq.matches && !html.classList.contains('kb-open') && !isField(e.target) && $('.modal-body', dlg).scrollTop <= 0) sy = e.touches[0].clientY; }, { passive: true });
     dlg.addEventListener('touchmove', e => { if (sy === null) return; const d = e.touches[0].clientY - sy; if (d > 0) dlg.style.transform = `translateY(${d}px)`; }, { passive: true });
