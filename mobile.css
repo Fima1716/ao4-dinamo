@@ -176,9 +176,6 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .opinion-stages>*,.care-support-steps>*,.closing-docs>*,.closing-route-steps>*{scroll-snap-align:start;min-width:0}
 .closing-route-steps[hidden]{display:none!important}
 .opinion-stages>li:not(:last-child)::after,.closing-route-steps li::after{display:none!important}
-/* импланты — вертикальной колонкой, а не горизонтальной каруселью: высокие карточки в overflow-x конфликтовали с вертикальной прокруткой и дёргали страницу на Android */
-.implant-brands-grid{grid-template-columns:1fr!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow:visible!important;margin:0!important;padding:0!important;gap:15px!important}
-.implant-brands-grid>*{min-width:0}
 .m-dots{display:flex;justify-content:center;gap:6px;margin:-2px 0 10px}
 .m-dots i{width:6px;height:6px;border-radius:3px;background:#d8d7de;transition:width .25s,background .25s}
 .m-dots i.on{width:18px;background:#e93d8d}

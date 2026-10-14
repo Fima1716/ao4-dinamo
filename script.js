@@ -156,11 +156,12 @@
     const mqNarrow = matchMedia('(max-width:760px)');
     const fit = () => {
       stage.style.minHeight = '';
-      // на телефоне фиксированную высоту сцены не держим: короткий шаг под высокий (форма
-      // с телефоном и мессенджерами) давал огромный пустой провал. Каждый шаг — своей высоты.
-      if (mqNarrow.matches) return;
+      // высоту держим постоянной, чтобы шаги не прыгали. На телефоне — по самому высокому
+      // ВОПРОСУ (без финальной формы с телефоном/мессенджерами), иначе под форму зиял провал.
+      // На десктопе — по всем шагам, как было.
+      const pool = mqNarrow.matches ? steps : [...steps, contact];
       let h = 0;
-      [...steps, contact].forEach(el => {
+      pool.forEach(el => {
         const was = el.hidden; el.hidden = false; el.style.position = 'absolute'; el.style.visibility = 'hidden'; el.style.width = stage.clientWidth + 'px';
         h = Math.max(h, el.offsetHeight);
         el.hidden = was; el.style.position = el.style.visibility = el.style.width = '';

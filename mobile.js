@@ -82,7 +82,7 @@
       { img: A + 'doctors/akchurin.webp?v=5', cap: 'Акчурин Руслан Дамирович', sub: 'Стоматолог-хирург · стаж 18 лет' },
       { img: A + 'doctors/tsahaev.webp?v=5', cap: 'Цахаев Марат Халилович', sub: 'Стоматолог-хирург-имплантолог · стаж 11 лет' },
       { img: A + 'doctors/arkallaev-ramazan.webp?v=5', cap: 'Аркаллаев Рамазан Рашидович', sub: 'Стоматолог-хирург-имплантолог · стаж 6 лет' },
-      { img: A + 'doctors/petrosyan.webp?v=5', cap: 'Петросян Сергей Гагикович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
+      { img: A + 'doctors/petrosyan.webp?v=6', cap: 'Петросян Сергей Гагикович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
       { img: A + 'doctors/dzhanumova.webp?v=5', cap: 'Джанумова Валерия Александровна', sub: 'Стоматолог-ортопед · стаж 9 лет' },
       { img: A + 'doctors/amaev.webp?v=5', cap: 'Амаев Камал Шарифович', sub: 'Стоматолог-ортопед · стаж 8 лет' },
       { img: A + 'doctors/arkallaev-magomed.webp?v=5', cap: 'Аркаллаев Магомед Рашидович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
@@ -93,13 +93,6 @@
       { img: A + 'stories/clinic-ct.webp', cap: 'Диагностика на месте', sub: '3D КТ с ИИ-анализом – 0 ₽' },
       { img: A + 'stories/clinic-surgery.webp', cap: 'Операционная', sub: 'Имплантация и протез – в один визит' },
       { img: A + 'stories/clinic-opening.webp', cap: 'Клиника у метро «Динамо»', sub: 'Квартал ВТБ Арена Парк, Ленинградский проспект, 36' },
-    ] },
-    { id: 'route', title: 'Маршрут', cover: A + 'route/din-01.webp', slides: [
-      { img: A + 'route/din-01.webp', tag: '1', cap: 'Выход из метро «Динамо»', sub: 'К Ленинградскому проспекту' },
-      { img: A + 'route/din-02.webp', tag: '2', cap: 'Стадион «Динамо» · ВТБ Арена', sub: 'Идём вдоль арены' },
-      { img: A + 'route/din-03.webp', tag: '3', cap: 'Площадь ВТБ Арена Парк', sub: 'Вдоль проспекта до строения 40' },
-      { img: A + 'route/din-06.webp', tag: '4', cap: 'Вдоль Ленинградского проспекта', sub: 'Почти пришли' },
-      { img: A + 'route/din-09.webp', tag: '5', cap: 'Вход в клинику, 1 этаж', sub: 'Две минуты пешком от метро' },
     ] },
   ];
   const SEEN_KEY = 'as_stories_seen';
@@ -301,7 +294,7 @@
   }
 
   /* ---------- точки под лентами ---------- */
-  const RAILS = '.results-works,.care-grid,.reviews-grid,.payment-benefits,.solution-cards,.opinion-stages,.care-support-steps,.closing-docs';
+  const RAILS = '.results-works,.care-grid,.reviews-grid,.payment-benefits,.solution-cards,.implant-brands-grid,.opinion-stages,.care-support-steps,.closing-docs';
   $$(RAILS).forEach(r => {
     if (r.closest('.m-sheet')) return;
     const n = r.children.length; if (n < 2) return;
