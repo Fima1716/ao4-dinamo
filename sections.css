@@ -509,7 +509,9 @@ main #care-title{margin-bottom:18px}
 .match-quiz-option input[type=checkbox]{border-radius:6px}
 .match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in .35s var(--ease)}
 @keyframes quiz-in{from{opacity:0;transform:translateX(12px)}}
-@media(prefers-reduced-motion:reduce){.match-quiz-step,.match-quiz-contact{animation:none!important}}
+/* фаза ухода: текущий шаг мягко растворяется перед сменой (класс ставит script.js) */
+.quiz-leave{animation:none!important;opacity:0;transform:translateY(-8px);transition:opacity .17s ease-in,transform .17s ease-in}
+@media(prefers-reduced-motion:reduce){.match-quiz-step,.match-quiz-contact{animation:none!important}.quiz-leave{transition:none}}
 
 /* ====================================================================
    Аккуратная сетка спокойных секций (розовые блоки и формы не трогаем)

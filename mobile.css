@@ -330,7 +330,10 @@ html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{trans
 
 /* ---------- квиз: экран как в приложении — высота переливается плавно, кнопки появляются красиво ---------- */
 /* контент сверху; JS ставит сцене высоту ТЕКУЩЕГО шага, а переход анимируем здесь */
-.match-quiz-stage{display:block!important;overflow:clip;transition:height .35s cubic-bezier(.2,.7,.2,1)}
+.match-quiz-stage{display:block!important;overflow:clip;transition:height .45s cubic-bezier(.22,.9,.3,1)}
+/* приход нового шага: не слайд сбоку, а мягкое всплытие с лёгкой задержкой — высота успевает начать перелив */
+.match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in-m .42s cubic-bezier(.22,.9,.3,1) .07s both}
+@keyframes quiz-in-m{from{opacity:0;transform:translateY(10px)}}
 /* ряд кнопок: геометрия стабильна, скрытые кнопки держат место невидимыми и появляются с fade+подъёмом */
 .match-quiz-nav{flex-wrap:nowrap!important;min-height:56px;margin-top:14px!important;gap:12px!important;transition:min-height .3s cubic-bezier(.2,.7,.2,1),margin-top .3s cubic-bezier(.2,.7,.2,1)}
 .match-quiz-back,#match-quiz-next{transition:opacity .28s ease,transform .28s cubic-bezier(.2,.7,.2,1)}

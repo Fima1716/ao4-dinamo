@@ -178,16 +178,26 @@
       render();
       answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '–').join(' | ');
     });
+    /* смена шага в две фазы: текущий растворяется (.quiz-leave), высота начинает
+       переливаться сразу, затем приходит следующий шаг со своей анимацией */
+    let moving = false;
+    const go = (n, focus) => {
+      if (moving || n === s) return; moving = true;
+      const from = s === 4 ? contact : steps[s];
+      from.classList.add('quiz-leave');
+      if (mqNarrow.matches && stepH.length) stage.style.height = stepH[n] + 'px';
+      setTimeout(() => { from.classList.remove('quiz-leave'); s = n; render(focus); moving = false; }, 170);
+    };
     /* первые три шага — одиночный выбор: клик по варианту сам ведёт к следующему вопросу */
     quiz.addEventListener('click', e => {
       if (s >= 3) return;
       const opt = e.target.closest('.match-quiz-option');
       const input = opt && $('input', opt);
       if (!input || input.type !== 'radio') return;
-      setTimeout(() => { if (s < 3 && $('input:checked', steps[s])) { s++; render(true); } }, 220);
+      setTimeout(() => { if (s < 3 && $('input:checked', steps[s])) go(s + 1, true); }, 140);
     });
-    next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) { s++; render(true); } });
-    back.addEventListener('click', () => { if (s > 0) { s--; render(true); } });
+    next.addEventListener('click', () => { if (s < 4 && $('input:checked', steps[s])) go(s + 1, true); });
+    back.addEventListener('click', () => { if (s > 0) go(s - 1, true); });
     render();
   }
 
