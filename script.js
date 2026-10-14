@@ -182,12 +182,15 @@
        (кроссфейд со сдвигом по направлению), размер карточки морфится сам — без пустых кадров.
        Браузеры без поддержки получают мгновенную смену с лёгкой анимацией входа. */
     let moving = false;
+    // при поддержке VT собственные анимации шагов отключены НАВСЕГДА (класс vt-quiz на html):
+    // всё движение рисуют снапшоты браузера, и после перехода ничего не проигрывается заново
+    if (document.startViewTransition) document.documentElement.classList.add('vt-quiz');
     const go = (n, focus) => {
       if (moving || n === s) return; moving = true;
       const swap = () => { s = n; render(focus); };
       if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.documentElement.dataset.quizDir = n > s ? 'fwd' : 'back';
-        quiz.classList.add('quiz-no-anim'); // свои анимации глушим — рисует снапшоты браузер
+        quiz.classList.add('quiz-no-anim'); // на время смены глушим transition высоты сцены
         const t = document.startViewTransition(swap);
         t.finished.finally(() => { quiz.classList.remove('quiz-no-anim'); moving = false; });
       } else { swap(); moving = false; }

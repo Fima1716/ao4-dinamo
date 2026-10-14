@@ -515,7 +515,8 @@ main #care-title{margin-bottom:18px}
 .match-quiz-nav{view-transition-name:quiz-nav}
 .match-quiz-progress{view-transition-name:quiz-progress}
 .quiz-no-anim .match-quiz-stage{transition:none!important}
-.quiz-no-anim .match-quiz-step:not([hidden]),.quiz-no-anim .match-quiz-contact:not([hidden]){animation:none!important}
+/* с View Transitions свои анимации шагов не нужны вовсе — иначе после перехода они проигрываются заново (рывок) */
+.vt-quiz .match-quiz-step:not([hidden]),.vt-quiz .match-quiz-contact:not([hidden]){animation:none!important}
 ::view-transition-old(root),::view-transition-new(root){animation:none}
 ::view-transition-group(quiz-stage),::view-transition-group(quiz-nav),::view-transition-group(quiz-progress){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,.9,.3,1)}
 ::view-transition-old(quiz-stage){animation:vt-quiz-out .3s cubic-bezier(.4,0,.2,1) both}
