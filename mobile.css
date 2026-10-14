@@ -328,6 +328,25 @@ html.kb-open .modal-body>p,html.kb-open .modal-list{display:none}
 html.kb-open .m-tabbar,html.sheet-open .m-tabbar,html.story-open .m-tabbar{transform:translateY(140%)}
 @media (max-width:360px){.m-tabbar{left:8px;right:8px}.m-tabbar a,.m-tabbar button{font-size:10px}.m-tabbar .m-tab-cta i{width:58px;height:58px;margin-top:-32px}}
 
+/* ---------- квиз: экран как в приложении — одна высота, ничего не ездит ---------- */
+/* контент сверху (не центрируем), высоту сцены держит JS по самому высокому шагу */
+.match-quiz-stage{display:block!important}
+/* ряд кнопок одной геометрии на всех шагах: скрытые кнопки резервируют место невидимыми,
+   поэтому «Назад»/«Дальше» никогда не прыгают и ряд не меняет высоту */
+.match-quiz-nav{flex-wrap:nowrap!important;min-height:56px;margin-top:14px!important;gap:12px!important}
+.match-quiz-nav .match-quiz-back[hidden]{display:inline-block;visibility:hidden}
+.match-quiz-nav .match-quiz-next[hidden]{display:flex;visibility:hidden}
+/* вопросы: варианты ощутимой высоты, сетки компактные — разброс высот шагов минимальный */
+.match-quiz-option{min-height:82px}
+.match-quiz-option:has(.match-quiz-jaw){min-height:172px;justify-content:center;padding-top:14px;padding-bottom:14px}
+/* финальный шаг — компактный, сабмит виден без прокрутки */
+main .match-quiz-contact h3{margin-bottom:10px}
+.match-quiz-contact>p{display:none}
+.match-quiz-phone{font-size:0}
+.match-quiz-phone input{font:400 17px/1.3 var(--ui);margin:0 0 10px;padding:13px 14px}
+.match-quiz-consent{margin-bottom:12px}
+.match-quiz-messenger{margin:0 0 12px}
+
 /* появление: на телефоне отключено целиком — блоки всегда видимы, ничего не «впрыгивает» при скролле */
 .anim-on .rv{opacity:1!important;transform:none!important;transition:none!important}
 }
