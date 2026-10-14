@@ -509,9 +509,24 @@ main #care-title{margin-bottom:18px}
 .match-quiz-option input[type=checkbox]{border-radius:6px}
 .match-quiz-step:not([hidden]),.match-quiz-contact:not([hidden]){animation:quiz-in .35s var(--ease)}
 @keyframes quiz-in{from{opacity:0;transform:translateX(12px)}}
-/* фаза ухода: текущий шаг мягко растворяется перед сменой (класс ставит script.js) */
-.quiz-leave{animation:none!important;opacity:0;transform:translateY(-8px);transition:opacity .17s ease-in,transform .17s ease-in}
-@media(prefers-reduced-motion:reduce){.match-quiz-step,.match-quiz-contact{animation:none!important}.quiz-leave{transition:none}}
+/* View Transitions: кроссфейд шагов — старый тает и уплывает, новый всплывает навстречу,
+   карточка морфится по размеру; направление задаёт html[data-quiz-dir] (ставит script.js) */
+.match-quiz-stage{view-transition-name:quiz-stage}
+.match-quiz-nav{view-transition-name:quiz-nav}
+.match-quiz-progress{view-transition-name:quiz-progress}
+.quiz-no-anim .match-quiz-stage{transition:none!important}
+.quiz-no-anim .match-quiz-step:not([hidden]),.quiz-no-anim .match-quiz-contact:not([hidden]){animation:none!important}
+::view-transition-old(root),::view-transition-new(root){animation:none}
+::view-transition-group(quiz-stage),::view-transition-group(quiz-nav),::view-transition-group(quiz-progress){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,.9,.3,1)}
+::view-transition-old(quiz-stage){animation:vt-quiz-out .3s cubic-bezier(.4,0,.2,1) both}
+::view-transition-new(quiz-stage){animation:vt-quiz-in .4s cubic-bezier(.16,.8,.3,1) both}
+@keyframes vt-quiz-out{to{opacity:0;transform:translateY(-12px)}}
+@keyframes vt-quiz-in{from{opacity:0;transform:translateY(16px)}}
+html[data-quiz-dir=back] ::view-transition-old(quiz-stage){animation-name:vt-quiz-out-b}
+html[data-quiz-dir=back] ::view-transition-new(quiz-stage){animation-name:vt-quiz-in-b}
+@keyframes vt-quiz-out-b{to{opacity:0;transform:translateY(12px)}}
+@keyframes vt-quiz-in-b{from{opacity:0;transform:translateY(-16px)}}
+@media(prefers-reduced-motion:reduce){.match-quiz-step,.match-quiz-contact{animation:none!important}}
 
 /* ====================================================================
    Аккуратная сетка спокойных секций (розовые блоки и формы не трогаем)

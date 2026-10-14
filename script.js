@@ -178,15 +178,19 @@
       render();
       answers.value = steps.map(st => $$('input:checked', st).map(i => i.value).join(', ') || '–').join(' | ');
     });
-    /* смена шага в две фазы: текущий растворяется (.quiz-leave), высота начинает
-       переливаться сразу, затем приходит следующий шаг со своей анимацией */
+    /* смена шага через View Transitions: старый и новый шаг переливаются одновременно
+       (кроссфейд со сдвигом по направлению), размер карточки морфится сам — без пустых кадров.
+       Браузеры без поддержки получают мгновенную смену с лёгкой анимацией входа. */
     let moving = false;
     const go = (n, focus) => {
       if (moving || n === s) return; moving = true;
-      const from = s === 4 ? contact : steps[s];
-      from.classList.add('quiz-leave');
-      if (mqNarrow.matches && stepH.length) stage.style.height = stepH[n] + 'px';
-      setTimeout(() => { from.classList.remove('quiz-leave'); s = n; render(focus); moving = false; }, 170);
+      const swap = () => { s = n; render(focus); };
+      if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.dataset.quizDir = n > s ? 'fwd' : 'back';
+        quiz.classList.add('quiz-no-anim'); // свои анимации глушим — рисует снапшоты браузер
+        const t = document.startViewTransition(swap);
+        t.finished.finally(() => { quiz.classList.remove('quiz-no-anim'); moving = false; });
+      } else { swap(); moving = false; }
     };
     /* первые три шага — одиночный выбор: клик по варианту сам ведёт к следующему вопросу */
     quiz.addEventListener('click', e => {
