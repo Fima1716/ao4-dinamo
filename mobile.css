@@ -9,7 +9,9 @@
 
 /* ---------- основа ---------- */
 :root{--gut:16px;--tab-h:66px;--vv-h:100dvh;--vv-top:0px}
-html{scroll-behavior:auto;scroll-padding-top:70px}
+/* overflow-anchor:none — главный фикс «прыжков»: при показе/скрытии адресной строки Android меняется высота вьюпорта, и scroll-anchoring Chrome неправильно подкручивал позицию (накапливал сдвиг по ~200px за кадр). Отключаем якорение прокрутки на телефоне — проверено: сдвиг становится нулевым */
+html{scroll-behavior:auto;scroll-padding-top:70px;overflow-anchor:none}
+*{overflow-anchor:none}
 html.m-lock,html.m-lock body{overflow:hidden;overscroll-behavior:none}
 body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 12px);-webkit-tap-highlight-color:transparent}
 input,select,textarea{font-size:16px!important}
