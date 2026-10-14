@@ -91,9 +91,9 @@
       { img: A + 'doctors/arkallaev-ramazan.webp?v=4', cap: 'Аркаллаев Рамазан Рашидович', sub: 'Стоматолог-хирург-имплантолог · стаж 6 лет' },
       { img: A + 'doctors/petrosyan.webp?v=4', cap: 'Петросян Сергей Гагикович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
       { img: A + 'doctors/dzhanumova.webp?v=4', cap: 'Джанумова Валерия Александровна', sub: 'Стоматолог-ортопед · стаж 9 лет' },
-      { img: A + 'doctors/amaev.webp?v=4', cap: 'Амаев Камал Шарифович', sub: 'Врач клиники All Smiles' },
-      { img: A + 'doctors/arkallaev-magomed.webp?v=4', cap: 'Аркаллаев Магомед Рашидович', sub: 'Врач клиники All Smiles' },
-      { img: A + 'doctors/kilkeev.webp?v=4', cap: 'Килькеев Азамат Русланович', sub: 'Врач клиники All Smiles' },
+      { img: A + 'doctors/amaev.webp?v=4', cap: 'Амаев Камал Шарифович', sub: 'Стоматолог-ортопед · стаж 8 лет' },
+      { img: A + 'doctors/arkallaev-magomed.webp?v=4', cap: 'Аркаллаев Магомед Рашидович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
+      { img: A + 'doctors/kilkeev.webp?v=4', cap: 'Килькеев Азамат Русланович', sub: 'Стоматолог-хирург-имплантолог · стаж 6 лет' },
     ] },
     { id: 'clinic', title: 'Клиника', cover: A + 'stories/clinic-entrance.webp', slides: [
       { img: A + 'stories/clinic-entrance.webp', cap: 'Вход с улицы, 1 этаж', sub: 'Ленинградский проспект, 36, стр. 40' },
