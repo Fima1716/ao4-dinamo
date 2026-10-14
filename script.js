@@ -35,18 +35,29 @@
      Позиция пишется при уходе на vrachi/, читается при возврате по ссылке «← Все врачи»
      (#closing-team). Восстановление повторяется после догрузки (load, правки редактора),
      но отменяется, как только пользователь начал листать сам. */
-  document.addEventListener('click', e => {
-    const a = e.target.closest('a[href*="vrachi/"]');
-    if (a) try { sessionStorage.setItem('as_return_scroll', JSON.stringify({ y: Math.round(scrollY), t: Date.now() })); } catch {}
-  }, true);
-  if (location.hash === '#closing-team') {
+  const rememberSpot = () => {
+    // якорь устойчив к поздним сдвигам раскладки: секция + смещение внутри неё, а не голые пиксели
+    let best = null;
+    $$('main > section[id]').forEach(sec => { if (sec.getBoundingClientRect().top <= 80) best = sec; });
+    const spot = { t: Date.now() };
+    if (best) { spot.id = best.id; spot.off = Math.round(-best.getBoundingClientRect().top); } else spot.y = Math.round(scrollY);
+    try { sessionStorage.setItem('as_return_scroll', JSON.stringify(spot)); } catch {}
+  };
+  document.addEventListener('click', e => { if (e.target.closest('a[href*="vrachi/"]')) rememberSpot(); }, true);
+  if (location.hash === '#closing-team' || location.hash === '#continue') {
     let saved = null; try { saved = JSON.parse(sessionStorage.getItem('as_return_scroll') || 'null'); } catch {}
+    if (location.hash === '#continue') history.replaceState(null, '', location.pathname);
     if (saved && Date.now() - saved.t < 30 * 60e3) {
       try { sessionStorage.removeItem('as_return_scroll'); } catch {}
       let cancelled = false;
       addEventListener('touchstart', () => cancelled = true, { once: true, passive: true });
       addEventListener('wheel', () => cancelled = true, { once: true, passive: true });
-      const backTo = () => { if (!cancelled) scrollTo({ top: saved.y, behavior: 'instant' }); };
+      const backTo = () => {
+        if (cancelled) return;
+        let y = saved.y || 0;
+        if (saved.id) { const el = document.getElementById(saved.id); if (el) y = Math.round(el.getBoundingClientRect().top + scrollY + saved.off); }
+        scrollTo({ top: y, behavior: 'instant' });
+      };
       backTo();
       addEventListener('load', backTo);
       document.addEventListener('as:content-applied', backTo, { once: true });
@@ -91,6 +102,8 @@
     // заявка уходит в админку; переход на «Спасибо» не ждёт ответа сервера
     try { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead), keepalive: true }); } catch {}
     try { sessionStorage.setItem('as_lead', JSON.stringify({ form: f.dataset.lead, at: Date.now() })); } catch {}
+    // запоминаем, где была заявка: «Вернуться на сайт» со страницы «Спасибо» приведёт сюда же
+    rememberSpot();
     location.href = 'thanks/?form=' + encodeURIComponent(f.dataset.lead);
   }));
 
