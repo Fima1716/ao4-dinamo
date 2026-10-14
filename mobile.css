@@ -184,6 +184,12 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .payment-benefit svg{margin-bottom:12px}
 .solution-card,.implant-brand-card,.care-support-step,.closing-doc{height:100%}
 .closing-doc .closing-photo{height:auto;aspect-ratio:1}
+/* карточки врачей в слайдере — шаблонные: фикс-зоны под имя и специальность, направления тянутся, «Подробнее» всегда внизу — все карточки одинаковые */
+.closing-track .closing-doc{display:flex;flex-direction:column}
+.closing-track .closing-doc h3{min-height:2.5em;margin-bottom:6px}
+.closing-track .closing-doc small{min-height:2.8em}
+.closing-track .closing-doc p{flex:1 0 auto}
+.closing-track .closing-doc .closing-doc-more{margin-top:auto;padding-top:12px}
 
 /* ---------- шторка «до/после» ---------- */
 .results-story-pics{position:relative;display:block!important;border-radius:16px;overflow:hidden;--pos:50%}

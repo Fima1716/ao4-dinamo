@@ -153,15 +153,12 @@
     };
     /* одинаковая высота всех шагов: замеряем самый высокий и держим её, чтобы страница не прыгала */
     const stage = $('.match-quiz-stage', quiz);
-    const mqNarrow = matchMedia('(max-width:760px)');
     const fit = () => {
       stage.style.minHeight = '';
-      // высоту держим постоянной, чтобы шаги не прыгали. На телефоне — по самому высокому
-      // ВОПРОСУ (без финальной формы с телефоном/мессенджерами), иначе под форму зиял провал.
-      // На десктопе — по всем шагам, как было.
-      const pool = mqNarrow.matches ? steps : [...steps, contact];
+      // одна высота на все шаги (включая форму), чтобы блок нигде не прыгал.
+      // короткие шаги центрируются по вертикали через CSS — пустого провала снизу нет.
       let h = 0;
-      pool.forEach(el => {
+      [...steps, contact].forEach(el => {
         const was = el.hidden; el.hidden = false; el.style.position = 'absolute'; el.style.visibility = 'hidden'; el.style.width = stage.clientWidth + 'px';
         h = Math.max(h, el.offsetHeight);
         el.hidden = was; el.style.position = el.style.visibility = el.style.width = '';
