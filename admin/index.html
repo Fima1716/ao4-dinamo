@@ -55,8 +55,8 @@ button{font:inherit;cursor:pointer}
 .card .hint{margin:0 0 14px;color:var(--muted);font-size:13px}
 label{display:block;font-weight:700;font-size:13px;margin:14px 0 5px}
 label small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:1px}
-input[type=text],textarea{width:100%;padding:11px 13px;border:1.5px solid var(--lav2);border-radius:11px;font:inherit;outline:0;background:#fff}
-input[type=text]:focus,textarea:focus{border-color:var(--pink)}
+input[type=text],input[type=password],textarea{width:100%;padding:11px 13px;border:1.5px solid var(--lav2);border-radius:11px;font:inherit;outline:0;background:#fff}
+input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:var(--pink)}
 textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospace;font-size:13px}
 .save-row{display:flex;gap:10px;align-items:center;margin-top:18px}
 .ok{color:#2a9d63;font-size:13px;font-weight:700}
@@ -106,6 +106,7 @@ td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padd
     <div class="brand"><img src="../../assets/brand/logo.svg" alt="">Админка</div>
     <nav class="nav" id="nav">
       <button data-tab="leads" class="on">Заявки <span class="b" id="leadCount">0</span></button>
+      <button data-tab="notify">Уведомления</button>
       <button data-tab="seo">SEO и robots</button>
       <button data-tab="metrika">Яндекс Метрика</button>
       <button data-tab="call">Колтрекинг</button>
@@ -128,6 +129,39 @@ td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padd
         </div>
       </div>
       <div class="leads-wrap"><div id="leads"></div></div>
+    </section>
+
+
+    <!-- Уведомления -->
+    <section class="pane" data-pane="notify">
+      <div class="head"><h2>Уведомления о заявках</h2></div>
+      <p class="hint" id="n_envWarn" style="display:none;color:#c9247a">Часть настроек задана в окружении сервера и имеет приоритет над сохранёнными здесь.</p>
+      <div class="card">
+        <h3>Telegram</h3>
+        <p class="hint">Каждая заявка придёт сообщением в чат. Как настроить: создайте бота у @BotFather и скопируйте токен; напишите боту /start (или добавьте его в группу); узнайте ID чата у @userinfobot (ID группы начинается с -100).</p>
+        <label>Токен бота<small>вида 1234567890:AA… Выдаёт @BotFather. Оставьте поле как есть, чтобы не менять сохранённый</small></label>
+        <input type="password" id="n_tgToken" autocomplete="new-password">
+        <label>Юзернейм бота<small>для справки, например @allsmiles_leads_bot</small></label>
+        <input type="text" id="n_tgUsername" placeholder="@...">
+        <label>ID чата<small>куда слать: личный ID или ID группы, бот должен быть её участником</small></label>
+        <input type="text" id="n_tgChat" placeholder="например 123456789 или -1001234567890">
+        <div class="save-row"><button class="btn" id="n_tgTest">Отправить тест в Telegram</button><span class="ok hide" id="n_tgOk">Отправлено, проверьте чат</span></div>
+      </div>
+      <div class="card">
+        <h3>Почта (SMTP)</h3>
+        <p class="hint">Заявки будут приходить письмом. Быстрое заполнение сервера:
+          <button type="button" class="btn" id="n_presetYandex" style="padding:6px 12px">Яндекс</button>
+          <button type="button" class="btn" id="n_presetGmail" style="padding:6px 12px">Gmail</button>
+        </p>
+        <label>Сервер SMTP</label><input type="text" id="n_smtpHost" placeholder="smtp.yandex.ru">
+        <label>Порт<small>465 — обычный вариант, 587 тоже поддерживается</small></label><input type="text" id="n_smtpPort" inputmode="numeric" placeholder="465">
+        <label>Адрес отправителя (логин)<small>полный адрес ящика, с которого шлём, например clinic@yandex.ru</small></label><input type="text" id="n_smtpUser" autocomplete="off">
+        <label>Пароль приложения<small>не пароль от почты! Яндекс: id.yandex.ru → Безопасность → Пароли приложений. Gmail: myaccount.google.com → Безопасность → Пароли приложений (нужна двухэтапная проверка). Оставьте поле как есть, чтобы не менять сохранённый</small></label>
+        <input type="password" id="n_smtpPass" autocomplete="new-password">
+        <label>Кому слать<small>адрес получателя заявок; несколько — через запятую</small></label><input type="text" id="n_smtpTo" placeholder="director@clinic.ru, admin@clinic.ru">
+        <div class="save-row"><button class="btn" id="n_emailTest">Отправить тестовое письмо</button><span class="ok hide" id="n_emailOk">Отправлено, проверьте почту</span></div>
+      </div>
+      <div class="save-row"><button class="btn go" id="n_save">Сохранить</button><span class="ok hide" id="n_saveOk">Сохранено</span></div>
     </section>
 
     <!-- SEO -->
@@ -205,7 +239,7 @@ async function tryShow(){
   const r=await fetch(API+'/leads',{headers:auth()});
   if(r.status===401){ localStorage.removeItem(TK); return tryShow(); }
   $('#login').classList.add('hide'); $('#app').classList.remove('hide');
-  loadLeads(); loadSettings();
+  loadLeads(); loadSettings(); loadNotify();
 }
 $('#loginForm').addEventListener('submit', async e=>{
   e.preventDefault(); $('#loginErr').textContent='';
@@ -323,6 +357,48 @@ $$('[data-save]').forEach(btn=>btn.addEventListener('click',async()=>{
   }catch{ alert('Не удалось сохранить'); }
   btn.disabled=false;
 }));
+
+
+/* уведомления о заявках */
+async function loadNotify(){
+  try{
+    const r=await fetch(API+'/notify',{headers:auth()}); if(!r.ok)return;
+    const n=await r.json();
+    $('#n_tgToken').value=n.tgToken||''; $('#n_tgUsername').value=n.tgUsername?'@'+n.tgUsername:''; $('#n_tgChat').value=n.tgChat||'';
+    $('#n_smtpHost').value=n.smtpHost||''; $('#n_smtpPort').value=n.smtpPort||''; $('#n_smtpUser').value=n.smtpUser||'';
+    $('#n_smtpPass').value=n.smtpPass||''; $('#n_smtpTo').value=n.smtpTo||'';
+    $('#n_envWarn').style.display=(n.env&&(n.env.tg||n.env.smtp))?'block':'none';
+  }catch{}
+}
+async function saveNotify(){
+  const payload={ tgToken:$('#n_tgToken').value, tgUsername:$('#n_tgUsername').value, tgChat:$('#n_tgChat').value,
+    smtpHost:$('#n_smtpHost').value, smtpPort:$('#n_smtpPort').value, smtpUser:$('#n_smtpUser').value,
+    smtpPass:$('#n_smtpPass').value, smtpFrom:$('#n_smtpUser').value, smtpTo:$('#n_smtpTo').value };
+  const r=await fetch(API+'/notify',{method:'POST',headers:auth(),body:JSON.stringify(payload)});
+  if(r.status===401){ localStorage.removeItem(TK); tryShow(); throw 0; }
+  if(!r.ok)throw 0;
+}
+$('#n_save').addEventListener('click',async()=>{
+  const b=$('#n_save'); b.disabled=true;
+  try{ await saveNotify(); $('#n_saveOk').classList.remove('hide'); setTimeout(()=>$('#n_saveOk').classList.add('hide'),2000); loadNotify(); }
+  catch{ alert('Не удалось сохранить'); }
+  b.disabled=false;
+});
+async function notifyTest(channel,btn,okEl){
+  btn.disabled=true; const was=btn.textContent; btn.textContent='Отправляю…';
+  try{
+    await saveNotify();
+    const r=await fetch(API+'/notify/test',{method:'POST',headers:auth(),body:JSON.stringify({channel})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(j.error||'Ошибка');
+    okEl.classList.remove('hide'); setTimeout(()=>okEl.classList.add('hide'),3000); loadNotify();
+  }catch(e){ alert(e.message||'Не удалось отправить'); }
+  btn.disabled=false; btn.textContent=was;
+}
+$('#n_tgTest').addEventListener('click',()=>notifyTest('tg',$('#n_tgTest'),$('#n_tgOk')));
+$('#n_emailTest').addEventListener('click',()=>notifyTest('email',$('#n_emailTest'),$('#n_emailOk')));
+$('#n_presetYandex').addEventListener('click',()=>{ $('#n_smtpHost').value='smtp.yandex.ru'; $('#n_smtpPort').value='465'; });
+$('#n_presetGmail').addEventListener('click',()=>{ $('#n_smtpHost').value='smtp.gmail.com'; $('#n_smtpPort').value='465'; });
 
 tryShow();
 </script>

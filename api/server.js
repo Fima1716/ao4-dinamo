@@ -86,8 +86,8 @@ function sendMail(cfg, mail) {
       + Buffer.from(String(mail.text || ''), 'utf8').toString('base64').replace(/(.{76})/g, '$1\r\n') + '\r\n.\r\n';
     const authSteps = [
       { cmd: 'AUTH LOGIN', expect: [334] },
-      { cmd: b64(user), expect: [334] },
-      { cmd: b64(pass), expect: [235] },
+      { cmd: b64(user), expect: [334], secret: 'логин' },
+      { cmd: b64(pass), expect: [235], secret: 'пароль' },
       { cmd: 'MAIL FROM:<' + from + '>', expect: [250] },
       ...to.map((t) => ({ cmd: 'RCPT TO:<' + t + '>', expect: [250, 251] })),
       { cmd: 'DATA', expect: [354] },
@@ -104,7 +104,7 @@ function sendMail(cfg, mail) {
         buf += chunk; let code;
         while ((code = nextReply()) !== null) {
           const s = steps[i]; if (!s) return;
-          if (!s.expect.includes(code)) return finish(new Error('SMTP ' + code + ' на «' + (s.cmd ? s.cmd.split('\r')[0].slice(0, 20) : 'greeting') + '»'));
+          if (!s.expect.includes(code)) return finish(new Error('SMTP ' + code + ' на «' + (s.secret || (s.cmd ? s.cmd.split('\r')[0].slice(0, 20) : 'greeting')) + '»'));
           if (s.success) { try { sock.write('QUIT\r\n'); sock.end(); } catch {} return finish(); }
           if (s.upgrade) return s.upgrade(sock);
           i++; prime();
@@ -350,6 +350,69 @@ http.createServer(async (req, res) => {
     }
     fs.writeFileSync(file, JSON.stringify(cur, null, 1));
     return send(res, 200, { ok: true, count: Object.keys(cur).length });
+  }
+
+  // настройки уведомлений о заявках (Telegram и почта) — только админ.
+  // Секреты хранятся в data/secrets.json и наружу отдаются маскированными;
+  // переменные окружения, если заданы, имеют приоритет над сохранённым.
+  const SECRETS = path.join(DATA, 'secrets.json');
+  if (req.method === 'GET' && route === '/notify') {
+    if (!authed(req)) return needAuth();
+    const s = readJSON(SECRETS);
+    const mask = v => (v ? '••••' + String(v).slice(-4) : '');
+    return send(res, 200, {
+      tgToken: mask(s.tgToken), tgUsername: s.tgUsername || '', tgChat: s.tgChat || '',
+      smtpHost: s.smtpHost || '', smtpPort: s.smtpPort || '', smtpUser: s.smtpUser || '',
+      smtpPass: mask(s.smtpPass), smtpFrom: s.smtpFrom || '', smtpTo: s.smtpTo || '',
+      env: { tg: !!process.env.TG_TOKEN, smtp: !!process.env.SMTP_HOST },
+    });
+  }
+  if (req.method === 'POST' && route === '/notify') {
+    if (!authed(req)) return needAuth();
+    let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
+    const s = readJSON(SECRETS);
+    // пустое или маскированное значение секрета означает «не менять»
+    const keep = (v, old) => { v = str(v, 300).trim(); return (!v || v.startsWith('••••')) ? (old || '') : v; };
+    s.tgToken = keep(b.tgToken, s.tgToken);
+    s.tgUsername = str(b.tgUsername, 100).trim().replace(/^@/, '');
+    s.tgChat = str(b.tgChat, 100).trim();
+    s.smtpHost = str(b.smtpHost, 200).trim();
+    s.smtpPort = String(parseInt(b.smtpPort, 10) || 465);
+    s.smtpUser = str(b.smtpUser, 200).trim();
+    s.smtpPass = keep(b.smtpPass, s.smtpPass);
+    s.smtpFrom = str(b.smtpFrom, 200).trim();
+    s.smtpTo = str(b.smtpTo, 500).trim();
+    fs.writeFileSync(SECRETS, JSON.stringify(s, null, 1));
+    return send(res, 200, { ok: true });
+  }
+  if (req.method === 'POST' && route === '/notify/test') {
+    if (!authed(req)) return needAuth();
+    let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
+    const sec = secrets();
+    if (b.channel === 'tg') {
+      if (!sec.tgToken || !sec.tgChat) return send(res, 400, { error: 'Заполните токен бота и ID чата' });
+      try {
+        const r = await fetch(`https://api.telegram.org/bot${sec.tgToken}/sendMessage`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: sec.tgChat, text: '✅ Тест: уведомления о заявках All Smiles настроены' }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!j.ok) return send(res, 400, { error: 'Telegram: ' + (j.description || 'ошибка ' + r.status) });
+        return send(res, 200, { ok: true });
+      } catch (e) { return send(res, 400, { error: 'Telegram недоступен: ' + e.message }); }
+    }
+    if (b.channel === 'email') {
+      const m = sec.smtp;
+      if (!m.host || !m.user || !m.pass || !m.to) return send(res, 400, { error: 'Заполните сервер, логин, пароль и адрес получателя' });
+      try {
+        await sendMail(
+          { host: m.host, port: m.port, user: m.user, pass: m.pass, from: m.from || m.user },
+          { to: String(m.to).split(/[,;\s]+/).filter(Boolean), subject: 'Тест: уведомления о заявках', text: 'Если вы видите это письмо, почтовые уведомления с сайта All Smiles настроены.', fromName: 'Сайт All Smiles' }
+        );
+        return send(res, 200, { ok: true });
+      } catch (e) { return send(res, 400, { error: 'Почта: ' + e.message }); }
+    }
+    return send(res, 400, { error: 'channel' });
   }
 
   // загрузка файла (OG-картинка и пр.) — только админ
