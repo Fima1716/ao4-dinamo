@@ -79,6 +79,7 @@ rsync -rlDz --checksum --delete --no-perms --no-owner --no-group --dry-run --ite
   --exclude 'api' --exclude 'README.md' --exclude 'AGENTS.md' --exclude '.DS_Store' \
   --exclude 'node_modules' --exclude 'scratchpad' --exclude '*.code-workspace' \
   --exclude 'pravki' --exclude 'photozone' --exclude 'render-3d' --exclude 'All-Smiles-*.html' \
+  --exclude 'assets/brand/guidebook.pdf' \
   ./ root@217.18.60.60:/var/www/ao4-dinamo/
 
 # 4. Если список адекватный (нет неожиданных удалений) - то же без --dry-run.
