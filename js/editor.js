@@ -16,7 +16,7 @@
   const SET_CACHE = 'as_settings';
 
   const BLOCKS = 'div,section,article,ul,ol,dl,form,fieldset,header,footer,figure,aside,nav,table,picture,video,dialog,svg,input,select,textarea,img';
-  const SKIP = '[data-noedit],.ed-bar,.ed-login,.ed-toast,.ed-picker,.ed-reorder,script,style,noscript,title';
+  const SKIP = '[data-noedit],.ed-bar,.ed-toast,.ed-picker,.ed-reorder,script,style,noscript,title';
   const hasOwnText = el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
 
   function collect() {
@@ -42,10 +42,25 @@
     }
     return parts.join('>');
   }
-  const cleanText = html => String(html)
-    .replace(/<\s*(script|style|iframe|object|embed)[\s\S]*?<\/\s*\1\s*>/gi, '')
-    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(/javascript:/gi, '');
+  // Чистим правку перед вставкой в страницу. Разбираем через <template>: его
+  // содержимое инертно (картинки не грузятся, обработчики не вешаются), и в
+  // отличие от регулярок нас не обойти записью вида <svg/onload=…>.
+  const BAD_TAGS = /^(script|style|iframe|object|embed|link|meta|base|form)$/i;
+  const URL_ATTRS = /^(href|src|xlink:href|formaction|action)$/i;
+  const cleanText = (html) => {
+    const tpl = document.createElement('template');
+    tpl.innerHTML = String(html);
+    tpl.content.querySelectorAll('*').forEach((el) => {
+      if (BAD_TAGS.test(el.tagName)) { el.remove(); return; }
+      [...el.attributes].forEach((a) => {
+        const name = a.name.toLowerCase();
+        const bad = name.startsWith('on')
+          || (URL_ATTRS.test(name) && /^\s*(javascript|data|vbscript):/i.test(a.value));
+        if (bad) el.removeAttribute(a.name);
+      });
+    });
+    return tpl.innerHTML;
+  };
   const okImgSrc = v => /^(data:image\/|https?:\/\/|\.?\/)/.test(String(v));
   let nodes = collect();
 
@@ -182,14 +197,6 @@ body.ed-on [data-edimg].ed-dirty{outline:2px solid #2fd07a}
 .ed-reorder button{width:30px;height:30px;padding:0;border:0;border-radius:50%;background:#3a3358;color:#fff;font:700 15px/1 sans-serif;cursor:pointer;display:grid;place-items:center}
 .ed-reorder button:hover{background:#e93d8d}
 body.ed-on main>section[id]{position:relative;outline:1px dashed rgba(94,83,145,.25);outline-offset:-1px}
-.ed-login{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;background:rgba(31,27,51,.6);backdrop-filter:blur(4px)}
-.ed-login form{background:#fff;border-radius:20px;padding:26px;width:min(360px,calc(100vw - 32px));font:400 15px/1.5 'Nunito','Segoe UI',sans-serif;box-shadow:0 30px 70px rgba(0,0,0,.3)}
-.ed-login h3{margin:0 0 6px;font-size:21px;font-weight:700}
-.ed-login p{margin:0 0 16px;color:#777}
-.ed-login input{width:100%;height:48px;padding:0 16px;border:1.5px solid #e3e0eb;border-radius:12px;font:inherit;outline:0;margin-bottom:10px}
-.ed-login input:focus{border-color:#e93d8d}
-.ed-login button{width:100%;height:48px;border:0;border-radius:12px;background:#e93d8d;color:#fff;font:inherit;font-weight:700;cursor:pointer}
-.ed-login .err{color:#d8305f;font-size:13px;min-height:18px;margin:6px 0 0}
 .ed-toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:100001;background:#1f1b33;color:#fff;padding:11px 20px;border-radius:999px;font:600 14px 'Nunito',sans-serif;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
 .ed-toast.on{opacity:1}
 /* всё кликабельно в режиме правки */
@@ -212,27 +219,6 @@ body.ed-on .modal[open]{z-index:100000}`;
     if (!t) { t = document.createElement('div'); t.className = 'ed-toast'; document.body.appendChild(t); }
     t.textContent = msg; t.classList.add('on');
     clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 2600);
-  }
-  function login() {
-    return new Promise(resolve => {
-      const w = document.createElement('div'); w.className = 'ed-login';
-      w.innerHTML = `<form><h3>Режим редактирования</h3><p>Введите пароль администратора</p>
-        <input type="password" autocomplete="current-password" placeholder="Пароль">
-        <p class="err"></p><button type="submit">Войти</button></form>`;
-      document.body.appendChild(w);
-      const f = w.querySelector('form'), inp = w.querySelector('input'), err = w.querySelector('.err');
-      f.addEventListener('submit', async e => {
-        e.preventDefault(); err.textContent = '';
-        try {
-          const r = await fetch(`${API}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: inp.value }) });
-          const j = await r.json();
-          if (!r.ok) { err.textContent = j.error || 'Ошибка'; return; }
-          localStorage.setItem(TOKEN_KEY, j.token); w.remove(); resolve(true);
-        } catch { err.textContent = 'Сервер недоступен'; }
-      });
-      w.addEventListener('click', e => { if (e.target === w) { w.remove(); resolve(false); } });
-      setTimeout(() => inp.focus(), 50);
-    });
   }
   function fileToDataURL(file, max = 1600) {
     return new Promise((resolve, reject) => {
@@ -318,7 +304,7 @@ body.ed-on .modal[open]{z-index:100000}`;
 
     /* блокируем действия сайта в режиме правки: клики по кнопкам/ссылкам/квизу
        не открывают модалку и не уводят со страницы — редактируем их текст */
-    const KEEP = '.ed-bar,.ed-reorder,.ed-login,.ed-toast,.ed-mbtn,.modal-close,[data-edimg],[data-edflag]';
+    const KEEP = '.ed-bar,.ed-reorder,.ed-toast,.ed-mbtn,.modal-close,[data-edimg],[data-edflag]';
     document.addEventListener('click', e => {
       if (e.target.closest(KEEP)) return;
       const t = e.target.closest('a[href],button,label,summary,[data-modal],[role=tab],[role=button]');
@@ -365,7 +351,7 @@ body.ed-on .modal[open]{z-index:100000}`;
       save.disabled = true; save.textContent = 'Сохраняю…';
       try {
         const r = await fetch(`${API}/content`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() }, body: JSON.stringify({ page: PAGE, data: payload }) });
-        if (r.status === 401) { localStorage.removeItem(TOKEN_KEY); location.reload(); return; }
+        if (r.status === 401) { localStorage.removeItem(TOKEN_KEY); location.href = '/admin/'; return; }
         if (!r.ok) throw 0;
         let c = {}; try { c = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}'); } catch {}
         Object.assign(c, payload); try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)); } catch {}
@@ -390,9 +376,11 @@ body.ed-on .modal[open]{z-index:100000}`;
 
   (async () => {
     await refresh();
-    if (!wantAdmin()) return;
+    // Правка включается, только если администратор уже вошёл в панели /admin/
+    // (токен лежит в localStorage того же origin). Формы входа на публичных
+    // страницах нет намеренно: постороннему по ?admin не показывается ничего.
+    if (!wantAdmin() || !token()) return;
     style();
-    if (!token() && !(await login())) return;
     startEditing();
   })();
 })();

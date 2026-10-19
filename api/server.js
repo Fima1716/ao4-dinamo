@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8791;
 const DATA = process.env.DATA_DIR || path.join(__dirname, 'data');
 const PASSWORD = process.env.EDITOR_PASSWORD || crypto.randomBytes(18).toString('base64url');
 if (!process.env.EDITOR_PASSWORD) console.warn('EDITOR_PASSWORD не задан — временный пароль:', PASSWORD);
-const TTL = 30 * 24 * 3600 * 1000;
+const TTL = 7 * 24 * 3600 * 1000;   // срок жизни сессии админа
 
 fs.mkdirSync(DATA, { recursive: true });
 const UPLOADS = path.join(DATA, 'uploads');
@@ -190,15 +190,15 @@ function send(res, code, body, extra = {}) {
   res.writeHead(code, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    // CORS намеренно не разрешаем: сайт и API на одном домене, а раньше стоял
+    // Access-Control-Allow-Origin:* — любой чужой сайт мог дёргать этот API
+    'X-Content-Type-Options': 'nosniff',
     ...extra,
   });
   res.end(data);
 }
 function sendText(res, code, text, type = 'text/plain; charset=utf-8') {
-  res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' });
+  res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
   res.end(text);
 }
 function body(req) {
@@ -224,6 +224,13 @@ function rawBody(req, limit) {
     req.on('end', () => (over ? reject(new Error('too big')) : resolve(Buffer.concat(chunks))));
     req.on('error', reject);
   });
+}
+// Сравнение за постоянное время: обычное !== на строках завершается на первом
+// несовпавшем символе и по времени ответа выдаёт, сколько символов угадано.
+function sameSecret(a, b) {
+  const x = crypto.createHash('sha256').update(String(a)).digest();
+  const y = crypto.createHash('sha256').update(String(b)).digest();
+  return crypto.timingSafeEqual(x, y);
 }
 function authed(req) {
   const t = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
@@ -342,7 +349,7 @@ http.createServer(async (req, res) => {
     const file = path.join(UPLOADS, name);
     let data; try { data = fs.readFileSync(file); } catch { return send(res, 404, { error: 'not found' }); }
     const ext = (name.split('.').pop() || '').toLowerCase();
-    res.writeHead(200, { 'Content-Type': EXT_MIME[ext] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'public, max-age=86400', 'Access-Control-Allow-Origin': '*' });
+    res.writeHead(200, { 'Content-Type': EXT_MIME[ext] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'public, max-age=86400' });
     return res.end(data);
   }
 
@@ -350,7 +357,7 @@ http.createServer(async (req, res) => {
   if (req.method === 'POST' && route === '/login') {
     if (!hit('login:' + clientIp(req), 12, 60000)) return send(res, 429, { error: 'Слишком много попыток входа, подождите минуту' });
     let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
-    if (String(b.password || '') !== PASSWORD) return send(res, 401, { error: 'Неверный пароль' });
+    if (!sameSecret(String(b.password || ''), PASSWORD)) return send(res, 401, { error: 'Неверный пароль' });
     const token = crypto.randomBytes(24).toString('hex');
     sessions.set(token, Date.now() + TTL);
     return send(res, 200, { token });
