@@ -19,10 +19,10 @@ const UPLOADS = path.join(DATA, 'uploads');
 fs.mkdirSync(UPLOADS, { recursive: true });
 const sessions = new Map();
 
-// секреты (токен Telegram и chat_id) — из окружения или из файла рядом с данными,
-// в репозиторий не попадают
 const FORM_NAMES = { hero: 'Первый экран', modal: 'Окно «Рассчитать»', quiz: 'Квиз', final: 'Финальная форма', opinion: 'Второе мнение' };
 
+// Токен Telegram, chat_id и доступы SMTP — из окружения либо из data/secrets.json
+// рядом с данными. В репозиторий этот файл не попадает.
 function secrets() {
   const f = path.join(DATA, 'secrets.json');
   let s = {}; try { s = JSON.parse(fs.readFileSync(f, 'utf8')); } catch {}
