@@ -73,6 +73,10 @@ td .tag{display:inline-block;padding:2px 9px;border-radius:999px;background:var(
 td a{font-weight:700;text-decoration:none;color:var(--ink)}
 td .ans{color:var(--ink2);font-size:13px}
 td .del{border:0;background:none;color:#c9247a;font-size:18px;line-height:1;padding:2px 6px}
+td .file{display:block;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px;padding:5px 10px;border:1px solid var(--lav2);border-radius:8px;background:var(--paper);color:var(--violet);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+td .file:last-child{margin-bottom:0}
+td .file:hover{border-color:var(--pink);color:var(--pink)}
+td .file:disabled{opacity:.6;cursor:default}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 .CodeMirror{border:1.5px solid var(--lav2);border-radius:11px;height:auto;min-height:150px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
 .CodeMirror-focused{border-color:var(--pink)}
@@ -287,7 +291,7 @@ async function loadLeads(){
   $('#leadCount').textContent=LEADS.length;
   const box=$('#leads');
   if(!LEADS.length){ box.innerHTML='<div class="empty">Заявок пока нет. Они появятся здесь сразу после отправки формы на сайте.</div>'; return; }
-  box.innerHTML=`<table><thead><tr><th>Когда</th><th>Форма</th><th>Имя</th><th>Телефон</th><th>Мессенджер</th><th>Ответы квиза</th><th></th></tr></thead><tbody>`+
+  box.innerHTML=`<table><thead><tr><th>Когда</th><th>Форма</th><th>Имя</th><th>Телефон</th><th>Мессенджер</th><th>Ответы квиза</th><th>Файлы</th><th></th></tr></thead><tbody>`+
     LEADS.map(l=>`<tr>
       <td>${fmtDate(l.ts)}</td>
       <td><span class="tag">${esc(FORM_NAMES[l.form]||l.form||'—')}</span></td>
@@ -295,19 +299,36 @@ async function loadLeads(){
       <td><a href="tel:${esc((l.phone||'').replace(/[^+\d]/g,''))}">${esc(l.phone)}</a></td>
       <td>${esc(l.messenger)||'—'}</td>
       <td><span class="ans">${esc(l.answers)||'—'}</span></td>
+      <td>${(l.files||[]).length
+        ? l.files.map((f,i)=>`<button class="file" data-id="${esc(f.id)}">${esc(f.name||('файл '+(i+1)))}</button>`).join('')
+        : '—'}</td>
       <td><button class="del" data-id="${l.id}" title="Удалить">×</button></td>
     </tr>`).join('')+`</tbody></table>`;
   box.querySelectorAll('.del').forEach(b=>b.addEventListener('click',async()=>{
-    if(!confirm('Удалить заявку?'))return;
+    if(!confirm('Удалить заявку? Приложенные к ней файлы тоже удалятся.'))return;
     await fetch(API+'/leads/delete',{method:'POST',headers:auth(),body:JSON.stringify({id:b.dataset.id})}); loadLeads();
   }));
+  box.querySelectorAll('.file').forEach(b=>b.addEventListener('click',()=>openLeadFile(b)));
+}
+/* файлы заявки отдаются только по токену, поэтому забираем их запросом и открываем из памяти */
+async function openLeadFile(btn){
+  const was=btn.textContent; btn.disabled=true; btn.textContent='Открываю…';
+  try{
+    const r=await fetch(API+'/lead-file/'+encodeURIComponent(btn.dataset.id),{headers:auth()});
+    if(r.status===401){ localStorage.removeItem(TK); return tryShow(); }
+    if(!r.ok){ alert('Файл не найден'); return; }
+    const u=URL.createObjectURL(await r.blob());
+    window.open(u,'_blank','noopener');
+    setTimeout(()=>URL.revokeObjectURL(u),120000);
+  }catch{ alert('Сервер недоступен'); }
+  finally{ btn.disabled=false; btn.textContent=was; }
 }
 $('#refresh').addEventListener('click',loadLeads);
 $('#clear').addEventListener('click',async()=>{ if(!confirm('Удалить ВСЕ заявки без возможности восстановления?'))return; await fetch(API+'/leads/delete',{method:'POST',headers:auth(),body:JSON.stringify({all:true})}); loadLeads(); });
 $('#csv').addEventListener('click',()=>{
   if(!LEADS.length)return;
-  const rows=[['Дата','Форма','Имя','Телефон','Мессенджер','Ответы','Страница']].concat(
-    LEADS.map(l=>[fmtDate(l.ts),FORM_NAMES[l.form]||l.form||'',l.name||'',l.phone||'',l.messenger||'',(l.answers||'').replace(/\n/g,' '),l.page||'']));
+  const rows=[['Дата','Форма','Имя','Телефон','Мессенджер','Ответы','Файлы','Страница']].concat(
+    LEADS.map(l=>[fmtDate(l.ts),FORM_NAMES[l.form]||l.form||'',l.name||'',l.phone||'',l.messenger||'',(l.answers||'').replace(/\n/g,' '),(l.files||[]).map(f=>f.name).join(', '),l.page||'']));
   const csv='﻿'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='leads.csv'; a.click();
 });

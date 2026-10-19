@@ -49,6 +49,7 @@ function notifyTelegram(lead) {
     `Телефон: ${lead.phone}`,
     lead.messenger ? `Мессенджер: ${lead.messenger}` : '',
     lead.answers ? `Ответы: ${lead.answers}` : '',
+    lead.files && lead.files.length ? `Приложено файлов: ${lead.files.length} — смотреть в админке` : '',
   ].filter(Boolean);
   const text = lines.join('\n');
   fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
@@ -141,6 +142,7 @@ function notifyEmail(lead) {
     'Телефон: ' + lead.phone,
     lead.messenger ? 'Мессенджер: ' + lead.messenger : '',
     lead.answers ? 'Ответы: ' + lead.answers : '',
+    lead.files && lead.files.length ? 'Приложено файлов: ' + lead.files.length + ' — смотреть в админке' : '',
     lead.page ? 'Страница: ' + lead.page : '',
     'Время: ' + new Date(lead.ts).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
   ].filter(Boolean);
@@ -151,7 +153,26 @@ function notifyEmail(lead) {
   ).catch((e) => console.warn('email lead error:', e.message));
 }
 const MIME_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
-const EXT_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif' };
+const EXT_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', pdf: 'application/pdf' };
+
+// Файлы, приложенные к заявке (планы лечения из формы «Второе мнение»).
+// Это медицинские документы пациентов, поэтому лежат отдельно от публичных
+// uploads и отдаются только администратору, по авторизации.
+const LEAD_FILES = path.join(DATA, 'lead-files');
+fs.mkdirSync(LEAD_FILES, { recursive: true });
+const LEAD_FILE_MAX = 10 * 1024 * 1024;
+const LEAD_FILE_RE = /^[a-f0-9]{24}\.(jpg|png|webp|pdf)$/;
+const LEAD_FILE_EXT = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+
+// Тип определяем по сигнатуре файла, а не по тому, что заявил браузер.
+function sniffType(buf) {
+  if (buf.length < 12) return '';
+  if (buf.toString('latin1', 0, 4) === '%PDF') return 'application/pdf';
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'image/jpeg';
+  if (buf[0] === 0x89 && buf.toString('latin1', 1, 4) === 'PNG') return 'image/png';
+  if (buf.toString('latin1', 0, 4) === 'RIFF' && buf.toString('latin1', 8, 12) === 'WEBP') return 'image/webp';
+  return '';
+}
 
 function slug(page) {
   const p = String(page || '/').replace(/[^a-zA-Z0-9/_-]/g, '').replace(/\/+/g, '/');
@@ -188,6 +209,22 @@ function body(req) {
     req.on('error', reject);
   });
 }
+// Читает тело запроса как есть. Превышение limit дочитываем вхолостую, чтобы
+// успеть ответить понятной ошибкой; на совсем большом потоке рвём соединение.
+function rawBody(req, limit) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let n = 0, over = false;
+    req.on('data', (c) => {
+      n += c.length;
+      if (n > limit * 2) { req.destroy(); reject(new Error('too big')); return; }
+      if (n > limit) { over = true; chunks.length = 0; return; }
+      chunks.push(c);
+    });
+    req.on('end', () => (over ? reject(new Error('too big')) : resolve(Buffer.concat(chunks))));
+    req.on('error', reject);
+  });
+}
 function authed(req) {
   const t = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
   const exp = sessions.get(t);
@@ -212,6 +249,17 @@ setInterval(() => {
   const now = Date.now();
   for (const [k, e] of rl) if (e.reset < now) rl.delete(k);
   for (const [t, exp] of sessions) if (exp < now) sessions.delete(t);
+  // файлы, загруженные больше суток назад, но так и не привязанные к заявке:
+  // человек выбрал план лечения и ушёл, не оставив телефон
+  try {
+    const used = new Set();
+    for (const l of readJSON(LEADS, [])) for (const f of l.files || []) used.add(f.id);
+    for (const name of fs.readdirSync(LEAD_FILES)) {
+      if (used.has(name)) continue;
+      const p = path.join(LEAD_FILES, name);
+      if (now - fs.statSync(p).mtimeMs > 24 * 3600 * 1000) fs.unlinkSync(p);
+    }
+  } catch {}
 }, 300000).unref();
 
 http.createServer(async (req, res) => {
@@ -240,6 +288,20 @@ http.createServer(async (req, res) => {
     return sendText(res, 200, txt);
   }
 
+  // приём файла к заявке (план лечения) — публично, тело запроса это сам файл.
+  // Отдаётся потом только админу через GET /lead-file/<id>.
+  if (req.method === 'POST' && route === '/lead-file') {
+    if (!hit('leadfile:' + clientIp(req), 20, 600000)) return send(res, 429, { error: 'Слишком много файлов, попробуйте позже' });
+    let buf;
+    try { buf = await rawBody(req, LEAD_FILE_MAX); } catch { return send(res, 413, { error: 'Файл больше 10 МБ' }); }
+    if (!buf.length) return send(res, 400, { error: 'Пустой файл' });
+    const type = sniffType(buf);
+    if (!LEAD_FILE_EXT[type]) return send(res, 400, { error: 'Поддерживаются PDF, JPG, PNG и WebP' });
+    const id = crypto.randomBytes(12).toString('hex') + '.' + LEAD_FILE_EXT[type];
+    fs.writeFileSync(path.join(LEAD_FILES, id), buf);
+    return send(res, 200, { id, size: buf.length });
+  }
+
   // приём заявки с формы — публично
   if (req.method === 'POST' && route === '/lead') {
     if (!hit('lead:' + clientIp(req), 6, 60000)) return send(res, 429, { error: 'Слишком часто, попробуйте позже' });
@@ -258,6 +320,11 @@ http.createServer(async (req, res) => {
       ref: str(b.ref, 300),
       ua: str(req.headers['user-agent'], 300),
     };
+    // приложенные файлы: берём только те, что действительно лежат на диске
+    const files = (Array.isArray(b.files) ? b.files : []).slice(0, 5)
+      .map((f) => ({ id: str(f && f.id, 40), name: str(f && f.name, 120) }))
+      .filter((f) => LEAD_FILE_RE.test(f.id) && fs.existsSync(path.join(LEAD_FILES, f.id)));
+    if (files.length) lead.files = files;
     const list = readJSON(LEADS, []);
     const arr = Array.isArray(list) ? list : [];
     arr.push(lead);
@@ -298,14 +365,31 @@ http.createServer(async (req, res) => {
     const list = readJSON(LEADS, []);
     return send(res, 200, { leads: Array.isArray(list) ? list.slice().reverse() : [] });
   }
-  // удалить заявку(и)
+  // файл, приложенный к заявке — только админу
+  if (req.method === 'GET' && route.startsWith('/lead-file/')) {
+    if (!authed(req)) return needAuth();
+    const id = route.slice('/lead-file/'.length);
+    if (!LEAD_FILE_RE.test(id)) return send(res, 404, { error: 'not found' });
+    let data; try { data = fs.readFileSync(path.join(LEAD_FILES, id)); } catch { return send(res, 404, { error: 'not found' }); }
+    res.writeHead(200, {
+      'Content-Type': EXT_MIME[id.split('.').pop()] || 'application/octet-stream',
+      'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store',
+    });
+    return res.end(data);
+  }
+
+  // удалить заявку(и) — вместе с приложенными файлами
   if (req.method === 'POST' && route === '/leads/delete') {
     if (!authed(req)) return needAuth();
     let b; try { b = await body(req); } catch { return send(res, 400, { error: 'bad json' }); }
     let arr = readJSON(LEADS, []); if (!Array.isArray(arr)) arr = [];
+    const gone = b.all ? arr : arr.filter(l => l.id === b.id);
     if (b.all) arr = [];
     else if (b.id) arr = arr.filter(l => l.id !== b.id);
     fs.writeFileSync(LEADS, JSON.stringify(arr));
+    for (const l of gone) for (const f of l.files || []) {
+      if (LEAD_FILE_RE.test(f.id || '')) { try { fs.unlinkSync(path.join(LEAD_FILES, f.id)); } catch {} }
+    }
     return send(res, 200, { ok: true, count: arr.length });
   }
 

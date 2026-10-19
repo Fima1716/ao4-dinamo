@@ -85,15 +85,30 @@
     i.addEventListener('focus', () => { if (!i.value) i.value = '+7 '; });
   });
 
+  /* заявка из модалки может нести файлы плана лечения — их кладёт сюда «второе мнение» */
+  let pendingFiles = [], pendingForm = '';
+  const uploadPlan = async list => {
+    const done = [];
+    for (const file of list) {
+      try {
+        const r = await fetch('/api/lead-file', { method: 'POST', body: file });
+        if (r.ok) { const j = await r.json(); if (j.id) done.push({ id: j.id, name: file.name }); }
+      } catch {}
+    }
+    return done;
+  };
+
   /* отправка заявок */
-  $$('form[data-lead]').forEach(f => f.addEventListener('submit', e => {
+  $$('form[data-lead]').forEach(f => f.addEventListener('submit', async e => {
     e.preventDefault();
     const t = $('input[type=tel]', f);
     const msg = $('.lead__msg,.form-message', f);
     if (t.value.replace(/\D/g, '').length !== 11) { t.focus(); msg.textContent = 'Проверьте номер телефона'; return; }
     const fd = new FormData(f);
+    const withFiles = f.dataset.lead === 'modal' && pendingFiles.length;
+    const form = (f.dataset.lead === 'modal' && pendingForm) || f.dataset.lead;
     const lead = {
-      form: f.dataset.lead,
+      form,
       name: fd.get('name') || '',
       phone: t.value,
       messenger: fd.get('messenger') || '',
@@ -101,11 +116,21 @@
       page: location.pathname,
       ref: document.referrer || '',
     };
+    // файлы догружаем до отправки заявки; телефон уходит в любом случае,
+    // даже если загрузка не удалась — администратор запросит документы сам
+    if (withFiles) {
+      const btn = $('button[type=submit]', f);
+      if (btn) btn.disabled = true;
+      msg.textContent = pendingFiles.length > 1 ? 'Отправляем файлы…' : 'Отправляем файл…';
+      lead.files = await uploadPlan(pendingFiles);
+      if (btn) btn.disabled = false;
+    }
     // заявка уходит в админку; переход на «Спасибо» не ждёт ответа сервера
     try { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead), keepalive: true }); } catch {}
-    try { sessionStorage.setItem('as_lead', JSON.stringify({ form: f.dataset.lead, at: Date.now() })); } catch {}
+    try { sessionStorage.setItem('as_lead', JSON.stringify({ form, at: Date.now() })); } catch {}
+    pendingFiles = []; pendingForm = '';
     rememberSpot();
-    location.href = 'thanks/?form=' + encodeURIComponent(f.dataset.lead);
+    location.href = 'thanks/?form=' + encodeURIComponent(form);
   }));
 
   /* калькулятор платежа: имплант задаёт цену, 3 и 6 мес — без переплат, 12 мес — +10% */
@@ -145,6 +170,8 @@
     return FALLBACK[key] || [];
   };
   const openModal = (title, text) => {
+    // окно одно на весь сайт: сбрасываем файлы от прошлого открытия
+    pendingFiles = []; pendingForm = '';
     dlgTitle.textContent = title || dlgDefault.title;
     dlgText.textContent = text || dlgDefault.text;
     dlgList.hidden = !!title;
@@ -361,6 +388,8 @@
       e.preventDefault();
       if (!files.length) { msg.textContent = 'Добавьте фото или PDF плана лечения.'; input.focus(); return; }
       openModal('Получить расчёт со скидкой 15%', 'Файлов выбрано: ' + files.length + '. Оставьте телефон – администратор свяжется с вами и пришлёт расчёт со скидкой.');
+      // файлы уйдут вместе с заявкой, когда человек оставит телефон
+      pendingFiles = files.slice(); pendingForm = 'opinion';
     });
   }
 
