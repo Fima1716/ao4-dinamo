@@ -85,7 +85,7 @@
     i.addEventListener('focus', () => { if (!i.value) i.value = '+7 '; });
   });
 
-  /* отправка форм (демо) */
+  /* отправка заявок */
   $$('form[data-lead]').forEach(f => f.addEventListener('submit', e => {
     e.preventDefault();
     const t = $('input[type=tel]', f);

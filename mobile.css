@@ -272,16 +272,12 @@ main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .p
 .m-sheet .closing-tabs{display:flex;gap:8px;margin:0 0 12px}
 .m-sheet .closing-tabs button{flex:1;justify-content:center;min-height:42px}
 .m-sheet .closing-route-steps li{display:grid;grid-template-columns:96px 1fr;grid-template-rows:auto auto;gap:0 12px;align-items:start;align-content:center;padding:10px;border:0;border-radius:16px;background:var(--paper);box-shadow:none}
-.m-sheet .closing-route-steps figure,.m-sheet .closing-metro-ph{grid-column:1;grid-row:1/3;align-self:center}
+.m-sheet .closing-route-steps figure{grid-column:1;grid-row:1/3;align-self:center}
 .m-sheet .closing-route-steps b,.m-sheet .closing-route-steps li>span{grid-column:2}
-.m-sheet .closing-route-steps figure,.m-sheet .closing-metro-ph{height:auto;aspect-ratio:1;margin:0;border-radius:12px;overflow:hidden}
-.m-sheet .closing-metro-ph span{font-size:44px}
+.m-sheet .closing-route-steps figure{height:auto;aspect-ratio:1;margin:0;border-radius:12px;overflow:hidden}
 .m-sheet .closing-route-steps b{font-size:14px;margin:0 0 4px}
 .m-sheet .closing-route-steps li>span{font-size:12.5px;line-height:1.4}
 .m-sheet .closing-route-addr{flex-direction:column;align-items:flex-start;gap:6px;margin:12px 0 0;padding:12px 14px;font-size:13px}
-.m-maps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.m-maps a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:14px;background:var(--lav-10);color:var(--ink);font:600 14px var(--ui);text-decoration:none}
-.m-maps img{width:22px;height:22px;object-fit:contain}
 .m-menu-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
 .m-menu-list a{display:flex;align-items:center;gap:12px;min-height:50px;padding:0 10px 0 12px;border-radius:14px;color:var(--ink);font:600 15px var(--ui);text-decoration:none}
 .m-menu-list a:active{background:var(--paper)}
