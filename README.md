@@ -77,7 +77,8 @@ sed -i '' -E "s#(href|src)=\"([^\"?:]+\.(css|js))\"#\1=\"\2?v=$v\"#g" index.html
 rsync -rlDz --checksum --delete --no-perms --no-owner --no-group --dry-run --itemize-changes \
   --exclude '.git' --exclude '.github' --exclude '.gitignore' \
   --exclude 'api' --exclude 'README.md' --exclude 'AGENTS.md' --exclude '.DS_Store' \
-  --exclude 'node_modules' --exclude 'scratchpad' \
+  --exclude 'node_modules' --exclude 'scratchpad' --exclude '*.code-workspace' \
+  --exclude 'pravki' --exclude 'photozone' --exclude 'render-3d' --exclude 'All-Smiles-*.html' \
   ./ root@217.18.60.60:/var/www/ao4-dinamo/
 
 # 4. Если список адекватный (нет неожиданных удалений) - то же без --dry-run.
@@ -111,5 +112,37 @@ ssh root@217.18.60.60 'pm2 reload ao4-api'
 
 ## При переезде на свой домен
 
-1. Добавить server_name в конфиг nginx (`/etc/nginx/sites-available/ao4-dinamo`) и перевыпустить сертификат certbot.
-2. Заменить адрес сайта в `policy/` (встречается 5 раз) и в `sitemap.xml`.
+Временный адрес `allsmiles.217-18-60-60.sslip.io` прописан в трёх файлах:
+
+- `index.html` - canonical, og:url и og:image (абсолютные ссылки в шапке);
+- `sitemap.xml` - все адреса страниц;
+- `policy/index.html` - адрес сайта в тексте политики (5 упоминаний).
+
+Порядок действий:
+
+1. Направить A-запись домена на 217.18.60.60, добавить server_name в конфиг nginx
+   (`/etc/nginx/sites-available/ao4-dinamo`) и выпустить сертификат certbot.
+2. Заменить адрес во всех трёх файлах одной командой (подставить свой домен):
+
+   ```bash
+   LC_ALL=C grep -rl 'allsmiles.217-18-60-60.sslip.io' index.html sitemap.xml policy/index.html \
+     | xargs sed -i '' 's#allsmiles\.217-18-60-60\.sslip\.io#новый-домен.ru#g'
+   ```
+
+3. Проверить глазами (`git diff`), закоммитить и выложить по обычному гайду выше.
+4. В админке (вкладка "SEO и robots") проверить robots.txt - если в нём указан
+   старый адрес в строке Sitemap, поправить там же.
+
+## Передача проекта
+
+Что должна получить принимающая сторона:
+
+1. **Код** - доступ к репозиторию GitHub (перенос владельца или приглашение) либо
+   архив из гита: `git archive -o allsmiles-site.zip HEAD` - в него попадают
+   только файлы проекта, без истории и локального мусора.
+2. **Сервер** - доступ root@217.18.60.60 (или перенос на свой сервер). На сервере,
+   помимо кода, живут данные, которых нет в репозитории: `/var/www/ao4-api/`
+   (заявки `leads.json`, правки страниц `page_*.json`, настройки `settings.json`,
+   секреты `data/secrets.json`) - при переносе забрать обязательно.
+3. **Пароль админки** - передаётся отдельно, в репозитории его нет.
+4. Этот README (деплой) и `AGENTS.md` (справочник по данным клиники и правилам текстов).

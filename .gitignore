@@ -14,6 +14,7 @@ assets/brand/guidebook.pdf
 .env.*
 *.pem
 *.key
+*.code-workspace
 
 # исходные материалы от клиента — лежат локально и в облаке, в репозиторий не нужны
 pravki/
