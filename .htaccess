@@ -1,0 +1,36 @@
+# Конфигурация Apache для сайта All Smiles на обычном хостинге.
+# Кладётся в корень сайта (public_html).
+
+# robots.txt отдаётся не файлом, а из настроек админки
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^robots\.txt$ /api/index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+    # CSP намеренно минимальная: клиника добавляет свои счётчики через админку,
+    # и строгий script-src сломал бы их молча. Эти три директивы безопасны всегда.
+    Header always set Content-Security-Policy "object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+
+    # HSTS говорит браузерам ходить на домен только по HTTPS в течение года.
+    # Включайте, когда сертификат уже работает и откатываться на http не планируете.
+    # Header always set Strict-Transport-Security "max-age=31536000"
+
+    # Правки в админке должны быть видны сразу
+    <FilesMatch "\.(html|css|js)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>
+
+# Служебные файлы наружу не отдаём
+<FilesMatch "^\.(htaccess|htpasswd|env|git)">
+    Require all denied
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>

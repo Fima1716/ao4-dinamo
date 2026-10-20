@@ -1,0 +1,29 @@
+# ОБРАЗЕЦ. Переименуйте в .htaccess ПОСЛЕ того, как укажете верный путь
+# к файлу с паролем: если путь неверный, Apache будет отдавать ошибку 500.
+#
+# Проще всего включить «Защиту директории паролем» в панели хостинга —
+# она сама создаст и .htaccess, и файл с паролем. Тогда этот образец не нужен.
+#
+# Админка закрывается паролем на уровне сервера: посторонний не получает
+# ни разметки панели, ни её скриптов — только запрос пароля.
+#
+# ВАЖНО: замените путь на свой абсолютный путь к файлу с паролем.
+# Файл должен лежать ВНЕ папки сайта. Создать его можно в панели хостинга
+# (раздел «Защита директории паролем») или командой:
+#
+#   htpasswd -bc /home/ЛОГИН/.htpasswd-allsmiles allsmiles 'ВАШ-ПАРОЛЬ'
+#
+# Если в панели есть готовая «Защита директории паролем» — проще включить её,
+# а этот файл не использовать.
+
+AuthType Basic
+AuthName "All Smiles"
+AuthUserFile /home/ЛОГИН/.htpasswd-allsmiles
+Require valid-user
+
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "no-referrer"
+    Header always set Cache-Control "no-store"
+</IfModule>
