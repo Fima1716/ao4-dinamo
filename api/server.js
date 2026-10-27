@@ -58,6 +58,46 @@ function notifyTelegram(lead) {
   }).catch(() => {});
 }
 
+/* Отправка заявки в коллтрекинг Calltouch со стороны сервера.
+   Их скрипт на странице тоже умеет это делать, но не успевает: мы сразу уводим
+   человека на страницу «Спасибо», и браузер обрывает запрос. Поэтому шлём сами.
+   Токен не нужен, а номер сайта и сессии Calltouch кладёт в куки, которые
+   браузер отправляет нам вместе с заявкой. */
+function notifyCalltouch(lead, req) {
+    const jar = Object.fromEntries(
+      String(req.headers.cookie || '').split(';').map((p) => {
+        const i = p.indexOf('='); return [p.slice(0, i).trim(), p.slice(i + 1).trim()];
+      }).filter(([k]) => k)
+    );
+    const site = String(jar._ct_site_id || '').replace(/\D/g, '');
+    const sess = String(jar._ct_session_id || '').replace(/\D/g, '');
+    if (!site) return;                 // коллтрекинг на сайте не подключён
+
+    const host = req.headers['x-forwarded-host'] || req.headers.host || '';
+    const comment = [
+      lead.messenger ? 'Мессенджер: ' + lead.messenger : '',
+      lead.answers ? 'Ответы: ' + lead.answers : '',
+      lead.files && lead.files.length ? 'Приложено файлов: ' + lead.files.length : '',
+    ].filter(Boolean).join('; ');
+
+    const p = new URLSearchParams({
+      subject: FORM_NAMES[lead.form] || lead.form || 'Форма сайта',
+      requestNumber: lead.id,
+      requestDate: new Date(lead.ts).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }).replace(',', ''),
+      phoneNumber: String(lead.phone || '').replace(/\D/g, ''),
+      requestUrl: host ? 'https://' + host + (lead.page || '/') : (lead.page || ''),
+    });
+    if (sess) p.set('sessionId', sess);  // без него не определится источник
+    if (lead.name) p.set('fio', lead.name);
+    if (comment) p.set('comment', comment);
+
+    fetch(`https://api.calltouch.ru/calls-service/RestAPI/requests/${site}/register/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
+      body: p.toString(),
+    }).catch(() => {});
+}
+
 /* Минимальный SMTP-клиент (без внешних зависимостей).
    port 465 — неявный TLS; 587/25 — STARTTLS. Логин AUTH LOGIN, тело в base64/UTF-8. */
 function sendMail(cfg, mail) {
@@ -337,6 +377,7 @@ http.createServer(async (req, res) => {
     arr.push(lead);
     while (arr.length > 5000) arr.shift();
     fs.writeFileSync(LEADS, JSON.stringify(arr));
+    notifyCalltouch(lead, req);
     notifyTelegram(lead);
     notifyEmail(lead);
     return send(res, 200, { ok: true });

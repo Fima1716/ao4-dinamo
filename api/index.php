@@ -7,6 +7,9 @@
    который заворачивает сюда все запросы /api/*. Данные лежат ВНЕ веб-корня,
    путь задаётся в config.php. */
 
+// Предупреждения PHP не должны попадать в тело ответа: он всегда JSON
+// или файл, и любой посторонний текст сломал бы и сайт, и админку.
+@ini_set('display_errors', '0');
 date_default_timezone_set('Europe/Moscow');
 mb_internal_encoding('UTF-8');
 
@@ -211,7 +214,6 @@ function tg_send($token, $chat, $text, $html = true) {
         ]);
         $out = curl_exec($ch);
         $err = curl_error($ch);
-        curl_close($ch);
         if ($out === false) return ['ok' => false, 'description' => $err ?: 'сеть недоступна'];
         $j = json_decode($out, true);
         return is_array($j) ? $j : ['ok' => false, 'description' => 'непонятный ответ'];
@@ -257,6 +259,52 @@ function notify_telegram($lead) {
     $text = str_replace(['<', '>'], ['&lt;', '&gt;'], $text);
     $text = str_replace(["\x01", "\x02"], ['<b>', '</b>'], $text);
     tg_send($s['tgToken'], $s['tgChat'], $text, true);
+}
+
+/* Отправка заявки в коллтрекинг Calltouch со стороны сервера.
+   Их скрипт на странице тоже умеет это делать, но не успевает: мы сразу уводим
+   человека на страницу «Спасибо», и браузер обрывает запрос. Поэтому шлём сами.
+   Токен не нужен, а номер сайта и сессии Calltouch кладёт в куки, которые
+   браузер отправляет нам вместе с заявкой. */
+function notify_calltouch($lead) {
+    global $FORM_NAMES;
+    $site = preg_replace('/\D/', '', $_COOKIE['_ct_site_id'] ?? '');
+    $sess = preg_replace('/\D/', '', $_COOKIE['_ct_session_id'] ?? '');
+    if ($site === '') return;          // коллтрекинг на сайте не подключён
+
+    $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? '';
+    $comment = [];
+    if (!empty($lead['messenger'])) $comment[] = 'Мессенджер: ' . $lead['messenger'];
+    if (!empty($lead['answers'])) $comment[] = 'Ответы: ' . $lead['answers'];
+    if (!empty($lead['files'])) $comment[] = 'Приложено файлов: ' . count($lead['files']);
+
+    $params = [
+        'subject' => $FORM_NAMES[$lead['form'] ?? ''] ?? ($lead['form'] ?: 'Форма сайта'),
+        'requestNumber' => $lead['id'],
+        'requestDate' => date('d.m.Y H:i:s', (int)($lead['ts'] / 1000)),
+        'phoneNumber' => preg_replace('/\D/', '', $lead['phone'] ?? ''),
+        'requestUrl' => $host ? 'https://' . $host . ($lead['page'] ?? '/') : ($lead['page'] ?? ''),
+    ];
+    if ($sess !== '') $params['sessionId'] = $sess;          // без него не определится источник
+    if (!empty($lead['name'])) $params['fio'] = $lead['name'];
+    if ($comment) $params['comment'] = implode('; ', $comment);
+
+    $url = 'https://api.calltouch.ru/calls-service/RestAPI/requests/' . $site . '/register/';
+    $body = http_build_query($params);
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true, CURLOPT_POSTFIELDS => $body,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded; charset=utf-8'],
+            CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 6,
+        ]);
+        curl_exec($ch);
+        return;
+    }
+    @file_get_contents($url, false, stream_context_create(['http' => [
+        'method' => 'POST', 'content' => $body, 'timeout' => 6, 'ignore_errors' => true,
+        'header' => "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n",
+    ]]));
 }
 
 function notify_email($lead) {
@@ -462,6 +510,7 @@ if ($method === 'POST' && $route === '/lead') {
         fflush($fh);
         flock($fh, LOCK_UN); fclose($fh);
     }
+    notify_calltouch($lead);
     notify_telegram($lead);
     notify_email($lead);
     send_json(200, ['ok' => true]);
