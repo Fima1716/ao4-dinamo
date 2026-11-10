@@ -389,7 +389,10 @@ em{font-style:normal;color:var(--purple)}
    подложки: иначе карточка читается как чужеродная коробка на фоне. */
 .v1 .hero2-visual{position:relative}
 .v1 .hero2-figure{position:relative;z-index:1;margin:0 -7% 0 -5%;isolation:isolate}
-.v1 .hero2-figure img{position:relative;z-index:1;width:100%;height:auto;filter:drop-shadow(0 46px 54px rgba(60,20,120,.3));animation:float 6s ease-in-out infinite;transform-origin:center}
+/* Протез и улыбка на зубе качаются вместе: анимация на общем слое, иначе
+   своя анимация у улыбки затёрла бы её поворот. */
+.v1 .hero2-float{position:relative;z-index:1;animation:float 6s ease-in-out infinite;transform-origin:center}
+.v1 .hero2-figure img{display:block;width:100%;height:auto;filter:drop-shadow(0 46px 54px rgba(60,20,120,.3))}
 .v1 .hero2-glow{position:absolute;left:50%;top:48%;width:86%;height:62%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,52,142,.26),rgba(178,28,255,.12) 55%,transparent 72%);filter:blur(40px);z-index:0;pointer-events:none;animation:breathe 7s ease-in-out infinite}
 .v1 .hero2-orbit{position:absolute;left:50%;top:58%;width:108%;transform:translate(-50%,-50%) rotate(-8deg);overflow:visible;z-index:0}
 .v1 .hero2-orbit ellipse{fill:none;stroke:rgba(255,52,142,.75);stroke-width:1.2;stroke-dasharray:1900;stroke-dashoffset:1900;animation:draw 2.2s .4s var(--ease) forwards}
@@ -430,6 +433,6 @@ em{font-style:normal;color:var(--purple)}
   .v1 .hero2-awards{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .v1 .hero2-figure img{animation:none}
+  .v1 .hero2-float{animation:none}
   .v1 .hero2-orbit ellipse{stroke-dashoffset:0;animation:none}
 }
