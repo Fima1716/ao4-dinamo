@@ -90,7 +90,7 @@
       { img: A + 'doctors/petrosyan.webp?v=6', cap: 'Петросян Сергей Гагикович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
       { img: A + 'doctors/dzhanumova.webp?v=5', cap: 'Джанумова Валерия Александровна', sub: 'Стоматолог-ортопед · стаж 9 лет' },
       { img: A + 'doctors/amaev.webp?v=5', cap: 'Амаев Камал Шарифович', sub: 'Стоматолог-ортопед · стаж 8 лет' },
-      { img: A + 'doctors/arkallaev-magomed.webp?v=5', cap: 'Аркаллаев Магомед Рашидович', sub: 'Стоматолог-ортопед · стаж 6 лет' },
+      { img: A + 'doctors/lameka.webp?v=5', cap: 'Ламека Никита Романович', sub: 'Стоматолог-терапевт · стаж 2 года' },
       { img: A + 'doctors/kilkeev.webp?v=5', cap: 'Килькеев Азамат Русланович', sub: 'Стоматолог-хирург-имплантолог · стаж 6 лет' },
     ] },
     { id: 'clinic', title: 'Клиника', cover: A + 'stories/clinic-entrance.webp', slides: [
