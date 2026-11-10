@@ -357,3 +357,75 @@ em{font-style:normal;color:var(--purple)}
 .v1 .btn--grad:hover{background:#c9247a}
 .v1 .btn--grad::after{display:none}
 .v1 .btn--grad:hover .arr{transform:none}
+
+/* ─── Первый экран: раскладка по макету Ильи ───────────────────────────────
+   Слева текст и форма, справа карточка с протезом и подписью под ней.     */
+.v1 .hero2{position:relative;overflow:hidden;padding:clamp(28px,4vw,60px) 0 clamp(40px,5vw,78px);background:linear-gradient(110deg,#fff 45%,var(--lav) 45%)}
+.v1 .hero2-pattern{position:absolute;inset:0;pointer-events:none;opacity:.5;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none' stroke='%23b9a7ea' stroke-width='14' stroke-linecap='round'><path d='M62 120a95 95 0 1 0 100-90' opacity='.35'/><circle cx='80' cy='60' r='9' fill='%23b9a7ea' stroke='none' opacity='.35'/><circle cx='118' cy='40' r='9' fill='%23b9a7ea' stroke='none' opacity='.35'/><path d='M262 340a70 70 0 1 0 74-66' opacity='.25'/><circle cx='276' cy='296' r='7' fill='%23b9a7ea' stroke='none' opacity='.25'/><circle cx='304' cy='282' r='7' fill='%23b9a7ea' stroke='none' opacity='.25'/></svg>");background-size:420px 420px;mask-image:linear-gradient(90deg,transparent 40%,#000 70%);-webkit-mask-image:linear-gradient(90deg,transparent 40%,#000 70%)}
+.v1 .hero2-wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 clamp(20px,3vw,32px)}
+.v1 .hero2-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(32px,4.5vw,65px);align-items:center}
+.v1 .hero2-grid>*{min-width:0}
+
+.v1 .hero2-h{margin:0 0 18px;font-weight:600;font-size:clamp(34px,3.9vw,58px);line-height:1.1;letter-spacing:-.03em}
+.v1 .hero2-h em{font-style:normal;color:var(--violet)}
+.v1 .hero2-lead{margin:0 0 14px;max-width:560px;font-size:clamp(16px,1.3vw,20px);line-height:1.5;color:var(--muted)}
+.v1 .hero2-gift{display:inline-flex;align-items:center;gap:9px;margin:0 0 22px;padding-bottom:6px;border-bottom:2px dashed #b9a7ea;color:var(--violet);font-size:16px;font-weight:700}
+.v1 .hero2-gift::before{content:"";flex:none;width:24px;height:24px;border-radius:50%;background:var(--lav-soft) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235e5391' stroke-width='2' stroke-linecap='round'><path d='M7 13a5.4 5.4 0 0 0 10 0'/><circle cx='8.6' cy='8.4' r='1.5' fill='%235e5391' stroke='none'/><circle cx='15.4' cy='8.4' r='1.5' fill='%235e5391' stroke='none'/></svg>") center/15px 15px no-repeat}
+
+.v1 .hero2-actions{max-width:560px;margin:0 0 22px}
+.v1 .hero2-actions .lead--row{grid-template-columns:minmax(180px,1fr) auto}
+
+.v1 .hero2-finance{margin:0 0 22px;padding:16px 20px;border:1px solid var(--line);border-left:4px solid var(--pink);border-radius:14px;background:#fff;box-shadow:0 10px 30px rgba(48,32,68,.07)}
+.v1 .hero2-finance strong{font-size:17px}
+.v1 .hero2-finance p{margin:3px 0 0;font-size:14px;color:var(--muted)}
+
+.v1 .hero2-awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.v1 .hero2-award{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:#fff;font-size:13.5px;line-height:1.4;color:var(--muted);box-shadow:0 8px 24px rgba(94,83,145,.07)}
+.v1 .hero2-award b{display:block;color:var(--violet);font-size:16px;font-weight:700}
+.v1 .hero2-award-ico{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:var(--lav-soft);color:var(--violet)}
+.v1 .hero2-award-ico svg{width:24px;height:24px}
+
+/* Карточка с протезом. Картинка с прозрачным фоном, поэтому не обрезаем её
+   по размеру карточки, а вписываем целиком на светлую подложку. */
+.v1 .hero2-visual{position:relative}
+.v1 .hero2-figure{position:relative;z-index:1;display:grid;place-items:center;height:clamp(360px,42vw,560px);margin:0;padding:clamp(20px,3vw,46px);border-radius:20px;background:linear-gradient(170deg,#f0ecfb 0%,#e6e0f8 55%,#ddd4f5 100%);box-shadow:0 30px 70px rgba(48,32,68,.14);overflow:hidden}
+.v1 .hero2-figure img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 40px rgba(60,20,120,.26));animation:float 6s ease-in-out infinite}
+.v1 .hero2-orbit{position:absolute;left:50%;top:56%;width:116%;transform:translate(-50%,-50%) rotate(-8deg);overflow:visible;z-index:0}
+.v1 .hero2-orbit ellipse{fill:none;stroke:rgba(255,52,142,.6);stroke-width:1.2;stroke-dasharray:1900;stroke-dashoffset:1900;animation:draw 2.2s .4s var(--ease) forwards}
+.v1 .hero2-caption{position:relative;z-index:2;margin:-22px 24px 0 -24px;padding:20px 26px;border-radius:14px;background:#fff;box-shadow:0 15px 55px rgba(48,32,68,.14)}
+.v1 .hero2-caption h3{margin:0 0 4px;font-size:21px;line-height:1.3;font-weight:600}
+.v1 .hero2-caption p{margin:0;font-size:15px;line-height:1.4;color:var(--muted)}
+
+@media (max-width:980px){
+  .v1 .hero2{background:var(--lav)}
+  .v1 .hero2-pattern{display:none}
+  .v1 .hero2-grid{grid-template-columns:1fr;gap:26px}
+  .v1 .hero2-visual{order:-1}
+  .v1 .hero2-caption{margin:-18px 12px 0 12px}
+  .v1 .hero2-awards{gap:8px}
+  .v1 .hero2-award{padding:11px 12px;gap:10px;font-size:12px}
+  .v1 .hero2-award-ico{width:36px;height:36px;border-radius:11px}
+  .v1 .hero2-award-ico svg{width:20px;height:20px}
+}
+/* На телефоне первый экран должен помещаться целиком, поэтому карточка ниже,
+   а плашки наград убраны: то же самое есть в бегущей строке и в рейтингах. */
+@media (max-width:760px){
+  .v1 .hero2{padding:16px 0 26px}
+  .v1 .hero2-grid{gap:18px}
+  .v1 .hero2-figure{height:230px;padding:14px;border-radius:16px}
+  .v1 .hero2-caption{margin:-16px 10px 0;padding:14px 18px;border-radius:12px}
+  .v1 .hero2-caption h3{font-size:18px}
+  .v1 .hero2-caption p{font-size:13.5px}
+  .v1 .hero2-h{font-size:30px;margin-bottom:12px}
+  .v1 .hero2-lead{font-size:15px;margin-bottom:10px}
+  .v1 .hero2-gift{font-size:14px;margin-bottom:16px}
+  .v1 .hero2-actions{margin-bottom:16px}
+  .v1 .hero2-finance{margin-bottom:0;padding:13px 16px}
+  .v1 .hero2-finance strong{font-size:15px}
+  .v1 .hero2-finance p{font-size:13px}
+  .v1 .hero2-awards{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .v1 .hero2-figure img{animation:none}
+  .v1 .hero2-orbit ellipse{stroke-dashoffset:0;animation:none}
+}

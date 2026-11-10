@@ -59,11 +59,11 @@
   if (headerInner) headerInner.append(menuBtn);
 
   /* ---------- первый экран: кнопка вместо формы ---------- */
-  const heroGrid = $('.v1 .hero__grid');
-  if (heroGrid) {
+  const heroCopy = $('.v1 .hero2-copy');
+  if (heroCopy) {
     const cta = nav('m-hero-cta', `<button type="button">Рассчитать стоимость <span>→</span></button><p>* План работ и финальная стоимость – в договоре</p>`);
     $('button', cta).addEventListener('click', openLead);
-    heroGrid.append(cta);
+    heroCopy.append(cta);
   }
 
   /* ---------- сторис ---------- */
