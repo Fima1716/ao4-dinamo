@@ -36,8 +36,8 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 .v1 .hero2{padding:14px 0 22px}
 .v1 .hero2-wrap{padding:0 16px}
 .v1 .hero2-grid{gap:16px}
-.v1 .hero2-figure{height:210px;padding:12px;border-radius:20px}
-.v1 .hero2-caption{margin:-16px 10px 0;padding:14px 18px;border-radius:14px}
+.v1 .hero2-figure{max-width:290px;margin:-6px auto -16px}
+.v1 .hero2-caption{margin:0;padding:14px 18px;border-radius:14px}
 .v1 .hero2-caption h3{font-size:17px}
 .v1 .hero2-caption p{font-size:13px}
 .v1 .hero2-h{font-size:clamp(28px,8.4vw,36px);line-height:1.08;margin-bottom:10px}
@@ -54,7 +54,7 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 .m-hero-cta p{margin:9px 4px 0;font-size:11.5px;line-height:1.35;color:var(--ink-40);text-align:center}
 /* без старых эффектов: ничего не парит, не пульсирует и не дорисовывается */
 .v1 .hero .reveal{transition-duration:.45s}
-@media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}.v1 .hero2-figure{height:186px}.v1 .hero2-caption{padding:12px 15px}}
+@media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}.v1 .hero2-figure{max-width:280px}.v1 .hero2-caption{padding:12px 15px}}
 
 /* ---------- квиз: компактно, как экран приложения ---------- */
 .match-quiz-section{padding:16px 10px 24px}
