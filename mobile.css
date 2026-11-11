@@ -33,71 +33,57 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 .m-menu svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 
 /* ---------- первый экран ---------- */
-/* Одна картинка, а не стопка белых коробок: сверху заголовок с ценой, под ним
-   крупный протез прямо на лиловом фоне, внизу белая панель действий во всю
-   ширину – подарок, телефон, кнопка и рассрочка собраны в один блок.
-   Экран занимает ровно окно: окно минус шапка, минус таб-бар (--hdr-h и
-   --tab-space меряет mobile.js по месту; значения в скобках – запасные). */
-.v1 .hero2{--hdr:var(--hdr-h,72px);--tab:var(--tab-space,calc(var(--tab-h) + 44px + env(safe-area-inset-bottom)));align-items:stretch;min-height:calc(100vh - var(--hdr) - var(--tab) - 4px);min-height:calc(100svh - var(--hdr) - var(--tab) - 4px);padding:clamp(10px,1.8vh,20px) 0 0;background:linear-gradient(185deg,#f4f0fc 0%,#ece5f9 55%,#e3daf6 100%)}
-.v1 .hero2-wrap{display:flex;padding:0 16px}
-.v1 .hero2-grid{flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0}
-/* copy раскрываем, чтобы заголовок, протез и панель можно было переставить */
-.v1 .hero2-copy{display:contents}
+/* Строго по примеру Ильи: заголовок с ценой, плашка с акцией, поле телефона,
+   кнопка, согласие, рассрочка и карточка протеза – ровным столбиком с
+   одинаковыми отступами. Фото девушки тут не показываем. Высота по
+   содержимому: ниже сразу начинается следующий блок. */
+.v1 .hero2{--hdr:var(--hdr-h,72px);align-items:stretch;min-height:0;padding:16px 0 20px;background:linear-gradient(180deg,#f4f0fd 0%,#ece6f9 70%,#e7e0f7 100%)}
+.v1 .hero2-wrap{display:block;padding:0 16px}
+.v1 .hero2-grid{display:flex;flex-direction:column;align-items:stretch;gap:16px}
+/* обёртки раскрываем, чтобы блоки шли одним столбиком */
+.v1 .hero2-copy,.v1 .hero2-panel{display:contents}
 .v1 .hero2-lead,.v1 .hero2-awards,.v1 .hero2-ask,.v1 .hero2-model{display:none}
 
-.v1 .hero2-h{order:1;flex:none;font-size:clamp(26px,7.8vw,33px);line-height:1.07;margin:0}
+.v1 .hero2-h{order:1;margin:0 0 4px;font-size:clamp(27px,8.2vw,34px);line-height:1.08;letter-spacing:-.02em}
 
-/* протез лежит на фоне без подложки и занимает весь остаток высоты */
-.v1 .hero2-visual{order:2;flex:1 1 auto;min-height:0;margin:0;display:flex}
-.v1 .hero2-figure{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;min-height:0;margin:0;padding:6px 0 0;border-radius:0;background:none;box-shadow:none}
-/* ширину протеза ограничиваем и по высоте окна – иначе на низком экране
-   он выдавливает панель за край */
-.v1 .hero2-float{flex:0 1 auto;width:min(88%,360px,40svh);max-width:none;height:auto;min-height:0;display:block}
-.v1 .hero2-figure img{width:100%;height:auto;max-height:100%;object-fit:contain;filter:drop-shadow(0 18px 24px rgba(60,20,120,.2))}
-.v1 .hero2-glow{left:50%;top:46%;width:72%;height:58%}
-.v1 .hero2-orbit{left:50%;top:54%;width:96%}
-.v1 .hero2-caption{flex:none;margin:0;padding:0;border:0;text-align:center}
-.v1 .hero2-caption h3{font-size:14px;font-weight:600;line-height:1.3;margin:0;color:var(--violet)}
-.v1 .hero2-caption p{display:none}
+/* акция – белая плашка-пилюля во всю ширину */
+.v1 .hero2-gift{order:2;display:flex;align-items:center;gap:9px;margin:0;padding:12px 14px 12px 11px;border:0;border-radius:18px;background:#fff;color:var(--violet);font-size:clamp(12.5px,3.5vw,15px);font-weight:700;line-height:1.25;letter-spacing:-.01em;box-shadow:0 8px 22px rgba(60,30,110,.07)}
+.v1 .hero2-gift::before{width:24px;height:24px;background-size:15px 15px}
 
-/* белая панель действий во всю ширину, как шторка снизу */
-.v1 .hero2-panel{order:3;flex:none;display:block;margin:12px -16px 0;padding:16px 16px calc(14px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:#fff;box-shadow:0 -6px 34px rgba(60,30,110,.13)}
-.v1 .hero2-gift{display:flex;margin:0 0 12px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;font-size:13.5px;line-height:1.25}
-.v1 .hero2-gift::before{width:22px;height:22px;background-size:14px 14px}
-.v1 .hero2-actions{display:block;max-width:none;margin:0}
-.v1 .hero2-actions .lead--row{grid-template-columns:1fr;gap:9px}
-.v1 .hero2-actions .field{height:52px;background:var(--lav-1);border-color:#ded5f3}
-.v1 .hero2-actions .btn{width:100%;min-height:52px}
+.v1 .hero2-actions{order:3;display:block;max-width:none;margin:0}
+.v1 .hero2-actions .lead--row{grid-template-columns:1fr;gap:12px}
+.v1 .hero2-actions .field{height:56px;padding:0 20px;background:#fff;border:1.5px solid #d9cdf4;box-shadow:none}
+.v1 .hero2-actions .field:focus-within{border-color:var(--violet);box-shadow:0 0 0 4px rgba(111,0,221,.1)}
+.v1 .hero2-actions .field input{font-size:16px}
+.v1 .hero2-actions .btn{width:100%;min-height:58px;font-size:17px}
 .v1 .hero2-actions .hero__note-star{display:none}
-.v1 .hero2-actions .consent{font-size:11.5px;line-height:1.3}
-/* рассрочка – строкой под разделителем, а не отдельной карточкой */
-.v1 .hero2-finance{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin:12px 0 0;padding:12px 0 0;border:0;border-top:1px solid var(--line);border-radius:0;background:none;box-shadow:none}
-.v1 .hero2-finance strong{font-size:14px}
-.v1 .hero2-finance p{margin:0;font-size:11.5px;line-height:1.3}
+.v1 .hero2-actions .consent{gap:12px;font-size:12.5px;line-height:1.3}
+.v1 .hero2-actions .consent input{width:20px;height:20px;border-radius:6px}
 .m-hero-cta{display:none}
 
-/* На низком экране формы нет – вместо неё кнопка-шторка внутри той же панели */
-@media (max-height:700px){
-  .v1 .hero2-h{font-size:clamp(23px,7.2vw,28px)}
-  .v1 .hero2-float{width:min(74%,260px,30svh)}
-  .v1 .hero2-caption h3{font-size:13px}
-  .m-hero-cta p{margin-top:5px;font-size:11px}
-  .v1 .hero2-gift,.v1 .hero2-actions{display:none}
-  /* над рассрочкой больше ничего нет – разделитель убираем */
-  .v1 .hero2-finance{margin:0;padding:0;border-top:0}
-  .v1 .m-hero-cta{order:4;display:block;margin:-6px -16px 0;padding:0 16px calc(14px + env(safe-area-inset-bottom));background:#fff}
-  .v1 .hero2-panel{padding-bottom:10px;border-radius:26px 26px 0 0}
-}
-.m-hero-cta{display:none;margin-top:clamp(8px,1.6vh,12px)}
-.m-hero-cta button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;border:0;border-radius:999px;background:var(--pink);color:#fff;font:700 16px var(--ui)}
-.m-hero-cta button span{font-size:20px;line-height:0}
-.m-hero-cta p{margin:7px 4px 0;font-size:11.5px;line-height:1.35;color:var(--ink-40);text-align:center}
+/* рассрочка – карточка с розовой полосой слева */
+.v1 .hero2-finance{order:4;margin:0;padding:14px 16px;border:0;border-left:4px solid var(--pink);border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(60,30,110,.07)}
+.v1 .hero2-finance strong{font-size:16px}
+.v1 .hero2-finance p{margin:3px 0 0;font-size:13px;line-height:1.35}
+
+/* протез – карточка: слева снимок, справа подпись через линейку */
+.v1 .hero2-visual{order:5;display:block;margin:0}
+.v1 .hero2-figure{position:relative;display:flex;align-items:center;gap:16px;width:100%;margin:0;padding:14px 18px 14px 12px;border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(60,30,110,.07)}
+.v1 .hero2-float{flex:0 0 auto;width:38%;max-width:none;height:auto}
+.v1 .hero2-figure img{width:100%;height:auto;filter:drop-shadow(0 10px 16px rgba(60,20,120,.14))}
+/* в карточке орбиты и свечение лишние – нужен чистый снимок */
+.v1 .hero2-glow,.v1 .hero2-orbit{display:none}
+.v1 .hero2-caption{flex:1;min-width:0;margin:0;padding-left:16px;border-left:1px solid var(--line);text-align:left}
+.v1 .hero2-caption h3{margin:0;font-size:17px;font-weight:700;line-height:1.25;color:var(--ink)}
+.v1 .hero2-caption p{display:none}
 /* без старых эффектов: ничего не парит, не пульсирует и не дорисовывается */
 .v1 .hero .reveal{transition-duration:.45s}
 @media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}}
 /* Узкие экраны (320 px и телефоны с увеличенным системным шрифтом): шапка
    не влезала и страница ездила вбок. Ужимаем логотип, телефон и кнопку меню. */
 @media (max-width:374px){
+  .v1 .hero2-gift{font-size:12px;padding:10px 12px 10px 10px}
+  .v1 .hero2-caption h3{font-size:15.5px}
   .header-inner{gap:7px;padding-left:12px;padding-right:12px}
   .header .brand{width:74px}
   .header-contact a{gap:5px;min-height:36px;padding:0 8px 0 7px;font-size:13px}
