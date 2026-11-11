@@ -31,51 +31,53 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 .m-menu svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 
 /* ---------- первый экран ---------- */
-/* Сверху оффер и форма, внизу карточка с протезом. Экран занимает ровно окно:
-   окно минус шапка, минус таб-бар – иначе кнопка ушла бы под него. */
-.v1 .hero2{--hdr:72px;--visual-h:clamp(130px,20svh,200px);align-items:stretch;min-height:calc(100vh - var(--hdr) - var(--tab-h) - 14px);min-height:calc(100svh - var(--hdr) - var(--tab-h) - 14px);padding:8px 0 0}
+/* Композиция та же, что и на компьютере: сверху оффер и форма, внизу фото
+   девушки с карточкой протеза поверх. Экран занимает ровно окно: окно минус
+   шапка, минус таб-бар – иначе кнопка ушла бы под него. Чтобы на фото
+   осталось место, подзаголовок убран, а рассрочка свёрнута в одну строку. */
+.v1 .hero2{--hdr:72px;--visual-h:clamp(160px,30svh,300px);align-items:stretch;min-height:calc(100vh - var(--hdr) - var(--tab-h) - 44px);min-height:calc(100svh - var(--hdr) - var(--tab-h) - 44px);padding:10px 0 0}
 .v1 .hero2-wrap{display:flex;padding:0 16px}
 .v1 .hero2-grid{flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0}
-/* текст занимает весь остаток над фото и центрируется в нём: иначе между
-   кнопкой и фото зиял пустой кусок на высоких экранах */
 .v1 .hero2-copy{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center}
-/* Фото девушки тут не показываем: рядом с формой ему остаётся полоска, в
-   которой лицо всё равно не прочитать. Вместо него карточка протеза во всю
-   ширину – слева снимок, справа подпись. */
-.v1 .hero2-model{display:none}
-.v1 .hero2-visual{order:2;position:relative;flex:0 0 auto;margin-top:clamp(8px,1.6vh,16px);display:block}
-.v1 .hero2-figure{position:relative;display:flex;align-items:center;gap:14px;width:100%;height:var(--visual-h);margin:0;padding:10px 16px 10px 12px;border-radius:20px;box-shadow:0 14px 34px rgba(60,30,110,.14)}
-.v1 .hero2-float{width:45%;flex:none}
-.v1 .hero2-glow{left:25%;width:42%}
-.v1 .hero2-orbit{left:25%;top:52%;width:48%}
-.v1 .hero2-caption{flex:1;min-width:0;margin:0;text-align:left}
-.v1 .hero2-caption h3{font-size:15.5px;margin-bottom:3px}
-.v1 .hero2-caption p{display:block;font-size:12px;line-height:1.35}
-.v1 .hero2-h{font-size:clamp(27px,8.2vw,36px);line-height:1.08;margin-bottom:clamp(6px,1.2vh,10px)}
-.v1 .hero2-lead{font-size:clamp(14px,1.9vh,15px);margin-bottom:clamp(8px,1.4vh,12px)}
-.v1 .hero2-gift{font-size:13.5px;margin-bottom:clamp(10px,1.7vh,14px);border-bottom:0;padding-bottom:0}
-/* Форма с телефоном прямо на экране: поле и кнопка в столбик. Кнопка-шторка
-   тут уже не нужна – она дублировала бы то же действие. */
-.v1 .hero2-actions{display:block;max-width:none;margin:0 0 clamp(8px,1.5vh,14px)}
-.v1 .hero2-actions .lead--row{grid-template-columns:1fr;gap:10px}
-.v1 .hero2-ask{font-size:13px;margin-bottom:7px}
+
+.v1 .hero2-h{font-size:clamp(27px,8vw,34px);line-height:1.06;margin-bottom:12px}
+.v1 .hero2-lead{display:none}
+/* акция – плашкой, иначе строчка теряется среди остального текста */
+.v1 .hero2-gift{margin:0 0 12px;padding:8px 14px 8px 10px;border:0;border-radius:999px;background:#fff;font-size:13px;box-shadow:0 6px 18px rgba(60,30,110,.08)}
+.v1 .hero2-gift::before{width:20px;height:20px;background-size:13px 13px}
+
+.v1 .hero2-ask{display:none}
+.v1 .hero2-actions{display:block;max-width:none;margin:0 0 10px}
+.v1 .hero2-actions .lead--row{grid-template-columns:1fr;gap:8px}
 .v1 .hero2-actions .field{height:52px}
 .v1 .hero2-actions .btn{width:100%;min-height:52px}
 .v1 .hero2-actions .hero__note-star{display:none}
+.v1 .hero2-actions .consent{font-size:11.5px;line-height:1.3}
 .m-hero-cta{display:none}
-.v1 .hero2-finance{margin:0;padding:clamp(10px,1.5vh,13px) 16px;border-radius:12px}
-.v1 .hero2-finance strong{font-size:15px}
-.v1 .hero2-finance p{font-size:12.5px}
+
+/* рассрочка одной строкой: заголовок и условие рядом */
+.v1 .hero2-finance{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin:0;padding:9px 14px;border-radius:12px}
+.v1 .hero2-finance strong{font-size:14px}
+.v1 .hero2-finance p{margin:0;font-size:11.5px;line-height:1.3}
 .v1 .hero2-awards{display:none}
-/* На низком экране форма целиком не влезает – там оставляем кнопку-шторку,
-   а подзаголовок и строку про КТ прячем: оффер и кнопка важнее. */
+
+/* нижняя треть: фото справа во всю ширину окна, карточка протеза слева */
+.v1 .hero2::before{display:block;top:auto;left:0;right:0;bottom:0;height:calc(100% - 40px);clip-path:none;background:linear-gradient(180deg,rgba(201,180,226,0) 0,#c9b4e2 62%)}
+/* маска гасит и левый, и верхний край – иначе виден прямоугольник фотографии */
+.v1 .hero2-model{display:block;right:0;bottom:0;width:auto;height:var(--visual-h);max-width:62%;object-fit:contain;object-position:100% 100%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%),linear-gradient(180deg,transparent 0,#000 16%);mask-image:linear-gradient(90deg,transparent 0,#000 18%),linear-gradient(180deg,transparent 0,#000 16%);-webkit-mask-composite:source-in;mask-composite:intersect}
+.v1 .hero2-visual{order:2;position:relative;flex:0 0 var(--visual-h);margin-top:12px;display:block}
+.v1 .hero2-figure{position:absolute;left:0;bottom:0;width:min(58%,215px);margin:0;padding:12px 14px 10px;border-radius:20px;box-shadow:0 16px 40px rgba(60,30,110,.2)}
+.v1 .hero2-caption{margin-top:6px}
+.v1 .hero2-caption h3{font-size:15px;margin-bottom:0}
+.v1 .hero2-caption p{display:none}
+
+/* На низком экране форма целиком не влезает – там кнопка-шторка,
+   а плашка с акцией убрана: оффер и кнопка важнее. */
 @media (max-height:700px){
-  .v1 .hero2{--visual-h:clamp(120px,20svh,180px)}
-  .v1 .hero2-gift,.v1 .hero2-lead,.v1 .hero2-actions{display:none}
+  .v1 .hero2{--visual-h:clamp(150px,26svh,240px)}
+  .v1 .hero2-gift,.v1 .hero2-actions{display:none}
   .v1 .m-hero-cta{display:block}
-  .v1 .hero2 .hero2-figure{padding:8px 14px 8px 10px}
-  .v1 .hero2-caption h3{font-size:15px}
-  .v1 .hero2-caption p{font-size:12px}
+  .v1 .hero2 .hero2-figure{width:min(52%,190px);padding:10px 12px 8px}
 }
 .m-hero-cta{display:none;margin-top:clamp(8px,1.6vh,12px)}
 .m-hero-cta button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;border:0;border-radius:999px;background:var(--pink);color:#fff;font:700 16px var(--ui)}
@@ -83,7 +85,7 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 .m-hero-cta p{margin:7px 4px 0;font-size:11.5px;line-height:1.35;color:var(--ink-40);text-align:center}
 /* без старых эффектов: ничего не парит, не пульсирует и не дорисовывается */
 .v1 .hero .reveal{transition-duration:.45s}
-@media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}.v1 .hero2-figure{gap:10px;padding-right:12px}.v1 .hero2-caption h3{font-size:14.5px}}
+@media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}.v1 .hero2-figure{width:min(60%,200px);padding:10px 12px 8px}.v1 .hero2-caption h3{font-size:14px}}
 
 /* ---------- квиз: компактно, как экран приложения ---------- */
 .match-quiz-section{padding:16px 10px 24px}
