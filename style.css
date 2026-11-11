@@ -384,6 +384,12 @@ em{font-style:normal;color:var(--purple)}
 
 .v1 .hero2-actions{max-width:560px;margin:0 0 clamp(10px,2.4vh,22px)}
 .v1 .hero2-actions .lead--row{grid-template-columns:minmax(180px,1fr) auto}
+/* Поле телефона на белой половине экрана сливалось с фоном: даём заливку,
+   видимую рамку и лёгкую внутреннюю тень, чтобы читалось как поле ввода. */
+.v1 .hero2-actions .field{background:var(--lav-1);border-color:#d7cdf0;box-shadow:inset 0 1px 2px rgba(60,30,110,.07)}
+.v1 .hero2-actions .field:focus-within{background:#fff;border-color:var(--violet);box-shadow:0 0 0 4px rgba(111,0,221,.1)}
+.v1 .hero2-actions .field input::placeholder{color:#8b82a8}
+.v1 .hero2-ask{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--violet)}
 
 .v1 .hero2-finance{margin:0 0 clamp(10px,2.4vh,22px);padding:clamp(11px,1.7vh,16px) 20px;border:1px solid var(--line);border-left:4px solid var(--pink);border-radius:14px;background:#fff;box-shadow:0 10px 30px rgba(48,32,68,.07)}
 .v1 .hero2-finance strong{font-size:17px}
