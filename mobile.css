@@ -13,7 +13,9 @@
 html{scroll-behavior:auto;scroll-padding-top:70px;overflow-anchor:none}
 *{overflow-anchor:none}
 html.m-lock,html.m-lock body{overflow:hidden;overscroll-behavior:none}
-body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 12px);-webkit-tap-highlight-color:transparent}
+/* страховка от случайной прокрутки вбок: clip, а не hidden – hidden сделал бы
+   из body скролл-контейнер и сломал бы липкую шапку */
+body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 12px);-webkit-tap-highlight-color:transparent;overflow-x:clip}
 input,select,textarea{font-size:16px!important}
 button,a,.match-quiz-option,summary{touch-action:manipulation}
 
@@ -93,6 +95,16 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 /* без старых эффектов: ничего не парит, не пульсирует и не дорисовывается */
 .v1 .hero .reveal{transition-duration:.45s}
 @media (max-width:360px){.header .brand{width:88px}.header-contact a{font-size:14px;padding:0 10px 0 8px}}
+/* Узкие экраны (320 px и телефоны с увеличенным системным шрифтом): шапка
+   не влезала и страница ездила вбок. Ужимаем логотип, телефон и кнопку меню. */
+@media (max-width:374px){
+  .header-inner{gap:7px;padding-left:12px;padding-right:12px}
+  .header .brand{width:74px}
+  .header-contact a{gap:5px;min-height:36px;padding:0 8px 0 7px;font-size:13px}
+  .header-contact svg,.header-contact img{width:16px;height:16px}
+  .m-menu button{width:36px;height:36px;border-radius:11px}
+  .m-menu svg{width:20px;height:20px}
+}
 
 /* ---------- квиз: компактно, как экран приложения ---------- */
 .match-quiz-section{padding:16px 10px 24px}
@@ -158,7 +170,7 @@ main #smile-aesthetic-title,main #care-support-title,.closing-section:not(.closi
 main .solution-intro,main .implant-brands-intro,main .care-support-intro,main .payment-intro,.closing-section .closing-lead{font-size:15px;margin-left:0;margin-right:0}
 
 /* ---------- сторис ---------- */
-.m-stories{display:flex;gap:14px;overflow-x:auto;padding:14px var(--gut) 4px;scrollbar-width:none;scroll-snap-type:x proximity}
+.m-stories{display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;padding:14px var(--gut) 4px;scrollbar-width:none;scroll-snap-type:x proximity}
 .m-stories::-webkit-scrollbar{display:none}
 .m-stories button{flex:none;width:70px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;font:600 11.5px/1.2 var(--ui);color:var(--ink);scroll-snap-align:start;cursor:pointer}
 .m-stories .ring{width:66px;height:66px;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#e93d8d,#b9a7ea,#e93d8d)}

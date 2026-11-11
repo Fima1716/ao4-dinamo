@@ -72,3 +72,13 @@ body.doc-page{margin:0;background:#fff;color:var(--ink);font-family:var(--ui);-w
  .doc-photo{max-width:none}
  .doc-cta{padding:20px}
 }
+/* Узкие экраны: логотип, «назад» и телефон не помещались в строку и страница
+   ездила вбок. Ужимаем шрифты и прячем «Назад» – выход есть через логотип. */
+@media(max-width:374px){
+ .doc-topbar-in{gap:10px;padding-left:12px;padding-right:12px}
+ .doc-topbar a.doc-logo img{height:28px}
+ .doc-topbar .doc-back{display:none}
+ .doc-topbar .doc-phone b{font-size:15px}
+ .doc-topbar .doc-phone span{font-size:11px}
+ .doc-wrap,.doc-foot-in{padding-left:12px;padding-right:12px}
+}
