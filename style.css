@@ -364,7 +364,7 @@ em{font-style:normal;color:var(--purple)}
    вертикальные отступы и кегли завязаны на vh, чтобы на низком ноутбуке блок
    сжимался, а не вылезал за край. svh – чтобы на телефоне адресная строка
    браузера не растягивала экран. */
-.v1 .hero2{--hdr:89px;position:relative;overflow:hidden;display:flex;align-items:center;min-height:calc(100vh - var(--hdr));min-height:calc(100svh - var(--hdr));padding:clamp(14px,2.6vh,52px) 0;background:#fff}
+.v1 .hero2{--hdr:89px;position:relative;overflow:hidden;display:flex;align-items:center;min-height:calc(100vh - var(--hdr));min-height:min(calc(100svh - var(--hdr)),920px);padding:clamp(14px,2.6vh,52px) 0;background:#fff}
 /* Лиловый клин уходит по диагонали вправо – как на макете. Угол задан
    процентами, чтобы наклон держался на любой ширине окна. */
 .v1 .hero2::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(103deg,#f8f5fd 0%,#e9e0f8 42%,#cfbce7 100%);clip-path:polygon(51% 0,100% 0,100% 100%,31% 100%)}
