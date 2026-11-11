@@ -36,19 +36,21 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
    Экран занимает ровно окно: окно минус шапка, минус таб-бар. */
 /* --hdr-h и --tab-space меряет mobile.js по месту; значения до него – запасные,
    на случай если скрипт не успел отработать. */
-.v1 .hero2{--hdr:var(--hdr-h,72px);--tab:var(--tab-space,calc(var(--tab-h) + 44px + env(safe-area-inset-bottom)));--visual-h:clamp(118px,16svh,150px);align-items:stretch;min-height:0;padding:clamp(10px,1.6vh,18px) 0 clamp(14px,2vh,22px)}
+.v1 .hero2{--hdr:var(--hdr-h,72px);--tab:var(--tab-space,calc(var(--tab-h) + 44px + env(safe-area-inset-bottom)));--visual-h:clamp(118px,21svh,180px);align-items:stretch;min-height:calc(100vh - var(--hdr) - var(--tab) - 4px);min-height:calc(100svh - var(--hdr) - var(--tab) - 4px);padding:clamp(10px,1.6vh,18px) 0 clamp(12px,1.8vh,20px)}
 .v1 .hero2-wrap{display:flex;padding:0 16px}
 .v1 .hero2-grid{flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0}
-.v1 .hero2-copy{flex:none}
+/* остаток высоты делим: немного добирает карточка с протезом, остальное
+   расходится между блоками – так экран заполнен целиком и без пустой дыры */
+.v1 .hero2-copy{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between}
 
-.v1 .hero2-h{font-size:clamp(27px,8vw,34px);line-height:1.06;margin-bottom:12px}
+.v1 .hero2-h{font-size:clamp(27px,8vw,34px);line-height:1.06;margin-bottom:10px}
 .v1 .hero2-lead{display:none}
 /* акция – плашкой, иначе строчка теряется среди остального текста */
-.v1 .hero2-gift{margin:0 0 12px;padding:8px 14px 8px 10px;border:0;border-radius:999px;background:#fff;font-size:13px;box-shadow:0 6px 18px rgba(60,30,110,.08)}
+.v1 .hero2-gift{margin:0 0 10px;padding:8px 14px 8px 10px;border:0;border-radius:999px;background:#fff;font-size:13px;box-shadow:0 6px 18px rgba(60,30,110,.08)}
 .v1 .hero2-gift::before{width:20px;height:20px;background-size:13px 13px}
 
 .v1 .hero2-ask{display:none}
-.v1 .hero2-actions{display:block;max-width:none;margin:0 0 10px}
+.v1 .hero2-actions{display:block;max-width:none;margin:0 0 8px}
 .v1 .hero2-actions .lead--row{grid-template-columns:1fr;gap:8px}
 .v1 .hero2-actions .field{height:52px}
 .v1 .hero2-actions .btn{width:100%;min-height:52px}
@@ -64,13 +66,16 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
 
 /* протез карточкой во всю ширину: слева снимок, справа подпись через линейку */
 .v1 .hero2-model{display:none}
-.v1 .hero2-visual{order:2;flex:0 0 auto;margin-top:12px;display:block}
-.v1 .hero2-figure{position:relative;display:flex;align-items:center;gap:16px;width:100%;min-height:var(--visual-h);margin:0;padding:12px 18px 12px 12px;border-radius:20px;box-shadow:0 14px 34px rgba(60,30,110,.12)}
-.v1 .hero2-float{width:42%;flex:none}
+/* свободную высоту забирает карточка с протезом: экран заполнен целиком, а
+   снимок становится крупнее – вместо пустой дыры между блоками */
+.v1 .hero2-visual{order:2;flex:0 0 auto;margin-top:12px;display:flex;align-items:stretch}
+.v1 .hero2-figure{position:relative;display:flex;align-items:center;gap:16px;width:100%;min-height:var(--visual-h);margin:0;padding:14px 18px 14px 12px;border-radius:20px;box-shadow:0 14px 34px rgba(60,30,110,.12)}
+.v1 .hero2-float{flex:0 0 auto;width:auto;max-width:45%;height:100%;display:flex;align-items:center}
+.v1 .hero2-figure img{width:auto;height:100%;max-width:100%;object-fit:contain}
 .v1 .hero2-glow{left:24%;width:40%}
 .v1 .hero2-orbit{left:24%;top:52%;width:44%}
-.v1 .hero2-caption{flex:1;min-width:0;margin:0;padding-left:16px;border-left:1px solid var(--line);text-align:left}
-.v1 .hero2-caption h3{font-size:17px;line-height:1.25;margin:0}
+.v1 .hero2-caption{flex:1;min-width:0;margin:0;padding-left:14px;border-left:1px solid var(--line);text-align:left}
+.v1 .hero2-caption h3{font-size:16px;line-height:1.25;margin:0}
 .v1 .hero2-caption p{display:none}
 
 /* На низком экране форма целиком не влезает – там кнопка-шторка,
