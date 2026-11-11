@@ -400,6 +400,9 @@ em{font-style:normal;color:var(--purple)}
 .v1 .hero2-award b{display:block;color:var(--violet);font-size:16px;font-weight:700}
 .v1 .hero2-award-ico{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:var(--lav-soft);color:var(--violet)}
 .v1 .hero2-award-ico svg{width:24px;height:24px}
+/* Обёртка нужна только мобильной версии – там это белая панель действий.
+   На компьютере она не должна влиять на раскладку вообще. */
+.v1 .hero2-panel{display:contents}
 /* На низком экране награды прячем: они всё равно повторены в бегущей строке
    и в блоке рейтингов, а первый экран должен уместиться целиком. */
 @media (min-width:901px) and (max-height:800px){.v1 .hero2-awards{display:none}}
