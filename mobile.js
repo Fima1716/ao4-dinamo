@@ -276,6 +276,25 @@
     <button type="button" data-sheet="route">${svg(ICO2.route)}<span>Маршрут</span></button>`);
   tab.setAttribute('aria-label', 'Быстрые действия');
   document.body.append(tab);
+
+  /* ---------- сколько места реально занимают шапка и таб-бар ----------
+     Высоту шапки и таб-бара (вместе с круглой кнопкой, торчащей над ним,
+     и безопасной зоной снизу) меряем на месте: на разных телефонах они
+     разной высоты, а первый экран должен помещаться ровно между ними. */
+  const header = $('.header');
+  const tabIco = $('.m-tab-cta i', tab);
+  const applyChrome = () => {
+    // пока таб-бар уехал вниз (клавиатура, шторка, сторис) мерить нечего
+    if (!mq.matches || html.classList.contains('kb-open') || html.classList.contains('sheet-open') || html.classList.contains('story-open')) return;
+    if (header) html.style.setProperty('--hdr-h', Math.round(header.getBoundingClientRect().height) + 'px');
+    // круглая кнопка торчит над баром, поэтому берём её верх, если он выше
+    const top = Math.min(tab.getBoundingClientRect().top, tabIco ? tabIco.getBoundingClientRect().top : Infinity);
+    const space = Math.round(innerHeight - top);
+    if (space > 0 && space < innerHeight / 2) html.style.setProperty('--tab-space', space + 'px');
+  };
+  applyChrome();
+  addEventListener('resize', applyChrome);
+  addEventListener('orientationchange', () => setTimeout(applyChrome, 200));
   $('.m-tab-cta', tab).addEventListener('click', openLead);
   $$('[data-sheet]', tab).forEach(b => { tabLinks[b.dataset.sheet] = b; b.addEventListener('click', () => sheets[b.dataset.sheet].open()); });
 

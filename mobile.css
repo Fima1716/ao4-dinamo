@@ -35,7 +35,9 @@ button,a,.match-quiz-option,summary{touch-action:manipulation}
    девушки с карточкой протеза поверх. Экран занимает ровно окно: окно минус
    шапка, минус таб-бар – иначе кнопка ушла бы под него. Чтобы на фото
    осталось место, подзаголовок убран, а рассрочка свёрнута в одну строку. */
-.v1 .hero2{--hdr:72px;--visual-h:clamp(160px,30svh,300px);align-items:stretch;min-height:calc(100vh - var(--hdr) - var(--tab-h) - 44px);min-height:calc(100svh - var(--hdr) - var(--tab-h) - 44px);padding:10px 0 0}
+/* --hdr-h и --tab-space меряет mobile.js по месту; значения до него – запасные,
+   на случай если скрипт не успел отработать. */
+.v1 .hero2{--hdr:var(--hdr-h,72px);--tab:var(--tab-space,calc(var(--tab-h) + 44px + env(safe-area-inset-bottom)));--visual-h:clamp(160px,30svh,300px);align-items:stretch;min-height:calc(100vh - var(--hdr) - var(--tab) - 4px);min-height:calc(100svh - var(--hdr) - var(--tab) - 4px);padding:10px 0 0}
 .v1 .hero2-wrap{display:flex;padding:0 16px}
 .v1 .hero2-grid{flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0}
 .v1 .hero2-copy{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center}
